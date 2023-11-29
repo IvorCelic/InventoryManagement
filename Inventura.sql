@@ -40,6 +40,13 @@ create table SREDSTVA_LOKACIJE (
 );
 
 
+select a.*, b.*, c.*
+from SREDSTVA a
+inner join SREDSTVA_LOKACIJE b on a.Sredstvo_ID = b.Sredstvo_ID
+inner join LOKACIJE c on c.Lokacija_ID = b.Lokacija_ID;
+
+
+
 
 ---------- INSERTI ----------
 
@@ -63,3 +70,14 @@ insert into SREDSTVA_LOKACIJE (Kolicina, Cijena, Opis, Sredstvo_ID, Lokacija_ID,
     (1, 1000, null, 1, 3, 1),
     (200, 5, '5xM, 10xS, 25xXS', 2, 3, 1),
     (40, 5, '20 komada u neiskoristivom stanju', 3, 2, 2);
+
+
+
+
+---------- SELECT ----------
+
+select a.Kolicina, a.Cijena, a.Opis, b.Naziv as 'Naziv sredstva', c.Naziv as 'Skladište', CONCAT(d.Ime, ' ', d.Prezime) as 'Osoba'
+from SREDSTVA_LOKACIJE a
+inner join SREDSTVA b on a.Sredstvo_ID=b.Sredstvo_ID
+inner join LOKACIJE c on a.Lokacija_ID=c.Lokacija_ID
+inner join OSOBE d on a.Osoba_ID=d.Osoba_ID
