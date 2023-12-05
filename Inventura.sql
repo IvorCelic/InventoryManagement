@@ -3,6 +3,8 @@ drop database if exists Inventura;
 go
 create database Inventura;
 go
+alter database Inventura collate Croatian_CI_AS;
+go
 use Inventura;
 go
 
@@ -12,7 +14,7 @@ create table OSOBE (
     Ime varchar(20) not null,
     Prezime varchar(20) not null,
     Email varchar(50) not null,
-    Lozinka varchar(50) not null
+    Lozinka varchar(100) not null
 );
 
 create table SREDSTVA (
@@ -40,12 +42,6 @@ create table SREDSTVA_LOKACIJE (
 );
 
 
-select a.*, b.*, c.*
-from SREDSTVA a
-inner join SREDSTVA_LOKACIJE b on a.Sredstvo_ID = b.Sredstvo_ID
-inner join LOKACIJE c on c.Lokacija_ID = b.Lokacija_ID;
-
-
 
 
 ---------- INSERTI ----------
@@ -61,7 +57,7 @@ insert into SREDSTVA (Naziv, Opis, Komadno, Osoba_ID) values
     ('Rama za 100m', 'Drvena rama', 1, 1);
 
 insert into LOKACIJE (Naziv, Opis) values
-    ('46', 'El.mete, ekrane, televizore'),
+    ('46', 'El.mete, ekrani, televizori'),
     ('41', 'Metalurgija, rame...'),
     ('24', 'Printeri, monitori, stativi, projektori, mete, uredski materijal...'),
     ('26', 'Alati');
