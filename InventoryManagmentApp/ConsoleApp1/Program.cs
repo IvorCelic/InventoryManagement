@@ -16,6 +16,7 @@ namespace ConsoleApp1
             Persons = new List<Person>();
             HelloMessage();
             NavigationMenu();
+
         }
 
 
@@ -61,6 +62,7 @@ namespace ConsoleApp1
                     NavigationMenu();
                     break;
             }
+
         }
 
         private void NavigationMenuPersons()
@@ -77,6 +79,7 @@ namespace ConsoleApp1
             Console.WriteLine("--------------------------------");
 
             ChooseNumberNavigationMenuPersons();
+
         }
 
         private void ChooseNumberNavigationMenuPersons()
@@ -103,9 +106,14 @@ namespace ConsoleApp1
                     Console.WriteLine("------------");
                     Console.WriteLine("Edit person:");
                     Console.WriteLine("------------");
+                    EditPerson();
                     break;
                 case 4:
+                    Console.WriteLine("");
+                    Console.WriteLine("--------------");
                     Console.WriteLine("Delete person:");
+                    Console.WriteLine("--------------");
+                    DeletePerson();
                     break;
                 case 5:
                     Console.WriteLine("Going back to navigation menu");
@@ -115,6 +123,31 @@ namespace ConsoleApp1
                     NavigationMenu();
                     break;
             }
+
+        }
+
+        private void DeletePerson()
+        {
+            ShowAllPersons();
+            Persons.RemoveAt(Utility.LoadInt("Choose person to delete: ") - 1);
+
+            NavigationMenuPersons();
+
+        }
+
+        private void EditPerson()
+        {
+            ShowAllPersons();
+            var person = Persons[Utility.LoadInt("Choose person to edit: ") - 1];
+
+            person.Id = Utility.LoadInt(person.Id + " - Insert new Id: ");
+            person.FirstName = Utility.LoadString(person.FirstName + "  - first name: ");
+            person.LastName = Utility.LoadString(person.LastName + " - last name: ");
+            person.Email = Utility.LoadString(person.Email + " - email: ");
+            person.Password = Utility.LoadString(person.Password + " - password: ");
+
+            NavigationMenuPersons();
+
         }
 
         private void ShowAllPersons()
@@ -124,6 +157,7 @@ namespace ConsoleApp1
             {
                 Console.WriteLine(++i + ". " + person);
             });
+
         }
 
         private void AddPerson()
@@ -147,6 +181,7 @@ namespace ConsoleApp1
             Console.WriteLine("|                              |");
             Console.WriteLine("|  INVENTORY MANAGMENT APP v1  |");
             Console.WriteLine("|______________________________|");
+
         }
 
         static void Main()
