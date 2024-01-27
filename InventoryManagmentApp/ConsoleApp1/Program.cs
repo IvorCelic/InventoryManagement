@@ -58,7 +58,7 @@ namespace ConsoleApp1
                     Console.WriteLine("You are exiting program");
                     break;
                 default:
-                    Console.WriteLine("You must enter a valid choice");
+                    Console.WriteLine("Invalid number!");
                     NavigationMenu();
                     break;
             }
@@ -119,7 +119,7 @@ namespace ConsoleApp1
                     Console.WriteLine("Going back to navigation menu");
                     break;
                 default:
-                    Console.WriteLine("You must enter a valid choice");
+                    Console.WriteLine("Invalid number!");
                     NavigationMenu();
                     break;
             }
@@ -141,8 +141,8 @@ namespace ConsoleApp1
             var person = Persons[Utility.LoadInt("Choose person to edit: ") - 1];
 
             person.Id = Utility.LoadInt(person.Id + " - Insert new Id: ");
-            person.FirstName = Utility.LoadString(person.FirstName + "  - first name: ");
-            person.LastName = Utility.LoadString(person.LastName + " - last name: ");
+            person.FirstName = Utility.ValidateString(person.FirstName + "  - first name: ");
+            person.LastName = Utility.ValidateString(person.LastName + " - last name: ");
             person.Email = Utility.LoadString(person.Email + " - email: ");
             person.Password = Utility.LoadString(person.Password + " - password: ");
 
@@ -165,8 +165,8 @@ namespace ConsoleApp1
             Persons.Add(new Person
             {
                 Id = Utility.LoadInt("Add person ID: "),
-                FirstName = Utility.LoadString("Add person name: "),
-                LastName = Utility.LoadString("Add person last name: "),
+                FirstName = Utility.ValidateString("Add person name: "),
+                LastName = Utility.ValidateString("Add person last name: "),
                 Email = Utility.LoadString("Add person email: "),
                 Password = Utility.LoadString("Add person password: ")
             });

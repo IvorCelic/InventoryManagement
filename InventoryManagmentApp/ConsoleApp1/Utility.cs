@@ -15,11 +15,22 @@ namespace ConsoleApp1
                 Console.Write(message);
                 try
                 {
-                    return int.Parse(Console.ReadLine());
+                    string inputString = Console.ReadLine();
+                    int input= int.Parse(inputString);
+
+                    if (input > 0)
+                    {
+                        return input;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid number!");
+                    }
+
                 }
                 catch (Exception)
                 {
-                    Console.WriteLine("Incorrect input");
+                    Console.WriteLine("Invalid input!");
                 }
             }
         }
@@ -42,6 +53,32 @@ namespace ConsoleApp1
                 return input;
 
             }
+        }
+
+        public static string ValidateString(string message)
+        {
+            while (true)
+            {
+                try
+                {
+                    string input = LoadString(message);
+
+                    if (!string.IsNullOrEmpty(input) && input.Any(char.IsLetter))
+                    {
+                        return input;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid input!");
+                    }
+
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Invalid input!");
+                }
+            }
+
         }
     }
 }
