@@ -16,7 +16,7 @@ namespace ConsoleApp1
                 try
                 {
                     string inputString = Console.ReadLine();
-                    int input= int.Parse(inputString);
+                    int input = int.Parse(inputString);
 
                     if (input > 0)
                     {
