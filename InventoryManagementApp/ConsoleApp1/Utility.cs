@@ -1,4 +1,6 @@
-﻿namespace ConsoleApp1
+﻿using ConsoleApp1.Models;
+
+namespace ConsoleApp1
 {
     internal class Utility
     {
@@ -27,6 +29,7 @@
                     Console.WriteLine("Invalid input!");
                 }
             }
+
         }
 
         public static string LoadString(string message)
@@ -45,8 +48,8 @@
                 }
 
                 return input;
-
             }
+
         }
 
         public static string ValidateString(string message)
@@ -67,12 +70,37 @@
                     }
 
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     Console.WriteLine("Invalid input!");
                 }
             }
 
         }
+
+        public static bool LoadBool(string message)
+        {
+            Console.WriteLine(message);
+            Console.WriteLine("1. Yes");
+            Console.WriteLine("2. No");
+
+            while (true)
+            {
+                int input = LoadInt("Enter your choice (1 or 2): ");
+
+                switch (input)
+                {
+                    case 1:
+                        return true;
+                    case 2:
+                        return false;
+                    default:
+                        Console.WriteLine("You can choose 1 or 2!");
+                        continue;
+                }
+            }
+
+        }
+
     }
 }

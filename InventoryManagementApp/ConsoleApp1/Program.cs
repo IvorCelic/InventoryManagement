@@ -6,10 +6,14 @@ namespace ConsoleApp1
     {
         private List<Person> Persons;
         private List<Location> Locations;
+        private List<Product> Products;
+
         public Program()
         {
             Persons = new List<Person>();
             Locations = new List<Location>();
+            Products = new List<Product>();
+
             HelloMessage();
             NavigationMenu();
 
@@ -47,6 +51,7 @@ namespace ConsoleApp1
                     break;
                 case 3:
                     Console.WriteLine("You choosed to work with products");
+                    NavigationMenuProducts();
                     break;
                 case 4:
                     Console.WriteLine("You choosed to work with products in locations");
@@ -59,6 +64,144 @@ namespace ConsoleApp1
                     NavigationMenu();
                     break;
             }
+
+        }
+
+        private void NavigationMenuProducts()
+        {
+            Console.WriteLine("");
+            Console.WriteLine("----------------------");
+            Console.WriteLine("Products Navigation bar");
+            Console.WriteLine("----------------------");
+            Console.WriteLine("1. List all products");
+            Console.WriteLine("2. Add new product");
+            Console.WriteLine("3. Edit product");
+            Console.WriteLine("4. Delete product");
+            Console.WriteLine("5. Go back to navigation menu");
+            Console.WriteLine("--------------------------------");
+
+            ChooseNumberNavigationMenuProducts();
+
+        }
+
+        private void ChooseNumberNavigationMenuProducts()
+        {
+            switch (Utility.LoadInt("Enter your choice: "))
+            {
+                case 1:
+                    Console.WriteLine("");
+                    Console.WriteLine("-------------------");
+                    Console.WriteLine("Listing all products");
+                    Console.WriteLine("-------------------");
+                    ShowAllProducts();
+                    NavigationMenuProducts();
+                    break;
+                case 2:
+                    Console.WriteLine("");
+                    Console.WriteLine("---------------");
+                    Console.WriteLine("Add new product:");
+                    Console.WriteLine("---------------");
+                    AddProduct();
+                    break;
+                case 3:
+                    Console.WriteLine("");
+                    Console.WriteLine("------------");
+                    Console.WriteLine("Edit product:");
+                    Console.WriteLine("------------");
+                    EditProduct();
+                    break;
+                case 4:
+                    Console.WriteLine("");
+                    Console.WriteLine("--------------");
+                    Console.WriteLine("Delete product:");
+                    Console.WriteLine("--------------");
+                    DeleteLocation();
+                    break;
+                case 5:
+                    Console.WriteLine("Going back to navigation menu");
+                    NavigationMenu();
+                    break;
+                default:
+                    Console.WriteLine("Invalid number!");
+                    NavigationMenu();
+                    break;
+            }
+
+        }
+
+        private void EditProduct()
+        {
+            // NOT FINISHED
+        }
+
+        private void AddProduct()
+        {
+            var person = ChoosePersonCurrentlyWorking(); 
+
+            Products.Add(new Product
+            {
+                Id = Utility.LoadInt("Add product ID: "),
+                Name = Utility.LoadString("Add product name: "),
+                Description = Utility.LoadString("Add product description: "),
+                IsUnitary = Utility.LoadBool("Please decide if product is unitary or no: "),
+                Person = person,
+            });
+
+            NavigationMenuProducts();
+
+        }
+
+        private Person ChoosePersonCurrentlyWorking()
+        {
+            if (Persons.Count == 0)
+            {
+                Console.WriteLine("There are no persons on the list. First add a person.");
+                NavigationMenuProducts();
+
+                if (Persons.Count > 0)
+                {
+                    ShowAllPersons();
+
+                    return ValidatePersonSelection();
+
+                }
+
+                return null;
+            }
+            else
+            {
+                ShowAllPersons();
+
+                return ValidatePersonSelection();
+            }
+
+        }
+
+        private Person ValidatePersonSelection()
+        {
+            while (true)
+            {
+                int index = Utility.LoadInt("Choose person which is currently working: ") - 1;
+
+                if (index >= 0 && index < Persons.Count)
+                {
+                    return Persons[index];
+                }
+                else
+                {
+                    Console.WriteLine("Invalid person ID. Please choose an existing ID: ");
+                }
+            }
+
+        }
+
+        private void ShowAllProducts()
+        {
+            var i = 0;
+            Products.ForEach(product =>
+            {
+                Console.WriteLine(++i + ". " + product);
+            });
 
         }
 

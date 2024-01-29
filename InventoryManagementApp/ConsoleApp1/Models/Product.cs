@@ -2,10 +2,15 @@
 {
     internal class Product : Entity
     {
-        private readonly string Name;
-        private readonly string Description;
-        private readonly bool IsUnitary; // Is it in one piece or pieces
-        private readonly Person Person;
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public bool IsUnitary { get; set; }
+        public Person Person { get; set; }
+
+        public override string ToString()
+        {
+            return Name;
+        }
 
     }
 }
