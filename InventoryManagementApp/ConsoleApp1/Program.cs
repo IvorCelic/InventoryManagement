@@ -115,7 +115,7 @@ namespace ConsoleApp1
                     Console.WriteLine("--------------");
                     Console.WriteLine("Delete product:");
                     Console.WriteLine("--------------");
-                    DeleteLocation();
+                    DeleteProduct();
                     break;
                 case 5:
                     Console.WriteLine("Going back to navigation menu");
@@ -129,14 +129,68 @@ namespace ConsoleApp1
 
         }
 
+        private void DeleteProduct()
+        {
+            ShowAllProducts();
+            int indexToDelete = ValidateProductSelection("delete");
+            Products.RemoveAt(indexToDelete);
+
+            NavigationMenuProducts();
+        }
+
+        private int ValidateProductSelection(string type)
+        {
+            while (true)
+            {
+                if (Products.Count == 0)
+                {
+                    Console.WriteLine("There is no product currently added.");
+                    NavigationMenuProducts();
+                    break;
+                }
+                else
+                {
+                    ShowAllProducts();
+                    int index = Utility.LoadInt($"Choose product you want to {type}: ") - 1;
+                    if (index >= 0 && index < Products.Count)
+                    {
+                        return index;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid product ID. Please choose an existing ID: ");
+                        NavigationMenuProducts();
+                    }
+
+                }
+            }
+
+            return 0;
+
+        }
+
         private void EditProduct()
         {
-            // NOT FINISHED
+            int indexToEdit = ValidateProductSelection("edit");
+            var product = Products[indexToEdit];
+
+            var person = ChoosePersonCurrentlyWorking();
+            Console.WriteLine("");
+
+            product.Id = Utility.LoadInt("Current: " + product.Id + " | New Id: ");
+            product.Name = Utility.LoadString("Current: " + product.Name + " | New name: ");
+            product.Description = Utility.LoadString("Current: " + product.Description + " | New description: ");
+            product.IsUnitary = Utility.LoadBool("Current: " + product.IsUnitary + " | Is product unitary or no?: ");
+            product.Person = person;
+
+            NavigationMenuProducts();
+
         }
 
         private void AddProduct()
         {
-            var person = ChoosePersonCurrentlyWorking(); 
+            var person = ChoosePersonCurrentlyWorking();
+            Console.WriteLine("");
 
             Products.Add(new Product
             {
@@ -181,7 +235,7 @@ namespace ConsoleApp1
         {
             while (true)
             {
-                int index = Utility.LoadInt("Choose person which is currently working: ") - 1;
+                int index = Utility.LoadInt("Choose person you want to : ") - 1;
 
                 if (index >= 0 && index < Persons.Count)
                 {
