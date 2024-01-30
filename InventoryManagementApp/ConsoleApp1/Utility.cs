@@ -102,6 +102,35 @@ namespace ConsoleApp1
 
         }
 
+        public static float LoadFloat(string message)
+        {
+
+            while (true)
+            {
+                Console.WriteLine(message);
+
+                try
+                {
+                    string inputString = Console.ReadLine();
+                    float input = float.Parse(inputString);
+
+                    if (input > 0)
+                    {
+                        return input;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid number!");
+                    }
+                }
+                catch (Exception)
+                {
+                    Console.WriteLine("Invalid input!");
+                }
+            }
+
+        }
+
 
     }
 }

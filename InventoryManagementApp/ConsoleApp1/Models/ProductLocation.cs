@@ -1,13 +1,21 @@
-﻿namespace ConsoleApp1.Models
+﻿using System.Xml.Linq;
+
+namespace ConsoleApp1.Models
 {
     internal class ProductLocation : Entity
     {
-        private readonly int Quantity;
-        private readonly float Price;
-        private readonly string Description;
-        private readonly Product Product;
-        private readonly Location Location;
-        private readonly Person Person;
+        public int Quantity { get; set; }
+        public float Price { get; set; }
+        // public string Description { get; set; }
+        public Product Product { get; set; }
+        public Location Location { get; set; }
+        public Person Person { get; set; }
+
+        public override string ToString()
+        {
+            return Product.Name + " in " + Location.Name;
+        }
+
 
     }
 }

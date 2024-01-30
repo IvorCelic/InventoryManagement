@@ -1,5 +1,6 @@
 ﻿using ConsoleApp1.Models;
 using System;
+using System.Reflection.Metadata;
 
 namespace ConsoleApp1
 {
@@ -8,19 +9,19 @@ namespace ConsoleApp1
         private List<Person> Persons;
         private List<Location> Locations;
         private List<Product> Products;
+        private List<ProductLocation> ProductsLocation;
 
         public Program()
         {
             Persons = new List<Person>();
             Locations = new List<Location>();
             Products = new List<Product>();
+            ProductsLocation = new List<ProductLocation>();
 
             HelloMessage();
             NavigationMenu();
 
         }
-
-
 
         private void NavigationMenu()
         {
@@ -49,6 +50,7 @@ namespace ConsoleApp1
                     break;
                 case 2:
                     Console.WriteLine("You choosed to work with locations");
+                    NavigationMenuLocations();
                     break;
                 case 3:
                     Console.WriteLine("You choosed to work with products");
@@ -56,6 +58,7 @@ namespace ConsoleApp1
                     break;
                 case 4:
                     Console.WriteLine("You choosed to work with products in locations");
+                    NavigationMenuProductsLocation();
                     break;
                 case 5:
                     Console.WriteLine("You are exiting program");
@@ -68,113 +71,224 @@ namespace ConsoleApp1
 
         }
 
+        private void NavigationMenuProductsLocation()
+        {
+            Console.WriteLine("");
+            Console.WriteLine("----------------------");
+            Console.WriteLine("Products in Locations Navigation bar");
+            Console.WriteLine("----------------------");
+            Console.WriteLine("1. List all products in locations");
+            Console.WriteLine("2. Add product in location");
+            Console.WriteLine("3. Edit product in location");
+            Console.WriteLine("4. Delete product from location");
+            Console.WriteLine("5. Go back to navigation menu");
+            Console.WriteLine("--------------------------------");
 
-        //        private void NavigationMenuLocations()
-        //        {
-        //            Console.WriteLine("");
-        //            Console.WriteLine("----------------------");
-        //            Console.WriteLine("Locations Navigation bar");
-        //            Console.WriteLine("----------------------");
-        //            Console.WriteLine("1. List all locations");
-        //            Console.WriteLine("2. Add new location");
-        //            Console.WriteLine("3. Edit location");
-        //            Console.WriteLine("4. Delete location");
-        //            Console.WriteLine("5. Go back to navigation menu");
-        //            Console.WriteLine("--------------------------------");
+            ChooseNumberNavigationMenuProductsLocations();
 
-        //            ChooseNumberNavigationMenuLocations();
+        }
 
-        //        }
+        private void ChooseNumberNavigationMenuProductsLocations()
+        {
+            switch (Utility.LoadInt("Enter your choice: "))
+            {
+                case 1:
+                    Console.WriteLine("");
+                    Console.WriteLine("-------------------");
+                    Console.WriteLine("Listing all products on locations");
+                    Console.WriteLine("-------------------");
+                    ShowAllProductsLocations();
+                    NavigationMenuProductsLocation();
+                    break;
+                case 2:
+                    Console.WriteLine("");
+                    Console.WriteLine("---------------");
+                    Console.WriteLine("Add product to location:");
+                    AddProductLocation();
+                    Console.WriteLine("---------------");
+                    break;
+                case 3:
+                    Console.WriteLine("");
+                    Console.WriteLine("------------");
+                    Console.WriteLine("Edit product in location:");
+                    EditProductLocation();
+                    Console.WriteLine("------------");
+                    break;
+                case 4:
+                    Console.WriteLine("");
+                    Console.WriteLine("--------------");
+                    Console.WriteLine("Delete product from location:");
+                    DeleteProductLocation();
+                    Console.WriteLine("--------------");
+                    break;
+                case 5:
+                    Console.WriteLine("Going back to navigation menu");
+                    NavigationMenu();
+                    break;
+                default:
+                    Console.WriteLine("Invalid number!");
+                    NavigationMenu();
+                    break;
+            }
 
-        //        private void ChooseNumberNavigationMenuLocations()
-        //        {
-        //            switch (Utility.LoadInt("Enter your choice: "))
-        //            {
-        //                case 1:
-        //                    Console.WriteLine("");
-        //                    Console.WriteLine("-------------------");
-        //                    Console.WriteLine("Listing all locations");
-        //                    Console.WriteLine("-------------------");
-        //                    ShowAllLocations();
-        //                    NavigationMenuLocations();
-        //                    break;
-        //                case 2:
-        //                    Console.WriteLine("");
-        //                    Console.WriteLine("---------------");
-        //                    Console.WriteLine("Add new location:");
-        //                    Console.WriteLine("---------------");
-        //                    AddLocation();
-        //                    break;
-        //                case 3:
-        //                    Console.WriteLine("");
-        //                    Console.WriteLine("------------");
-        //                    Console.WriteLine("Edit location:");
-        //                    Console.WriteLine("------------");
-        //                    EditLocation();
-        //                    break;
-        //                case 4:
-        //                    Console.WriteLine("");
-        //                    Console.WriteLine("--------------");
-        //                    Console.WriteLine("Delete location:");
-        //                    Console.WriteLine("--------------");
-        //                    DeleteLocation();
-        //                    break;
-        //                case 5:
-        //                    Console.WriteLine("Going back to navigation menu");
-        //                    NavigationMenu();
-        //                    break;
-        //                default:
-        //                    Console.WriteLine("Invalid number!");
-        //                    NavigationMenu();
-        //                    break;
-        //            }
+        }
 
-        //        }
+        private void DeleteProductLocation()
+        {
+            int productLocationIndex = ValidateProductLocationSelection("delete");
+            Console.WriteLine("");
 
-        //        private void DeleteLocation()
-        //        {
-        //            ShowAllLocations();
+            if (productLocationIndex != -1)
+            {
+                var productLocation = ProductsLocation[productLocationIndex];
 
-        //            Locations.RemoveAt(Utility.LoadInt("Choose location to delete: ") - 1);
+                ProductsLocation.RemoveAt(productLocationIndex);
 
-        //            NavigationMenuLocations();
+                Console.WriteLine("");
+                Console.WriteLine($"{productLocation} with ID {productLocation.Id} deleted successfully.");
+            }
 
-        //        }
+            NavigationMenuProductsLocation();
 
-        //        private void EditLocation()
-        //        {
-        //            ShowAllLocations();
-        //            var location = Locations[Utility.LoadInt("Choose location to edit: ") - 1];
+        }
 
-        //            location.Id = Utility.LoadInt("Current: " + location.Id + " | New Id: ");
-        //            location.Name = Utility.LoadString("Current: " + location.Name + " | New name: ");
-        //            location.Description = Utility.LoadString("Current: " + location.Description + " | New description: ");
+        private void EditProductLocation()
+        {
+            int productLocationIndex = ValidateProductLocationSelection("edit");
+            Console.WriteLine("");
 
-        //            NavigationMenuLocations();
+            if (productLocationIndex != -1)
+            {
+                var productLocation = ProductsLocation[productLocationIndex];
 
-        //        }
+                var personIndex = ValidatePersonSelection("edit");
 
-        //        private void AddLocation()
-        //        {
-        //            Locations.Add(new Location
-        //            {
-        //                Id = Utility.LoadInt("Add location ID: "),
-        //                Name = Utility.LoadString("Add location name: "),
-        //                Description = Utility.LoadString("Add location description: ")
-        //            });
+                if (personIndex != -1)
+                {
+                    Person person = Persons[personIndex];
 
-        //            NavigationMenuLocations();
-        //        }
+                    var productIndex = ValidateProductSelection("edit");
 
-        //        private void ShowAllLocations()
-        //        {
-        //            var i = 0;
-        //            Locations.ForEach(location =>
-        //            {
-        //                Console.WriteLine(++i + ". " + location);
-        //            });
+                    if (productIndex != -1)
+                    {
+                        Product product = Products[productIndex];
 
-        //        }
+                        var locationIndex = ValidateLocationSelection("edit");
+
+                        if (locationIndex != -1)
+                        {
+                            Location location = Locations[locationIndex];
+
+                            productLocation.Id = Utility.LoadInt("Current: " + productLocation.Id + " | New Id: ");
+                            productLocation.Quantity = Utility.LoadInt("Current: " + productLocation.Quantity + " | New quantity: ");
+                            productLocation.Price = Utility.LoadFloat("Current: " + productLocation.Price + " | New price: ");
+                            productLocation.Product = product;
+                            productLocation.Location = location;
+                            productLocation.Person = person;
+                        }
+                    }
+                }
+
+                Console.WriteLine($"{productLocation} with ID {productLocation.Id} edited successfully.");
+
+            }
+
+            NavigationMenuProductsLocation();
+
+        }
+
+        private void AddProductLocation()
+        {
+            if (Products.Count == 0 && Locations.Count == 0 && Persons.Count == 0)
+            {
+                Console.WriteLine("You can't add product to location because there is no product, location or person.");
+                NavigationMenuProductsLocation();
+                return;
+            }
+
+            var personIndex = ValidatePersonSelection("add");
+            Console.WriteLine("");
+            var productIndex = ValidateProductSelection("add");
+            Console.WriteLine("");
+            var locationIndex = ValidateLocationSelection("add");
+            Console.WriteLine("");
+
+            if (personIndex != -1)
+            {
+                Person person = Persons[personIndex];
+
+                if (productIndex != -1)
+                {
+                    Product product = Products[productIndex];
+
+                    if (locationIndex != -1)
+                    {
+                        Location location = Locations[locationIndex];
+
+                        ProductsLocation.Add(new ProductLocation
+                        {
+                            Id = Utility.LoadInt("Add ProductLocation ID: "),
+                            Quantity = Utility.LoadInt("Add quantity: "),
+                            Price = Utility.LoadFloat("Add price: "),
+                            Product = product,
+                            Location = location,
+                            Person = person,
+                        });
+
+                        Console.WriteLine("Product to location added successfully.");
+                    }
+                }
+            }
+
+            NavigationMenuProductsLocation();
+
+        }
+
+        private void ShowAllProductsLocations()
+        {
+            var i = 0;
+            ProductsLocation.ForEach(productLocation =>
+            {
+                Console.WriteLine(++i + ". " + productLocation);
+            });
+
+        }
+
+        private int ValidateProductLocationSelection(string type)
+        {
+            if (Products.Count == 0 && Locations.Count == 0)
+            {
+                Console.WriteLine($"You can't {type} product in location, because there is no product & location currently added.");
+                return -1;
+            }
+            else if (Products.Count == 0)
+            {
+                Console.WriteLine($"You can't {type} product in location, because there is no product currently added.");
+                return -1;
+            }
+            else if (Locations.Count == 0)
+            {
+                Console.WriteLine($"You can't {type} product in location, because there is no location currently added.");
+                return -1;
+            }
+
+            while (true)
+            {
+                ShowAllProductsLocations();
+                int index = Utility.LoadInt($"Choose product in location you want to {type}: ") - 1;
+
+                if (index >= 0 && index < ProductsLocation.Count)
+                {
+                    return index;
+                }
+                else
+                {
+                    Console.WriteLine("Invalid ProductLocation ID. Please choose an existing ID: ");
+                }
+
+            }
+
+        }
 
         private void NavigationMenuProducts()
         {
@@ -250,9 +364,10 @@ namespace ConsoleApp1
                 Products.RemoveAt(productIndex);
 
                 Console.WriteLine("");
-                Console.WriteLine($"{product} with ID {product.Id} deleted successfuly.");
+                Console.WriteLine($"{product} with ID {product.Id} deleted successfully.");
 
             }
+
             NavigationMenuProducts();
 
         }
@@ -275,7 +390,7 @@ namespace ConsoleApp1
                     product.Id = Utility.LoadInt("Current: " + product.Id + " | New Id: ");
                     product.Name = Utility.LoadString("Current: " + product.Name + " | New name: ");
                     product.Description = Utility.LoadString("Current: " + product.Description + " | New description: ");
-                    product.IsUnitary = Utility.LoadBool("Current: " + product.IsUnitary + " | Is product unitary or no?: ");
+                    product.IsUnique = Utility.LoadBool("Current: " + product.IsUnique + " | Is product unitary or no?: ");
                     product.Person = person;
                 }
 
@@ -307,7 +422,7 @@ namespace ConsoleApp1
                     Id = Utility.LoadInt("Add product ID: "),
                     Name = Utility.LoadString("Add product name: "),
                     Description = Utility.LoadString("Add product description: "),
-                    IsUnitary = Utility.LoadBool("Please decide if product is unitary or no: "),
+                    IsUnique = Utility.LoadBool("Please decide if product is stackable or no: "),
                     Person = person
                 });
 
@@ -317,8 +432,6 @@ namespace ConsoleApp1
             NavigationMenuProducts();
 
         }
-
-
 
         private void ShowAllProducts()
         {
@@ -343,13 +456,164 @@ namespace ConsoleApp1
                 ShowAllProducts();
                 int index = Utility.LoadInt($"Choose product you want to {type}: ") - 1;
 
-                if (index >= 0 && index < Persons.Count)
+                if (index >= 0 && index < Products.Count)
                 {
                     return index;
                 }
                 else
                 {
                     Console.WriteLine("Invalid product ID. Please choose an existing ID: ");
+                }
+
+            }
+
+        }
+
+        private void NavigationMenuLocations()
+        {
+            Console.WriteLine("");
+            Console.WriteLine("----------------------");
+            Console.WriteLine("Locations Navigation bar");
+            Console.WriteLine("----------------------");
+            Console.WriteLine("1. List all locations");
+            Console.WriteLine("2. Add new location");
+            Console.WriteLine("3. Edit location");
+            Console.WriteLine("4. Delete location");
+            Console.WriteLine("5. Go back to navigation menu");
+            Console.WriteLine("--------------------------------");
+
+            ChooseNumberNavigationMenuLocations();
+
+        }
+
+        private void ChooseNumberNavigationMenuLocations()
+        {
+            switch (Utility.LoadInt("Enter your choice: "))
+            {
+                case 1:
+                    Console.WriteLine("");
+                    Console.WriteLine("-------------------");
+                    Console.WriteLine("Listing all locations");
+                    Console.WriteLine("-------------------");
+                    ShowAllLocations();
+                    NavigationMenuLocations();
+                    break;
+                case 2:
+                    Console.WriteLine("");
+                    Console.WriteLine("---------------");
+                    Console.WriteLine("Add new location:");
+                    Console.WriteLine("---------------");
+                    AddLocation();
+                    break;
+                case 3:
+                    Console.WriteLine("");
+                    Console.WriteLine("------------");
+                    Console.WriteLine("Edit location:");
+                    Console.WriteLine("------------");
+                    EditLocation();
+                    break;
+                case 4:
+                    Console.WriteLine("");
+                    Console.WriteLine("--------------");
+                    Console.WriteLine("Delete location:");
+                    Console.WriteLine("--------------");
+                    DeleteLocation();
+                    break;
+                case 5:
+                    Console.WriteLine("Going back to navigation menu");
+                    NavigationMenu();
+                    break;
+                default:
+                    Console.WriteLine("Invalid number!");
+                    NavigationMenu();
+                    break;
+            }
+
+        }
+
+        private void DeleteLocation()
+        {
+            int locationIndex = ValidateLocationSelection("delete");
+            Console.WriteLine("");
+
+            if (locationIndex != -1)
+            {
+                var location = Locations[locationIndex];
+
+                Locations.RemoveAt(locationIndex);
+
+                Console.WriteLine("");
+                Console.WriteLine($"{location} with ID {location.Id} deleted successfully.");
+            }
+
+            NavigationMenuLocations();
+
+        }
+
+        private void EditLocation()
+        {
+            int locationIndex = ValidateLocationSelection("edit");
+            Console.WriteLine("");
+
+            if (locationIndex != -1)
+            {
+                var location = Locations[locationIndex];
+
+                location.Id = Utility.LoadInt("Current: " + location.Id + " | New Id: ");
+                location.Name = Utility.LoadString("Current: " + location.Name + " | New name: ");
+                location.Description = Utility.LoadString("Current: " + location.Description + " | New description: ");
+
+                Console.WriteLine($"{location} with ID {location.Id} edited successfully");
+            }
+
+            NavigationMenuLocations();
+
+        }
+
+        private void AddLocation()
+        {
+            Locations.Add(new Location
+            {
+                Id = Utility.LoadInt("Add location ID: "),
+                Name = Utility.LoadString("Add location name: "),
+                Description = Utility.LoadString("Add location description: ")
+            });
+
+            Console.WriteLine("Location added successfully.");
+
+            NavigationMenuLocations();
+        }
+
+        private void ShowAllLocations()
+        {
+            var i = 0;
+            Locations.ForEach(location =>
+            {
+                Console.WriteLine(++i + ". " + location);
+            });
+
+        }
+
+        private int ValidateLocationSelection(string type)
+        {
+            if (Locations.Count == 0)
+            {
+                Console.WriteLine($"You can't {type} location, because there isn't one.");
+                return -1;
+            }
+
+            while (true)
+            {
+                ShowAllLocations();
+                int index = Utility.LoadInt($"Choose location you want to {type}: ") - 1;
+
+                if (index >= 0 && index < Locations.Count)
+                {
+                    return index;
+                }
+                else
+                {
+                    Console.WriteLine("Invalid location ID. Please choose an existing ID: ");
                 }
 
             }
