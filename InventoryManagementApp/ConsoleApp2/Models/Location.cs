@@ -1,0 +1,14 @@
+﻿namespace ConsoleApp2.Models
+{
+    internal class Location : Entity
+    {
+        public string Name { get; set; }
+        public string Description { get; set; }
+
+        public override string ToString()
+        {
+            return Name;
+        }
+
+    }
+}
