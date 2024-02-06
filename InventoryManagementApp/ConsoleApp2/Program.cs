@@ -1,11 +1,12 @@
-﻿
-
-namespace ConsoleApp2
+﻿namespace ConsoleApp2
 {
     internal class Program
     {
+        public ControllerLocation ControllerLocation { get; }
         public Program()
         {
+            ControllerLocation = new ControllerLocation();
+
             HelloMessage();
             NavigationMenu();
         }
@@ -13,9 +14,9 @@ namespace ConsoleApp2
         private void NavigationMenu()
         {
             Console.WriteLine("");
-            Console.WriteLine("--------------");
-            Console.WriteLine("Navigation bar");
-            Console.WriteLine("--------------");
+            Console.WriteLine("--------------------------------");
+            Console.WriteLine("        Navigation menu");
+            Console.WriteLine("--------------------------------");
             Console.WriteLine("1. Work with persons");
             Console.WriteLine("2. Work with locations");
             Console.WriteLine("3. Work with products");
@@ -28,7 +29,28 @@ namespace ConsoleApp2
 
         private void ChooseNumberNavigationMenu()
         {
+            Console.WriteLine("");
 
+            switch (Utility.LoadNumberRange("Choose number from navigation menu: ", "Choose correct!", 1, 5))
+            {
+                case 1:
+                    NavigationMenu();
+                    break;
+                case 2:
+                    ControllerLocation.NavigationMenu();
+                    NavigationMenu();
+                    break;
+                case 3:
+                    NavigationMenu();
+                    break;
+                case 4:
+                    NavigationMenu();
+                    break;
+                case 5:
+                    Console.WriteLine("You are exiting application. Goodbye.");
+                    break;
+
+            }
         }
 
         private void HelloMessage()

@@ -1,7 +1,38 @@
-﻿namespace ConsoleApp2
+﻿using System.Runtime.Versioning;
+
+namespace ConsoleApp2
 {
     internal class Utility
     {
+        public static int LoadNumberRange(string message, string error, int start, int end)
+        {
+            int input;
+
+            while (true)
+            {
+                Console.Write(message);
+
+                try
+                {
+                    input = int.Parse(Console.ReadLine());
+
+                    if (input >= start && input <= end)
+                    {
+                        return input;
+                    }
+                    else
+                    {
+                        Console.WriteLine(error);
+                    }
+                }
+                catch (Exception exception)
+                {
+                    Console.WriteLine(error);
+                }
+
+            }
+        }
+
         public static int LoadInt(string message)
         {
             while (true)
@@ -27,10 +58,9 @@
                     Console.WriteLine("Invalid input!");
                 }
             }
-
         }
 
-        public static string LoadString(string message)
+        public static string LoadString(string message, string error)
         {
             string input;
 
@@ -41,22 +71,25 @@
 
                 if (input.Trim().Length == 0)
                 {
-                    Console.WriteLine("Input is required");
+                    Console.WriteLine(error);
                     continue;
                 }
 
                 return input;
             }
-
         }
 
-        public static string ValidateString(string message)
+        public static string ValidateString(string message, string error)
         {
+            string input;
+
             while (true)
             {
+                Console.WriteLine(message);
+
                 try
                 {
-                    string input = LoadString(message);
+                    input = Console.ReadLine();
 
                     if (!string.IsNullOrEmpty(input) && input.Any(char.IsLetter))
                     {
@@ -64,16 +97,15 @@
                     }
                     else
                     {
-                        Console.WriteLine("Invalid input!");
+                        Console.WriteLine(error);
                     }
 
                 }
-                catch (Exception)
+                catch (Exception exception)
                 {
-                    Console.WriteLine("Invalid input!");
+                    Console.WriteLine(error);
                 }
             }
-
         }
 
         public static bool LoadBool(string message)
@@ -97,7 +129,6 @@
                         continue;
                 }
             }
-
         }
 
         public static float LoadFloat(string message)
@@ -126,7 +157,11 @@
                     Console.WriteLine("Invalid input!");
                 }
             }
+        }
 
+        public static int ValidateId()
+        {
+            return 0;
         }
 
 
