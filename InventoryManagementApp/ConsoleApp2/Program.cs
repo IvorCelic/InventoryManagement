@@ -3,9 +3,12 @@
     internal class Program
     {
         public ControllerLocation ControllerLocation { get; }
+        public ControllerProduct ControllerProduct { get; }
+
         public Program()
         {
             ControllerLocation = new ControllerLocation();
+            ControllerProduct = new ControllerProduct();
 
             HelloMessage();
             NavigationMenu();
@@ -41,6 +44,7 @@
                     NavigationMenu();
                     break;
                 case 3:
+                    ControllerProduct.NavigationMenu();
                     NavigationMenu();
                     break;
                 case 4:
