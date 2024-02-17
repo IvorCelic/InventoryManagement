@@ -48,7 +48,7 @@ namespace ConsoleApp2
                     NavigationMenu();
                     break;
                 case 3:
-                    EditLocation();
+                    EditProduct();
                     NavigationMenu();
                     break;
                 case 4:
@@ -64,12 +64,58 @@ namespace ConsoleApp2
 
         private void DeleteProduct()
         {
-            throw new NotImplementedException();
+            if (Products.Count > 0)
+            {
+                Console.WriteLine("");
+                Console.WriteLine("--------------");
+                Console.WriteLine("delete product");
+                Console.WriteLine("--------------");
+
+                ListAllProducts();
+                Console.WriteLine("");
+
+                int index = Utility.LoadNumberRange("Choose product to delete: ", "Choose correct!", 1, Products.Count);
+                Products.RemoveAt(index - 1);
+
+                Console.WriteLine("");
+                Console.WriteLine("Product successfully deleted.");
+            }
+            else
+            {
+                Console.WriteLine("");
+                Console.WriteLine("Currently there are no products to delete.");
+            }
         }
 
-        private void EditLocation()
+        private void EditProduct()
         {
-            throw new NotImplementedException();
+            if (Products.Count > 0)
+            {
+                Console.WriteLine("");
+                Console.WriteLine("------------");
+                Console.WriteLine("edit product");
+                Console.WriteLine("------------");
+
+                ListAllProducts();
+                Console.WriteLine("");
+
+                int input = Utility.LoadNumberRange("Choose product to edit: ", "Choose correct!", 1, Products.Count);
+                var product = Products[input - 1];
+
+                product.Id = Utility.ValidateId($"Current ID: {product.Id}" + " | New ID: ", Products, p => p.Id, product.Id, "Input must be whole positive number!");
+                product.Name = Utility.LoadString($"Current name: {product.Name}" + " | New name: ", "Input required!");
+                product.Description = Utility.LoadString($"Current description: {product.Description}" + " | New description: ", "Input required!");
+                product.IsUnique = Utility.LoadBool($"Current uniqueness: {product.Name}" + " | New name: ", "Input required!");
+
+                Console.WriteLine("");
+                Console.WriteLine("Product edited successfully.");
+            }
+            else
+            {
+                Console.WriteLine("");
+                Console.WriteLine("Currently there are no products to edit.");
+            }
+
         }
 
         private void AddNewProduct()
@@ -81,11 +127,13 @@ namespace ConsoleApp2
 
             var product = new Product();
 
-            product.Id = Utility.ValidateId();
+            product.Id = Utility.ValidateId("Add productID: ", Products, p => p.Id, product.Id, "Input must be whole positive number!");
             product.Name = Utility.LoadString("Add product name: ", "Input required!");
+            product.Description = Utility.LoadString("add product description: ", "Input required!");
+            product.IsUnique = Utility.LoadBool("Choose is product unique or no.", "Choose correct!");
 
             Console.WriteLine("");
-            Console.WriteLine("Location added successfully.");
+            Console.WriteLine("Product added successfully.");
 
             Products.Add(product);
         }

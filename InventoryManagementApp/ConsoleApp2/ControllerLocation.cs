@@ -59,41 +59,56 @@ namespace ConsoleApp2
 
         private void DeleteLocation()
         {
-            Console.WriteLine("");
-            Console.WriteLine("---------------");
-            Console.WriteLine("delete location");
-            Console.WriteLine("---------------");
+            if (Locations.Count > 0)
+            {
+                Console.WriteLine("");
+                Console.WriteLine("---------------");
+                Console.WriteLine("delete location");
+                Console.WriteLine("---------------");
 
-            ListAllLocations();
-            Console.WriteLine("");
+                ListAllLocations();
+                Console.WriteLine("");
 
-            int input = Utility.LoadNumberRange("Choose location to edit: ", "Choose correct!", 1, Locations.Count);
+                int input = Utility.LoadNumberRange("Choose location to edit: ", "Choose correct!", 1, Locations.Count);
+                Locations.RemoveAt(input - 1);
 
-            Console.WriteLine("");
-            Console.WriteLine("Location deleted successfully.");
+                Console.WriteLine("");
+                Console.WriteLine("Location deleted successfully.");
 
-            Locations.RemoveAt(input - 1);
+            }
+            else
+            {
+                Console.WriteLine("");
+                Console.WriteLine("Currently there are no locations to delete.");
+            }
         }
 
         private void EditLocation()
         {
-            Console.WriteLine("");
-            Console.WriteLine("-------------");
-            Console.WriteLine("edit location");
-            Console.WriteLine("-------------");
+            if (Locations.Count > 0)
+            {
+                Console.WriteLine("");
+                Console.WriteLine("-------------");
+                Console.WriteLine("edit location");
+                Console.WriteLine("-------------");
 
-            ListAllLocations();
-            Console.WriteLine("");
+                ListAllLocations();
+                Console.WriteLine("");
 
-            int input = Utility.LoadNumberRange("Choose location to edit: ", "Choose correct!", 1, Locations.Count);
-            var location = Locations[input - 1];
+                int input = Utility.LoadNumberRange("Choose location to edit: ", "Choose correct!", 1, Locations.Count);
+                var location = Locations[input - 1];
 
-            location.Name = Utility.LoadString($"Current name: {location.Name}" + " | New name: ", "Input required!");
+                location.Id = Utility.ValidateId($"Current ID: {location.Id}" + " | New ID: ", Locations, l => l.Id, location.Id, "Input must be whole positive number!");
+                location.Name = Utility.LoadString($"Current name: {location.Name}" + " | New name: ", "Input required!");
 
-            Console.WriteLine("");
-            Console.WriteLine("Location edited successfully.");
-
-
+                Console.WriteLine("");
+                Console.WriteLine("Location edited successfully.");
+            }
+            else
+            {
+                Console.WriteLine("");
+                Console.WriteLine("Currently there are no locations to edit.");
+            }
         }
 
         private void AddNewLocation()
@@ -105,7 +120,7 @@ namespace ConsoleApp2
 
             var location = new Location();
 
-            location.Id = Utility.ValidateId();
+            location.Id = Utility.ValidateId("Add location ID: ", Locations, l => l.Id, location.Id, "Input must be whole positive number!" );
             location.Name = Utility.LoadString("Add location name: ", "Input required!");
 
             Console.WriteLine("");

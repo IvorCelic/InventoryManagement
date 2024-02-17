@@ -25,7 +25,7 @@ namespace ConsoleApp2
                         Console.WriteLine(error);
                     }
                 }
-                catch (Exception exception)
+                catch (Exception ex)
                 {
                     Console.WriteLine(error);
                 }
@@ -33,7 +33,7 @@ namespace ConsoleApp2
             }
         }
 
-        public static int LoadInt(string message)
+        public static int LoadInt(string message, string error)
         {
             while (true)
             {
@@ -49,13 +49,13 @@ namespace ConsoleApp2
                     }
                     else
                     {
-                        Console.WriteLine("Invalid number!");
+                        Console.WriteLine(error);
                     }
 
                 }
                 catch (Exception)
                 {
-                    Console.WriteLine("Invalid input!");
+                    Console.WriteLine(error);
                 }
             }
         }
@@ -108,7 +108,7 @@ namespace ConsoleApp2
             }
         }
 
-        public static bool LoadBool(string message)
+        public static bool LoadBool(string message, string error)
         {
             Console.WriteLine(message);
             Console.WriteLine("1. Yes");
@@ -116,7 +116,7 @@ namespace ConsoleApp2
 
             while (true)
             {
-                int input = LoadInt("Enter your choice (1 or 2): ");
+                int input = LoadInt("Enter your choice (1 or 2): ", error);
 
                 switch (input)
                 {
@@ -125,7 +125,7 @@ namespace ConsoleApp2
                     case 2:
                         return false;
                     default:
-                        Console.WriteLine("You can choose 1 or 2!");
+                        Console.WriteLine(error);
                         continue;
                 }
             }
@@ -159,9 +159,21 @@ namespace ConsoleApp2
             }
         }
 
-        public static int ValidateId()
+        public static int ValidateId<T>(string message, List<T> entities, Func<T, int> getId, int currentId, string error)
         {
-            return 0;
+            int input;
+
+            while (true)
+            {
+                input = LoadInt(message, error);
+
+                if ((currentId == input) || (!entities.Any(entitet => getId(entitet) == input)))
+                {
+                    return input;
+                }
+
+                Console.WriteLine("ID already exists. Choose another one.");
+            }
         }
 
 
