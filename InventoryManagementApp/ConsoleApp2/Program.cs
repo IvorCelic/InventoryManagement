@@ -4,11 +4,13 @@
     {
         public ControllerLocation ControllerLocation { get; }
         public ControllerProduct ControllerProduct { get; }
+        private ControllerProductLocation ControllerProductLocation { get; set; }
 
         public Program()
         {
             ControllerLocation = new ControllerLocation();
             ControllerProduct = new ControllerProduct();
+            ControllerProductLocation = new ControllerProductLocation(this);
 
             HelloMessage();
             NavigationMenu();
