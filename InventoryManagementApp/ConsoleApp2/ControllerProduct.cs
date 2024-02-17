@@ -127,7 +127,7 @@ namespace ConsoleApp2
 
             var product = new Product();
 
-            product.Id = Utility.ValidateId("Add productID: ", Products, p => p.Id, product.Id, "Input must be whole positive number!");
+            product.Id = Utility.ValidateId("Add product ID: ", Products, p => p.Id, product.Id, "Input must be whole positive number!");
             product.Name = Utility.LoadString("Add product name: ", "Input required!");
             product.Description = Utility.LoadString("add product description: ", "Input required!");
             product.IsUnique = Utility.LoadBool("Choose is product unique or no.", "Choose correct!");
