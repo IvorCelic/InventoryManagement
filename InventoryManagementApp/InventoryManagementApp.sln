@@ -5,7 +5,9 @@ VisualStudioVersion = 17.8.34408.163
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleApp1", "ConsoleApp1\ConsoleApp1.csproj", "{EAEEFDDC-23CF-4BE7-B997-85611D1F0751}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp2", "ConsoleApp2\ConsoleApp2.csproj", "{D322369A-551A-48BD-9D56-261D04101563}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleApp2", "ConsoleApp2\ConsoleApp2.csproj", "{D322369A-551A-48BD-9D56-261D04101563}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InventoryManagementAPP", "InventoryManagementAPP\InventoryManagementAPP.csproj", "{2893439A-8C42-4813-8EE4-E5534F8F131F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{D322369A-551A-48BD-9D56-261D04101563}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D322369A-551A-48BD-9D56-261D04101563}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D322369A-551A-48BD-9D56-261D04101563}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2893439A-8C42-4813-8EE4-E5534F8F131F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2893439A-8C42-4813-8EE4-E5534F8F131F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2893439A-8C42-4813-8EE4-E5534F8F131F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2893439A-8C42-4813-8EE4-E5534F8F131F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
