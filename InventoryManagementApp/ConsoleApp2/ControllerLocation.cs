@@ -51,7 +51,7 @@ namespace ConsoleApp2
                     NavigationMenu();
                     break;
                 case 5:
-                    Console.WriteLine("You are exiting application. Goodbye.");
+                    Console.WriteLine("Going back to navigation menu.");
                     break;
 
             }

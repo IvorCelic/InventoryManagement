@@ -46,24 +46,20 @@ namespace ConsoleApp2
             switch (Utility.LoadNumberRange("Choose number from navigation menu: ", "Choose correct!", 1, 5))
             {
                 case 1:
-                    ListAllPersons();
                     NavigationMenu();
                     break;
                 case 2:
                     Console.WriteLine("");
-                    AddNewPerson();
                     NavigationMenu();
                     break;
                 case 3:
-                    EditPerson();
                     NavigationMenu();
                     break;
                 case 4:
-                    DeletePerson();
                     NavigationMenu();
                     break;
                 case 5:
-                    Console.WriteLine("You are exiting application. Goodbye.");
+                    Console.WriteLine("Going back to navigation menu.");
                     break;
 
             }
