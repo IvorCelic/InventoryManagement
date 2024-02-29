@@ -1,4 +1,6 @@
-﻿using System.Reflection;
+﻿using InventoryManagementAPP.Data;
+using Microsoft.EntityFrameworkCore;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -36,13 +38,22 @@ builder.Services.AddSwaggerGen(sgo =>
     sgo.IncludeXmlComments(xmlPath, includeControllerXmlComments: true);
 });
 
+// Adding database
+builder.Services.AddDbContext<InventoryManagementContext>(o => 
+    o.UseSqlServer(builder.Configuration.GetConnectionString(name: "InventoryManagementContext"))
+);
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    // Possibility generating call of route in CMD and Powershell
+    app.UseSwaggerUI(options =>
+    {
+        options.ConfigObject.AdditionalItems.Add("requestSnippetsEnabled", true);
+    });
 }
 
 app.UseHttpsRedirection();

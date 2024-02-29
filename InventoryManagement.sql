@@ -1,13 +1,12 @@
 use master;
-drop database if exists Inventura;
 go
-create database InventoryManagment;
+drop database if exists InventoryManagement;
 go
-alter database InventoryManagment collate Croatian_CI_AS;
+create database InventoryManagement;
 go
-use InventoryManagment;
+alter database InventoryManagement collate Croatian_CI_AS;
 go
-
+use InventoryManagement;
 
 create table Persons (
     Id int primary key identity (1, 1) not null,
@@ -22,7 +21,7 @@ create table Products (
     Name varchar(50) not null,
     Description varchar(100) null,
     IsUnitary bit not null,
-    Person int references OSOBE (Osoba_ID) not null
+    Person int references Persons (Id) not null
 );
 
 create table Locations (
@@ -36,9 +35,9 @@ create table ProductsLocations (
     Quantity int not null,
     Price decimal not null,
     Description varchar(255) null,
-    Product int references SREDSTVA (Sredstvo_ID) not null,
-    Location int references LOKACIJE (Lokacija_ID) not null,
-    Person int references OSOBE (Osoba_ID) not null
+    Product int references Products (Id) not null,
+    Location int references Locations (Id) not null,
+    Person int references Persons (Id) not null
 );
 
 
@@ -51,12 +50,12 @@ insert into Persons (FirstName, LastName, Email, Password) values
     ('Tomislav', 'Jakopec', 'tjakopec@gmail.com', 'TomoCar123'),
     ('Pero', 'Đurić', 'peroduric@gmail.com', 'lozinka');
 
-insert into SREDSTVA (Name, Description, IsUnitary, Person) values
+insert into Products (Name, Description, IsUnitary, Person) values
     ('Cannon LBP6650', 'Printer crno-bijeli', 0, 1),
     ('T-shirt', 'Majice sa EPSO 2023', 1, 2),
     ('Rama za 100m', 'Drvena rama', 1, 1);
 
-insert into LOKACIJE (Name, Description) values
+insert into Locations (Name, Description) values
     ('46', 'El.mete, ekrani, televizori'),
     ('41', 'Metalurgija, rame...'),
     ('24', 'Printeri, monitori, stativi, projektori, mete, uredski materijal...'),
@@ -72,7 +71,7 @@ insert into ProductsLocations (Quantity, Price, Description, Product, Location, 
 
 ---------- SELECT ----------
 
-select a.IsUnitary, a.Price, a.Description, b.Name as 'Naziv sredstva', c.Name as 'Skladište', CONCAT(d.FirstName, ' ', d.LastName) as 'Osoba'
+select b.IsUnitary, a.Price, a.Description, b.Name as 'Product name', c.Name as 'Location', CONCAT(d.FirstName, ' ', d.LastName) as 'Operator'
 from ProductsLocations a
 inner join Products b on a.Id=b.Id
 inner join Locations c on a.Id=c.Id
