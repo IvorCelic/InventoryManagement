@@ -46,20 +46,25 @@ builder.Services.AddDbContext<InventoryManagementContext>(o =>
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
+//if (app.Environment.IsDevelopment())
+//{
     app.UseSwagger();
     // Possibility generating call of route in CMD and Powershell
     app.UseSwaggerUI(options =>
     {
         options.ConfigObject.AdditionalItems.Add("requestSnippetsEnabled", true);
     });
-}
+//}
 
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
 app.MapControllers();
+
+// Needed for production
+app.UseDefaultFiles();
+app.UseDeveloperExceptionPage();
+app.MapFallbackToFile("index.html");
 
 app.Run();

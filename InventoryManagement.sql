@@ -1,12 +1,29 @@
-use master;
-go
-drop database if exists InventoryManagement;
-go
-create database InventoryManagement;
-go
-alter database InventoryManagement collate Croatian_CI_AS;
-go
-use InventoryManagement;
+-- For local use
+--use master;
+--go
+--drop database if exists InventoryManagement;
+--go
+--create database InventoryManagement;
+--go
+--alter database InventoryManagement collate Croatian_CI_AS;
+--go
+--use InventoryManagement;
+
+
+-- For production use
+SELECT name, collation_name FROM sys.databases;
+GO
+-- Doma primjeniti na ime svoje baze 3 puta
+ALTER DATABASE db_aa5e80_ivorcelic SET SINGLE_USER WITH
+ROLLBACK IMMEDIATE;
+GO
+ALTER DATABASE db_aa5e80_ivorcelic COLLATE Croatian_CI_AS;
+GO
+ALTER DATABASE db_aa5e80_ivorcelic SET MULTI_USER;
+GO
+SELECT name, collation_name FROM sys.databases;
+GO
+
 
 create table Persons (
     Id int primary key identity (1, 1) not null,
