@@ -3,12 +3,12 @@
 namespace InventoryManagementAPP.Models
 {
     /// <summary>
-    /// Ovo je vršna nad klasa koja služi za osnovne atribute tipa šifra, operater, datum unosa, promjene, itd.
+    /// Represents the top-level base class containing fundamental attributes such as code, operator, entry date, changes, etc.
     /// </summary>
     public abstract class Entity
     {
         /// <summary>
-        /// This attribute is primary key in database with generating value identities (1, 1)
+        /// Gets or sets the primary key attribute in the database with generating value identities (1, 1).
         /// </summary>
         [Key]
         public int? Id { get; set; }

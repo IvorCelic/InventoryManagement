@@ -38,6 +38,15 @@ builder.Services.AddSwaggerGen(sgo =>
     sgo.IncludeXmlComments(xmlPath, includeControllerXmlComments: true);
 });
 
+// Everyone from everywhere can connect on our API
+builder.Services.AddCors(opcije =>
+{
+    opcije.AddPolicy("CorsPolicy",
+        builder =>
+            builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()
+            );
+});
+
 // Adding database
 builder.Services.AddDbContext<InventoryManagementContext>(o => 
     o.UseSqlServer(builder.Configuration.GetConnectionString(name: "InventoryManagementContext"))
@@ -61,6 +70,8 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseCors("CorsPolicy");
 
 // Needed for production
 app.UseDefaultFiles();

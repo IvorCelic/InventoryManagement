@@ -3,18 +3,18 @@
 namespace InventoryManagementAPP.Models
 {
     /// <summary>
-    /// This is POCO class which is mapped to the database
+    /// Represents a Plain Old CLR Object (POCO) class mapped to the database for managing locations.
     /// </summary>
     public class Location : Entity
     {
         /// <summary>
-        /// Name in database
+        /// Gets or sets the name of the location in the database.
         /// </summary>
         [Required(ErrorMessage = "Name required!")]
         public string? Name { get; set; }
 
         /// <summary>
-        /// Description in database
+        /// Gets or sets the description of the location in the database.
         /// </summary>
         public string? Description { get; set; }
     }

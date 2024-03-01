@@ -66,7 +66,7 @@ namespace InventoryManagementAPP.Controllers
         }
 
         /// <summary>
-        /// Adds a new location to the database.
+        /// Creates a new location.
         /// </summary>
         /// <remarks>
         /// Sample request:
@@ -103,7 +103,7 @@ namespace InventoryManagementAPP.Controllers
         }
 
         /// <summary>
-        /// Updates the data of an existing location in the database.
+        /// Updates the data of an existing location.
         /// </summary>
         /// <param name="id">The ID of the location to update.</param>
         /// <param name="location">The updated location data in JSON format.</param>
@@ -147,7 +147,7 @@ namespace InventoryManagementAPP.Controllers
         }
 
         /// <summary>
-        /// Deletes the specified location from the database.
+        /// Deletes the specified location.
         /// </summary>
         /// <param name="id">The ID of the location to delete.</param>
         /// <returns>Returns a message indicating successful deletion.</returns>
