@@ -71,6 +71,8 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+app.UseStaticFiles();
+
 app.UseCors("CorsPolicy");
 
 // Needed for production
