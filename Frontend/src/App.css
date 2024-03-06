@@ -4,4 +4,10 @@
 
 .myButton {
     width: 100%;
+    margin-top: 5rem;
+    margin-bottom: 0.5rem;
+}
+
+.btn-success {
+    background-color: #abcc5e;
 }
