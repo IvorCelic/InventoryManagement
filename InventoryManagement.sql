@@ -76,7 +76,10 @@ insert into Locations (Name, Description) values
     ('46', 'El.mete, ekrani, televizori'),
     ('41', 'Metalurgija, rame...'),
     ('24', 'Printeri, monitori, stativi, projektori, mete, uredski materijal...'),
-    ('26', 'Alati');
+    ('26', 'Alati'),
+    ('lokacija 1', 'opis 1'),
+    ('lokacija 2', 'opis 2'),
+    ('lokacija 3', 'opis 3');
 
 insert into ProductsLocations (Quantity, Price, Description, Product, Location, Person) values
     (1, 1000, null, 1, 3, 1),

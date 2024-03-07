@@ -19,15 +19,24 @@ export default function Locations() {
             });
     }
 
+    async function handleLocationDelete(id) {
+        const response = await LocationService.deleteLocation(id)
+        if (response.ok) {
+            console.log(response.message);
+            fetchLocations();
+        }
+    }
+
     useEffect(() => {
         fetchLocations();
     }, []);
+
 
     return (
         <Container>
             <Link
                 to={RoutesNames.LOCATIONS_NEW}
-                className="btn btn-primary myButton"
+                className="btn btn-primary myButton addButton"
             >
                 <GrFormAdd
                     size={30}
@@ -50,20 +59,22 @@ export default function Locations() {
                                 <Container
                                     className="d-flex justify-content-center"
                                 >
-                                    <Link
-                                        className="me-2"
+                                    <Button
+                                        variant="link"
+                                        className="me-2 actionButton"
                                     >
                                         <FaEdit
                                             size={25}
                                         />
-                                    </Link>
-                                    <Link
-                                        className='link-danger'
+                                    </Button>
+                                    <Button
+                                        className='link-danger actionButton'
+                                        onClick={() => handleLocationDelete(location.id)}
                                     >
                                         <FaTrash
                                             size={25}
                                         />
-                                    </Link>
+                                    </Button>
                                 </Container>
                             </td>
                         </tr>

@@ -5,7 +5,7 @@ async function getLocations() {
     return await httpService.get('/Location')
     .then((res) => {
         if (App.DEV) console.table(res.data);
-        
+
         return res;
     })
     .catch((e) => {
@@ -13,6 +13,17 @@ async function getLocations() {
     });
 }
 
+async function deleteLocation(id) {
+    return await httpService.delete('/Location/' + id)
+    .then((res) => {        
+        return {ok: true, message: res};
+    })
+    .catch((e) => {
+        console.log(e);
+    });
+}
+
 export default {
-    getLocations
+    getLocations,
+    deleteLocation
 }
