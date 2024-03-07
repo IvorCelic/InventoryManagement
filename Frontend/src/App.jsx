@@ -14,12 +14,10 @@ function App() {
 
   return (
     <>
-      <Routes>
-          <Route path={RoutesNames.LOGIN} element={<Login />} />
-      </Routes>
       <NavBar />
       <Routes>
         <>
+        <Route path={RoutesNames.LOGIN} element={<Login />} />
           <Route path={RoutesNames.HOME} element={<Home />} />
 
           <Route path={RoutesNames.LOCATIONS_LIST} element={<Locations />} />
