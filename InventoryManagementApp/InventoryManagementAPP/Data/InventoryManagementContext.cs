@@ -25,6 +25,6 @@ namespace InventoryManagementAPP.Data
         /// <summary>
         /// Gets or sets the dataset representing persons in the database.
         /// </summary>
-        public DbSet<Person> Persons { get; set; }
+        public DbSet<User> Users { get; set; }
     }
 }
