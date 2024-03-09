@@ -3,7 +3,8 @@ export const RoutesNames = {
     HOME: 'home',
 
     LOCATIONS_LIST: '/locations',
-    LOCATIONS_NEW: '/locations/add',
+    LOCATIONS_CREATE: '/locations/add',
+    LOCATIONS_EDIT: '/locations/:id',
 
     PERSONS_LIST: '/persons',
 

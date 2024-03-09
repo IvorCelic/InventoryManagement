@@ -8,6 +8,7 @@ import { RoutesNames } from "../../constants";
 
 export default function Locations() {
     const [locations, setLocations] = useState();
+    const navigate = useNavigate();
 
     async function fetchLocations() {
         await LocationService.getLocations()
@@ -22,7 +23,7 @@ export default function Locations() {
     async function handleLocationDelete(id) {
         const response = await LocationService.deleteLocation(id)
         if (response.ok) {
-            console.log(response.message);
+            alert(response.message.data.message);
             fetchLocations();
         }
     }
@@ -35,7 +36,7 @@ export default function Locations() {
     return (
         <Container>
             <Link
-                to={RoutesNames.LOCATIONS_NEW}
+                to={RoutesNames.LOCATIONS_CREATE}
                 className="btn btn-primary myButton addButton"
             >
                 <GrFormAdd
@@ -62,6 +63,7 @@ export default function Locations() {
                                     <Button
                                         variant="link"
                                         className="me-2 actionButton"
+                                        onClick={() => {navigate(`/locations/${location.id}`)}}
                                     >
                                         <FaEdit
                                             size={25}

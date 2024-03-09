@@ -8,7 +8,8 @@ import Locations from './pages/locations/Locations'
 import Products from './pages/products/Products'
 import Persons from './pages/persons/Persons'
 import Login from './pages/Login'
-import LocationsAdd from './pages/locations/LocationsAdd';
+import LocationsCreate from './pages/locations/LocationsCreate';
+import LocationsEdit from './pages/locations/LocationsEdit';
 
 function App() {
 
@@ -21,7 +22,8 @@ function App() {
           <Route path={RoutesNames.HOME} element={<Home />} />
 
           <Route path={RoutesNames.LOCATIONS_LIST} element={<Locations />} />
-          <Route path={RoutesNames.LOCATIONS_NEW} element={<LocationsAdd />} />
+          <Route path={RoutesNames.LOCATIONS_CREATE} element={<LocationsCreate />} />
+          <Route path={RoutesNames.LOCATIONS_EDIT} element={<LocationsEdit />} />
 
           <Route path={RoutesNames.PRODUCTS_LIST} element={<Products />} />
           <Route path={RoutesNames.PERSONS_LIST} element={<Persons />} />
