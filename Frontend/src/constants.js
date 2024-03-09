@@ -7,8 +7,11 @@ export const RoutesNames = {
     LOCATIONS_EDIT: '/locations/:id',
 
     PERSONS_LIST: '/persons',
+    PERSONS_CREATE: '/persons/add',
+    PERSONS_EDIT: '/persons/:id',
 
     PRODUCTS_LIST: '/products'
+
 }
 
 export const App = {

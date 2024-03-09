@@ -1,7 +1,7 @@
 import { App } from "../constants";
 import { httpService } from "./httpService";
 
-const entityName = 'Location'
+const entityName = 'Person';
 
 async function get() {
     return await httpService.get('/' + entityName)
@@ -17,23 +17,25 @@ async function get() {
 
 async function remove(id) {
     return await httpService.delete('/' + entityName + '/' + id)
-        .then((res) => {
-            return { ok: true, message: res };
-        })
-        .catch((error) => {
-            console.log(error);
-        });
+    .then((res) => {
+        return { ok: true, message: res};
+    })
+    .catch((error) => {
+        console.log(error);
+    });
 }
 
 async function add(entity) {
-    const response = await httpService.post('/' + entityName, entity)
-        .then(() => {
-            return { ok: true, message: entityName + ' added successfully.' }
-        })
-        .catch((error) => {
-            console.log(error.response.data.errors);
-            return { ok: false, message: 'Error' }
-        });
+    const response = await httpService
+    .post('/' + entityName, entity)
+    .then(() => {
+        console.log('Added' + entityName)
+        return { ok: true, message: entityName + ' added successfully.'}
+    })
+    .catch((error) => {
+        console.log(error);
+        return { ok: false, message: error.response.data};
+    });
 
     return response;
 }

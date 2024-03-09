@@ -10,6 +10,8 @@ import Persons from './pages/persons/Persons'
 import Login from './pages/Login'
 import LocationsCreate from './pages/locations/LocationsCreate';
 import LocationsEdit from './pages/locations/LocationsEdit';
+import PersonsCreate from './pages/persons/PersonsCreate';
+import PersonsEdit from './pages/persons/PersonsEdit';
 
 function App() {
 
@@ -24,9 +26,13 @@ function App() {
           <Route path={RoutesNames.LOCATIONS_LIST} element={<Locations />} />
           <Route path={RoutesNames.LOCATIONS_CREATE} element={<LocationsCreate />} />
           <Route path={RoutesNames.LOCATIONS_EDIT} element={<LocationsEdit />} />
+          
+          <Route path={RoutesNames.PERSONS_LIST} element={<Persons />} />
+          <Route path={RoutesNames.PERSONS_CREATE} element={<PersonsCreate />} />
+          <Route path={RoutesNames.PERSONS_EDIT} element={<PersonsEdit />} />
 
           <Route path={RoutesNames.PRODUCTS_LIST} element={<Products />} />
-          <Route path={RoutesNames.PERSONS_LIST} element={<Persons />} />
+
         </>
       </Routes>
     </>

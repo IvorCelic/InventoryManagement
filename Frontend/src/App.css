@@ -28,8 +28,11 @@
 .searchInput {
     width: 90%;
     margin-left: 0.5rem;
+    border-color: initial;
 }
 
-.searchInput::selection {
-    border: none;
+.searchInput:focus {
+    outline: none;
+    border-color: #0d6efd!important;
+    border-width: 0.15rem !important;
 }

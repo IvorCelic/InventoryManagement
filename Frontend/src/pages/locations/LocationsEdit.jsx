@@ -4,10 +4,11 @@ import { RoutesNames } from "../../constants";
 import LocationService from "../../services/LocationService";
 import { useEffect, useState } from "react";
 
-export default function LocationsCreate(){
+export default function LocationsEdit(){
     const navigate = useNavigate();
     const routeParams = useParams();
     const [location, setLocation] = useState({});
+    const entityName = 'location'
 
     async function fetchLocation() {
         await LocationService.getById(routeParams.id)
@@ -23,8 +24,8 @@ export default function LocationsCreate(){
         fetchLocation();
     }, []);
 
-    async function editLocation(location) {
-        const response = await LocationService.editLocation(routeParams.id, location);
+    async function editLocation(entityName) {
+        const response = await LocationService.edit(routeParams.id, entityName);
         if (response.ok) {
             navigate(RoutesNames.LOCATIONS_LIST);
         }
@@ -38,13 +39,13 @@ export default function LocationsCreate(){
         error.preventDefault();
         const data = new FormData(error.target)
 
-        const location =
+        const entityName =
         {
             name: data.get('name'),
             description: data.get('description')
         };
 
-        editLocation(location);
+        editLocation(entityName);
     }
 
     return (
@@ -63,8 +64,8 @@ export default function LocationsCreate(){
                         name="name"
                     />
                 </Form.Group>
-                <Form.Group controlId="description">
-                    <Form.Label>Description</Form.Label>
+                <Form.Group controlId="description" >
+                    <Form.Label className="pt-4">Description</Form.Label>
                     <Form.Control 
                         type="text"
                         defaultValue={location.description}
@@ -83,7 +84,7 @@ export default function LocationsCreate(){
                             variant="primary"
                             type="submit"
                         >
-                            Edit location
+                            Save changes
                         </Button>
                     </Col>
                 </Row>

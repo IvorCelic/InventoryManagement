@@ -5,9 +5,10 @@ import LocationService from "../../services/LocationService";
 
 export default function LocationsCreate(){
     const navigate = useNavigate();
+    const entityName = 'location'
 
-    async function addLocation(location) {
-        const response = await LocationService.addLocation(location);
+    async function addLocation(entityName) {
+        const response = await LocationService.add(entityName);
         if (response.ok) {
             navigate(RoutesNames.LOCATIONS_LIST);
         }
@@ -21,19 +22,19 @@ export default function LocationsCreate(){
         error.preventDefault();
         const data = new FormData(error.target)
 
-        const location =
+        const entityName =
         {
             name: data.get('name'),
             description: data.get('description')
         };
 
-        addLocation(location);
+        addLocation(entityName);
     }
 
     return (
         <Container>
         <Container className="square border mt-5">
-            <h2 className="mt-5 ms-5">Add new location</h2>
+            <h2 className="mt-5 ms-5">Add new {entityName}</h2>
            <Form
             className="m-5" 
             onSubmit={handleSubmit}
@@ -54,19 +55,19 @@ export default function LocationsCreate(){
                         name="description"
                     />
                 </Form.Group>
-                <Row>
-                    <Col>
+                <Row className="mb-0 flex-column flex-sm-row">
+                    <Col className="d-flex align-items-center mb-2 mb-sm-0">
                         <Link 
                         className="btn btn-danger myButton"
                         to={RoutesNames.LOCATIONS_LIST}>Cancel</Link>
                     </Col>
-                    <Col>
+                    <Col className="d-flex align-items-center">
                         <Button
                             className="myButton"
                             variant="primary"
                             type="submit"
                         >
-                            Add location
+                            Add {entityName}
                         </Button>
                     </Col>
                 </Row>

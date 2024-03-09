@@ -1,17 +1,17 @@
 import { useEffect, useState } from "react";
-import { Button, Col, Container, Row, Table } from "react-bootstrap";
-import { Link, useNavigate } from "react-router-dom";
-import { FaEdit, FaSearch, FaTrash } from "react-icons/fa";
+import { Button, Container, Table } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
+import { FaEdit, FaTrash } from "react-icons/fa";
 import LocationService from "../../services/LocationService";
-import { GrFormAdd } from "react-icons/gr";
 import { RoutesNames } from "../../constants";
+import SearchAndAdd from "../../components/SearchAndAdd";
 
 export default function Locations() {
     const [locations, setLocations] = useState();
     const navigate = useNavigate();
 
     async function fetchLocations() {
-        await LocationService.getLocations()
+        await LocationService.get()
             .then((res) => {
                 setLocations(res.data);
             })
@@ -20,8 +20,8 @@ export default function Locations() {
             });
     }
 
-    async function handleLocationDelete(id) {
-        const response = await LocationService.deleteLocation(id)
+    async function removeLocation(id) {
+        const response = await LocationService.remove(id)
         if (response.ok) {
             alert(response.message.data.message);
             fetchLocations();
@@ -34,22 +34,8 @@ export default function Locations() {
 
     return (
         <Container>
-            <Container className="mt-5">
-                <Row>
-                    <Col lg="4" className="d-flex align-items-center">
-                        <FaSearch />
-                            <input
-                                type="text"
-                                className="border-0 border-bottom searchInput"
-                                placeholder="Search"
-                            />
-                    </Col>
-                    <Col className="d-flex align-items-center">
-                        <Link to={RoutesNames.LOCATIONS_CREATE} className="btn btn-primary addButton">
-                            <GrFormAdd size={22} /> Add new location
-                        </Link>
-                    </Col>
-                </Row>
+            <Container>
+                <SearchAndAdd RouteName={RoutesNames.LOCATIONS_CREATE} entity={"location"}/>
             </Container>
             <Table striped bordered hover responsive>
                 <thead>
@@ -79,7 +65,7 @@ export default function Locations() {
                                     </Button>
                                     <Button
                                         className='link-danger actionButton'
-                                        onClick={() => handleLocationDelete(location.id)}
+                                        onClick={() => removeLocation(location.id)}
                                     >
                                         <FaTrash
                                             size={25}
