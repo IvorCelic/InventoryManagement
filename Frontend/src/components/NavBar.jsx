@@ -10,7 +10,7 @@ function NavBar() {
 
     return (
         <>
-            <Navbar bg="dark" data-bs-theme="dark">
+            <Navbar expand="lg" bg="dark" data-bs-theme="dark" className="mb-5">
                 <Container>
                     <Navbar.Brand
                         className="linkHome"
@@ -18,6 +18,8 @@ function NavBar() {
                     >
                         Inventory Management APP
                     </Navbar.Brand>
+                    <Navbar.Toggle aria-controls="basic-navbar-nav" />
+                    <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="me-auto">
                         <Nav.Link
                             onClick={() => navigate(RoutesNames.LOCATIONS_LIST)}
@@ -38,6 +40,7 @@ function NavBar() {
                     <Nav>
                         <Nav.Link target="_blank" href="https://ivorcelic-001-site1.htempurl.com/swagger/index.html">API Documentation</Nav.Link>
                     </Nav>
+                    </Navbar.Collapse>
                 </Container>
             </Navbar>
         </>
