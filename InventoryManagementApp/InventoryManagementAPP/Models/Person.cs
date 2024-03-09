@@ -5,7 +5,7 @@ namespace InventoryManagementAPP.Models
     /// <summary>
     /// Represents a user entity in the inventory management system.
     /// </summary>
-    public class User : Entity
+    public class Person : Entity
     {
         /// <summary>
         /// Gets or sets the first name of the person.
