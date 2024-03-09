@@ -13,7 +13,6 @@
 
 .addButton {
     width: 100%;
-    margin-top: 5rem;
     margin-bottom: 0.5rem;
 }
 
@@ -24,4 +23,13 @@
 
 .loginBackground {
     background-color: #61c1da7c;
+}
+
+.searchInput {
+    width: 90%;
+    margin-left: 0.5rem;
+}
+
+.searchInput::selection {
+    border: none;
 }

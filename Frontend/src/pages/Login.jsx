@@ -10,7 +10,7 @@ function Login() {
     return (
         <Container>
             <Row className="justify-content-md-center">
-                <Col className="rounded border mt-5 pt-3 pb-3 loginBackground" md="3">
+                <Col className="rounded border mt-5 pt-3 pb-3 loginBackground" md="4">
                     <h2 className="centered">LOGIN</h2>
                     <Form>
                         <Form.Group className="mb-3" controlId="formBasicEmail">

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { Button, Container, Table } from "react-bootstrap";
+import { Button, Col, Container, Row, Table } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
-import { FaEdit, FaTrash } from "react-icons/fa";
+import { FaEdit, FaSearch, FaTrash } from "react-icons/fa";
 import LocationService from "../../services/LocationService";
 import { GrFormAdd } from "react-icons/gr";
 import { RoutesNames } from "../../constants";
@@ -32,17 +32,25 @@ export default function Locations() {
         fetchLocations();
     }, []);
 
-
     return (
         <Container>
-            <Link
-                to={RoutesNames.LOCATIONS_CREATE}
-                className="btn btn-primary myButton addButton"
-            >
-                <GrFormAdd
-                    size={30}
-                /> Add new location
-            </Link>
+            <Container className="mt-5">
+                <Row>
+                    <Col lg="4" className="d-flex align-items-center">
+                        <FaSearch />
+                            <input
+                                type="text"
+                                className="border-0 border-bottom searchInput"
+                                placeholder="Search"
+                            />
+                    </Col>
+                    <Col className="d-flex align-items-center">
+                        <Link to={RoutesNames.LOCATIONS_CREATE} className="btn btn-primary addButton">
+                            <GrFormAdd size={22} /> Add new location
+                        </Link>
+                    </Col>
+                </Row>
+            </Container>
             <Table striped bordered hover responsive>
                 <thead>
                     <tr>
@@ -63,7 +71,7 @@ export default function Locations() {
                                     <Button
                                         variant="link"
                                         className="me-2 actionButton"
-                                        onClick={() => {navigate(`/locations/${location.id}`)}}
+                                        onClick={() => { navigate(`/locations/${location.id}`) }}
                                     >
                                         <FaEdit
                                             size={25}

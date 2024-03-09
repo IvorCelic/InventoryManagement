@@ -35,7 +35,7 @@ export default function LocationsCreate(){
         <Container className="square border mt-5">
             <h2 className="mt-5 ms-5">Add new location</h2>
            <Form
-            className="m-5"
+            className="m-5" 
             onSubmit={handleSubmit}
             >
                 <Form.Group controlId="name">
