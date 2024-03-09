@@ -191,6 +191,7 @@ public class LocationController : ControllerBase
             // Update the location data and save changes.
             locationFromDB.Name = location.Name;
             locationFromDB.Description = location.Description;
+
             _context.Locations.Update(locationFromDB);
             _context.SaveChanges();
 

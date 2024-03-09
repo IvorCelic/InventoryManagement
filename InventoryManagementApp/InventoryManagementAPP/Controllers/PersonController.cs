@@ -218,11 +218,7 @@ public class PersonController : ControllerBase
             _context.Persons.Remove(personFromDB);
             _context.SaveChanges();
 
-            return new JsonResult("Person deleted successfully.") { StatusCode = StatusCodes.Status200OK };
-        }
-        catch (SqlException ex)
-        {
-            return StatusCode(StatusCodes.Status503ServiceUnavailable, ex.ErrorCode);
+            return new JsonResult(new { message = "Person deleted successfully." });
         }
         catch (Exception ex)
         {
