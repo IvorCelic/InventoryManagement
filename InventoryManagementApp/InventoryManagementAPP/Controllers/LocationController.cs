@@ -243,12 +243,7 @@ public class LocationController : ControllerBase
             _context.SaveChanges();
 
             // Return a JSON result indicating successful deletion.
-            return new JsonResult("Location deleted successfully.") { StatusCode = StatusCodes.Status200OK };
-        }
-        catch (SqlException ex)
-        {
-            // Handle and return a service unavailable status with the SQL error code.
-            return StatusCode(StatusCodes.Status503ServiceUnavailable, ex.ErrorCode);
+            return new JsonResult(new { message = "Location deleted successfully." });
         }
         catch (Exception ex)
         {
