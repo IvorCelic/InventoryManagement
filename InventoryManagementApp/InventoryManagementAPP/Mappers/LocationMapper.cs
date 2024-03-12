@@ -15,11 +15,11 @@ namespace InventoryManagementAPP.Mappers
         public static Mapper InitializeReadToDTO()
         {
             return new Mapper(
-                new MapperConfiguration(c =>
+                new MapperConfiguration(config =>
                 {
-                    c.CreateMap<Location, LocationDTORead>();
+                    config.CreateMap<Location, LocationDTORead>();
                 })
-            );
+                );
         }
 
         /// <summary>
@@ -29,11 +29,11 @@ namespace InventoryManagementAPP.Mappers
         public static Mapper InitializeReadFromDTO()
         {
             return new Mapper(
-                new MapperConfiguration(c =>
+                new MapperConfiguration(config =>
                 {
-                    c.CreateMap<LocationDTORead, Location>();
+                    config.CreateMap<LocationDTORead, Location>();
                 })
-            );
+                );
         }
 
         /// <summary>
@@ -43,11 +43,11 @@ namespace InventoryManagementAPP.Mappers
         public static Mapper InitializeInsertUpdateToDTO()
         {
             return new Mapper(
-                new MapperConfiguration(c =>
+                new MapperConfiguration(config =>
                 {
-                    c.CreateMap<Location, LocationDTOInsertUpdate>();
+                    config.CreateMap<Location, LocationDTOInsertUpdate>();
                 })
-            );
+                );
         }
     }
 }
