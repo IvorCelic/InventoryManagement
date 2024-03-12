@@ -1,4 +1,5 @@
 ﻿using InventoryManagementAPP.Data;
+using InventoryManagementAPP.Extensions;
 using InventoryManagementAPP.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
@@ -53,11 +54,11 @@ public class LocationController : ControllerBase
             if (locations == null || locations.Count == 0)
             {
                 // Return a JSON result with a message when no locations are found.
-                return new JsonResult("No locations found.") { StatusCode = StatusCodes.Status204NoContent };
+                return new EmptyResult();
             }
 
             // Return a JSON result with the list of locations.
-            return new JsonResult(locations);
+            return new JsonResult(locations.MapLocationReadList());
         }
         catch (Exception ex)
         {
@@ -102,10 +103,7 @@ public class LocationController : ControllerBase
             }
 
             // Return the found location as a JSON result.
-            return new JsonResult(location)
-            {
-                StatusCode = StatusCodes.Status200OK
-            };
+            return new JsonResult(location.MapLocationInsertUpdatedToDTO());
         }
         catch (Exception ex)
         {
@@ -131,22 +129,23 @@ public class LocationController : ControllerBase
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status503ServiceUnavailable)]
-    public IActionResult Post(Location location)
+    public IActionResult Post(LocationDTOInsertUpdate locationDTO)
     {
         // Validate the model state and location.
-        if (!ModelState.IsValid || location == null)
+        if (!ModelState.IsValid || locationDTO == null)
         {
-            return BadRequest(ModelState);
+            return BadRequest();
         }
 
         try
         {
+            var location = locationDTO.MapLocationInsertUpdateFromDTO(new Location());
             // Add the new location to the database and save changes.
             _context.Locations.Add(location);
             _context.SaveChanges();
 
             // Return a JSON result with the newly created location.
-            return StatusCode(StatusCodes.Status201Created, location);
+            return StatusCode(StatusCodes.Status201Created, location.MapLocationReadToDTO());
         }
         catch (Exception ex)
         {
@@ -169,10 +168,10 @@ public class LocationController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status503ServiceUnavailable)]
-    public IActionResult Put(int id, Location location)
+    public IActionResult Put(int id, LocationDTOInsertUpdate locationDTO)
     {
         // Validate the model state, ID, and location.
-        if (id <= 0 || !ModelState.IsValid || location == null)
+        if (id <= 0 || !ModelState.IsValid || locationDTO == null)
         {
             return BadRequest();
         }
@@ -185,18 +184,16 @@ public class LocationController : ControllerBase
             // Check if the location is not found.
             if (locationFromDB == null)
             {
-                return BadRequest();
+                return StatusCode(StatusCodes.Status204NoContent, id);
             }
 
-            // Update the location data and save changes.
-            locationFromDB.Name = location.Name;
-            locationFromDB.Description = location.Description;
+            var location = locationDTO.MapLocationInsertUpdateFromDTO(locationFromDB);
 
             _context.Locations.Update(locationFromDB);
             _context.SaveChanges();
 
             // Return a JSON result with the updated location.
-            return StatusCode(StatusCodes.Status200OK, locationFromDB);
+            return StatusCode(StatusCodes.Status200OK, location.MapLocationReadToDTO());
         }
         catch (Exception ex)
         {
