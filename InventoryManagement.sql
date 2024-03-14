@@ -10,11 +10,9 @@
 --use InventoryManagement;
 
 
-
 -- For production use
 SELECT name, collation_name FROM sys.databases;
 GO
--- Doma primjeniti na ime svoje baze 3 puta
 ALTER DATABASE db_aa5e80_ivorcelic SET SINGLE_USER WITH
 ROLLBACK IMMEDIATE;
 GO
@@ -26,69 +24,74 @@ SELECT name, collation_name FROM sys.databases;
 GO
 
 
-create table Persons (
+CREATE TABLE Employees (
     Id int primary key identity (1, 1) not null,
-    FirstName varchar(20) not null,
-    LastName varchar(20) not null,
+    FirstName varchar(50) not null,
+    LastName varchar(50) not null,
     Email varchar(50) not null,
     Password varchar(100) not null
+    -- Role varchar(50)
 );
 
-create table Products (
+CREATE TABLE Warehouses (
     Id int primary key identity (1, 1) not null,
-    Name varchar(50) not null,
-    Description varchar(100) null,
+    WarehouseName varchar(100) not null,
+    Description varchar(255),
+);
+
+CREATE TABLE Products (
+    Id int primary key identity (1, 1) not null,
+    ProductName varchar(100) not null,
+    Description varchar(255),
+    UnitPrice decimal(18, 2),
     IsUnitary bit not null
 );
 
-create table Locations (
+CREATE TABLE InventoryTransactions (
     Id int primary key identity (1, 1) not null,
-    Name varchar(50) not null,
-    Description varchar(100) null
+    Employee int references Employees (Id) not null,
+    TransactionType varchar(255),
+    TransactionStatus varchar(255),
+    TransactionDateTime datetime,
+    AdditionalDetails varchar(255)
 );
 
-create table ProductsLocations (
+CREATE TABLE InventoryTransactionItems (
     Id int primary key identity (1, 1) not null,
-    Quantity int not null,
-    Price decimal not null,
-    Description varchar(255) null,
+    InventoryTransaction int references InventoryTransactions (Id) not null,
     Product int references Products (Id) not null,
-    Location int references Locations (Id) not null
+    Warehouse int references Warehouses (Id) not null,
+    Quantity int
 );
 
 
 
+-- insert into employees
+insert into Employees (FirstName, LastName, Email, Password)
+values ('John', 'Doe', 'john.doe@example.com', 'password123'),
+       ('Jane', 'Smith', 'jane.smith@example.com', 'securepass'),
+       ('Michael', 'Johnson', 'michael.johnson@example.com', 'pass1234');
 
----------- INSERTI ----------
+-- insert into warehouses
+insert into Warehouses (WarehouseName, Description)
+values ('Warehouse A', 'Main warehouse for storing electronics'),
+       ('Warehouse B', 'Secondary warehouse for storing clothing'),
+       ('Warehouse C', 'Overflow warehouse for general items');
 
-insert into Persons (FirstName, LastName, Email, Password) values
-    ('Ivor', 'Ćelić', 'ivorcelic@gmail.com', 'lozinka'),
-    ('Tomislav', 'Jakopec', 'tjakopec@gmail.com', 'TomoCar123'),
-    ('Pero', 'Đurić', 'peroduric@gmail.com', 'lozinka');
+-- insert into products
+insert into Products (ProductName, Description, UnitPrice, IsUnitary)
+values ('Laptop', 'High-performance laptop with SSD', 1200.00, 1),
+       ('T-shirt', 'Cotton t-shirt for casual wear', 15.99, 1),
+       ('Smartphone', 'Latest smartphone model with OLED display', 799.99, 1);
 
-insert into Products (Name, Description, IsUnitary) values
-    ('Cannon LBP6650', 'Printer crno-bijeli', 0),
-    ('T-shirt', 'Majice sa EPSO 2023', 1),
-    ('Rama za 100m', 'Drvena rama', 1);
+-- insert into inventorytransactions
+insert into InventoryTransactions (Employee, TransactionType, TransactionStatus, TransactionDateTime, AdditionalDetails)
+values (1, 'Incoming', 'Completed', getdate(), 'Received new shipment of laptops'),
+       (2, 'Outgoing', 'In progress', getdate(), 'Preparing order for shipment'),
+       (3, 'Internal', 'Planned', getdate(), 'Inventory audit scheduled for next week');
 
-insert into Locations (Name, Description) values
-    ('46', 'El.mete, ekrani, televizori'),
-    ('41', 'Metalurgija, rame...'),
-    ('24', 'Printeri, monitori, stativi, projektori, mete, uredski materijal...'),
-    ('26', 'Alati');
-
-insert into ProductsLocations (Quantity, Price, Description, Product, Location) values
-    (1, 1000, null, 1, 3),
-    (200, 5, '5xM, 10xS, 25xXS', 2, 3),
-    (40, 5, '20 komada u neiskoristivom stanju', 3, 2);
-
-
-
-
----------- SELECT ----------
-
-select b.IsUnitary, a.Price, a.Description, b.Name as 'Product name', c.Name as 'Location', CONCAT(d.FirstName, ' ', d.LastName) as 'Operator'
-from ProductsLocations a
-inner join Products b on a.Id=b.Id
-inner join Locations c on a.Id=c.Id
-inner join Persons d on a.Id=d.Id
+-- insert into inventorytransactionitems
+insert into InventoryTransactionItems (InventoryTransaction, Product, Warehouse, Quantity)
+values (1, 1, 1, 10),
+       (2, 3, 2, 20),
+       (3, 2, 3, 50);
