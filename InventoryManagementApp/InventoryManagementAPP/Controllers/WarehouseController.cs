@@ -232,7 +232,7 @@ namespace InventoryManagementAPP.Controllers
                 // Check if the warehouse is not found.
                 if (warehouseFromDB == null)
                 {
-                    return StatusCode(StatusCodes.Status204NoContent, "Warehouse not found.");
+                    return StatusCode(StatusCodes.Status204NoContent, id);
                 }
 
                 // Remove the warehouse from the database and save changes.

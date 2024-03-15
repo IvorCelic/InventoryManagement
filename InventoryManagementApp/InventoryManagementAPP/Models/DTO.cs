@@ -13,10 +13,10 @@
     /// <summary>
     /// Data Transfer Object (DTO) representing a read-only view of a person
     /// </summary>
-    public record PersonDTORead(int id, string firstName, string lastName, string email, string password);
+    public record EmployeeDTORead(int id, string firstName, string lastName, string email, string password);
 
     /// <summary>
     /// Data Transfer Object (DTO) representing the data needed for inserting or updating a person
     /// </summary>
-    public record PersonDTOInsertUpdate(string firstName, string lastName, string email, string password);
+    public record EmployeeDTOInsertUpdate(string firstName, string lastName, string email, string password);
 }

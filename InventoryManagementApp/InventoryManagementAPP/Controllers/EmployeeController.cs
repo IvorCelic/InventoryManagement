@@ -1,38 +1,45 @@
 ﻿using InventoryManagementAPP.Data;
 using InventoryManagementAPP.Extensions;
 using InventoryManagementAPP.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Linq;
 
 namespace InventoryManagementAPP.Controllers
 {
     /// <summary>
-    /// Inventory Management API controllers for Persons entity CRUD operations.
+    /// Inventory Management API controllers for Employees entity CRUD operations.
     /// </summary>
     [ApiController]
     [Route("api/v1/[controller]")]
-    public class PersonController : ControllerBase
+    public class EmployeeController : ControllerBase
     {
         private readonly InventoryManagementContext _context;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PersonController"/> class.
+        /// Initializes a new instance of the <see cref="EmployeeController"/> class.
         /// </summary>
         /// <param name="context">The database context.</param>
-        public PersonController(InventoryManagementContext context)
+        public EmployeeController(InventoryManagementContext context)
         {
             _context = context;
         }
 
         /// <summary>
-        /// Retrieves all persons from the database.
+        /// Retrieves all employees from the database.
         /// </summary>
         /// <returns>
-        /// <response code="200">Success - Returns the list of persons.</response>
-        /// <response code="204">No Content - If no persons found.</response>
+        /// <response code="200">Success - Returns the list of employees.</response>
+        /// <response code="204">No Content - If no employees found.</response>
         /// <response code="400">Bad Request - If the request is invalid.</response>
         /// <response code="503">Service Unavailable - If the database is not accessible.</response>
         /// </returns>
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status503ServiceUnavailable)]
         public IActionResult Get()
         {
             if (!ModelState.IsValid)
@@ -42,14 +49,14 @@ namespace InventoryManagementAPP.Controllers
 
             try
             {
-                var persons = _context.Persons.ToList();
+                var employees = _context.Employees.ToList();
 
-                if (persons == null || persons.Count == 0)
+                if (employees == null || employees.Count == 0)
                 {
                     return new EmptyResult();
                 }
 
-                return new JsonResult(persons.MapPersonReadList());
+                return new JsonResult(employees.MapEmployeeReadList());
             }
             catch (Exception ex)
             {
@@ -58,20 +65,24 @@ namespace InventoryManagementAPP.Controllers
         }
 
         /// <summary>
-        /// Retrieves a person from the database based on the specified ID.
+        /// Retrieves a employee from the database based on the specified ID.
         /// </summary>
         /// <remarks>
         /// Sample request:
-        ///     GET api/v1/Person/{id}
+        ///     GET api/v1/Employee/{id}
         /// </remarks>
-        /// <param name="id">The ID of the person to retrieve.</param>
-        /// <returns>Returns the requested person if found.</returns>
-        /// <response code="200">OK - Returns the requested person.</response>
-        /// <response code="204">No Content - If the specified person with the given ID is not found.</response>
+        /// <param name="id">The ID of the employee to retrieve.</param>
+        /// <returns>Returns the requested employee if found.</returns>
+        /// <response code="200">OK - Returns the requested employee.</response>
+        /// <response code="204">No Content - If the specified employee with the given ID is not found.</response>
         /// <response code="400">Bad Request - If the request is invalid or ID is less than or equal to 0.</response>
         /// <response code="503">Service Unavailable - If there is an issue accessing the database.</response>
         [HttpGet]
         [Route("{id:int}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status503ServiceUnavailable)]
         public IActionResult GetById(int id)
         {
             if (!ModelState.IsValid || id <= 0)
@@ -81,14 +92,14 @@ namespace InventoryManagementAPP.Controllers
 
             try
             {
-                var person = _context.Persons.Find(id);
+                var employee = _context.Employees.Find(id);
 
-                if (person == null)
+                if (employee == null)
                 {
                     return new EmptyResult();
                 }
 
-                return new JsonResult(person.MapPersonInsertUpdatedToDTO());
+                return new JsonResult(employee.MapEmployeeInsertUpdatedToDTO());
             }
             catch (Exception ex)
             {
@@ -97,11 +108,11 @@ namespace InventoryManagementAPP.Controllers
         }
 
         /// <summary>
-        /// Creates a new person.
+        /// Creates a new employee.
         /// </summary>
-        /// <param name="personDTO">The person to be created.</param>
+        /// <param name="employeeDTO">The employee to be created.</param>
         /// <returns>
-        /// <response code="201">Created - Returns the created person.</response>
+        /// <response code="201">Created - Returns the created employee.</response>
         /// <response code="400">Bad Request - If the request is invalid or missing required fields.</response>
         /// <response code="503">Service Unavailable - If an unexpected error occurs.</response>
         /// </returns>
@@ -109,20 +120,20 @@ namespace InventoryManagementAPP.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status503ServiceUnavailable)]
-        public IActionResult Post(PersonDTOInsertUpdate personDTO)
+        public IActionResult Post(EmployeeDTOInsertUpdate employeeDTO)
         {
-            if (!ModelState.IsValid || personDTO == null)
+            if (!ModelState.IsValid || employeeDTO == null)
             {
                 return BadRequest();
             }
 
             try
             {
-                var person = personDTO.MapPersonInsertUpdateFromDTO(new Person());
-                _context.Persons.Add(person);
+                var person = employeeDTO.MapEmployeeInsertUpdateFromDTO(new Employee());
+                _context.Employees.Add(person);
                 _context.SaveChanges();
 
-                return StatusCode(StatusCodes.Status201Created, person.MapPersonReadToDTO());
+                return StatusCode(StatusCodes.Status201Created, person.MapEmployeeReadToDTO());
             }
             catch (Exception ex)
             {
@@ -131,39 +142,44 @@ namespace InventoryManagementAPP.Controllers
         }
 
         /// <summary>
-        /// Updates the data of an existing person.
+        /// Updates the data of an existing employee.
         /// </summary>
-        /// <param name="id">The ID of the person to be updated.</param>
-        /// <param name="personDTO">The updated person information.</param>
+        /// <param name="id">The ID of the employee to be updated.</param>
+        /// <param name="employeeDTO">The updated employee information.</param>
         /// <returns>
-        /// <response code="200">OK - Returns the updated person.</response>
+        /// <response code="200">OK - Returns the updated employee.</response>
         /// <response code="400">Bad Request - If the request is invalid or missing required fields.</response>
+        /// <response code="204">No Content - If the specified employee with the given ID is not found.</response>
         /// <response code="503">Service Unavailable - If an unexpected error occurs.</response>
         /// </returns>
         [HttpPut]
         [Route("{id:int}")]
-        public IActionResult Put(int id, PersonDTOInsertUpdate personDTO)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status503ServiceUnavailable)]
+        public IActionResult Put(int id, EmployeeDTOInsertUpdate employeeDTO)
         {
-            if (id <= 0 || !ModelState.IsValid || personDTO == null)
+            if (id <= 0 || !ModelState.IsValid || employeeDTO == null)
             {
                 return BadRequest();
             }
 
             try
             {
-                var personFromDB = _context.Persons.Find(id);
+                var employeeFromDB = _context.Employees.Find(id);
 
-                if (personFromDB == null)
+                if (employeeFromDB == null)
                 {
                     return StatusCode(StatusCodes.Status204NoContent, id);
                 }
 
-                var person = personDTO.MapPersonInsertUpdateFromDTO(personFromDB);
+                var employee = employeeDTO.MapEmployeeInsertUpdateFromDTO(employeeFromDB);
 
-                _context.Persons.Update(person);
+                _context.Employees.Update(employee);
                 _context.SaveChanges();
 
-                return StatusCode(StatusCodes.Status200OK, person.MapPersonReadToDTO());
+                return StatusCode(StatusCodes.Status200OK, employee.MapEmployeeReadToDTO());
             }
             catch (Exception ex)
             {
@@ -172,17 +188,19 @@ namespace InventoryManagementAPP.Controllers
         }
 
         /// <summary>
-        /// Deletes the specified person.
+        /// Deletes the specified employee.
         /// </summary>
-        /// <param name="id">The ID of the person to be deleted.</param>
+        /// <param name="id">The ID of the employee to be deleted.</param>
         /// <returns>
         /// <response code="200">OK - Returns a success message.</response>
-        /// <response code="204">No Content - If no person found with the specified ID.</response>
+        /// <response code="204">No Content - If no employee found with the specified ID.</response>
         /// <response code="503">Service Unavailable - If an unexpected error occurs.</response>
         /// </returns>
         [HttpDelete]
         [Route("{id:int}")]
-        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status503ServiceUnavailable)]
         public IActionResult Delete(int id)
         {
             if (!ModelState.IsValid || id <= 0)
@@ -192,22 +210,23 @@ namespace InventoryManagementAPP.Controllers
 
             try
             {
-                var personFromDB = _context.Persons.Find(id);
+                var employeeFromDB = _context.Employees.Find(id);
 
-                if (personFromDB == null)
+                if (employeeFromDB == null)
                 {
                     return StatusCode(StatusCodes.Status204NoContent, id);
                 }
 
-                _context.Persons.Remove(personFromDB);
+                _context.Employees.Remove(employeeFromDB);
                 _context.SaveChanges();
 
-                return new JsonResult(new { message = "Person deleted successfully." });
+                return new JsonResult(new { message = "Employee deleted successfully." });
             }
             catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status503ServiceUnavailable, ex.Message);
             }
         }
+
     }
 }

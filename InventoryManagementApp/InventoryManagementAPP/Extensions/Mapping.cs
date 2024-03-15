@@ -67,53 +67,53 @@ namespace InventoryManagementAPP.Extensions
         }
 
         /// <summary>
-        /// Maps a list of <see cref="Employee"/> entities to a list of <see cref="PersonDTORead"/> DTOs.
+        /// Maps a list of <see cref="Employee"/> entities to a list of <see cref="EmployeeDTORead"/> DTOs.
         /// </summary>
         /// <param name="list">The list of <see cref="Employee"/> entities to map.</param>
-        /// <returns>A list of <see cref="PersonDTORead"/> DTOs.</returns>
-        public static List<PersonDTORead> MapPersonReadList(this List<Employee> list)
+        /// <returns>A list of <see cref="EmployeeDTORead"/> DTOs.</returns>
+        public static List<EmployeeDTORead> MapEmployeeReadList(this List<Employee> list)
         {
-            var mapper = PersonMapper.InitializeReadToDTO();
-            var result = new List<PersonDTORead>();
+            var mapper = EmployeeMapper.InitializeReadToDTO();
+            var result = new List<EmployeeDTORead>();
             list.ForEach(entity =>
             {
-                result.Add(mapper.Map<PersonDTORead>(entity));
+                result.Add(mapper.Map<EmployeeDTORead>(entity));
             });
 
             return result;
         }
 
         /// <summary>
-        /// Maps a <see cref="Employee"/> entity to a <see cref="PersonDTORead"/> DTO.
+        /// Maps a <see cref="Employee"/> entity to a <see cref="EmployeeDTORead"/> DTO.
         /// </summary>
         /// <param name="entity">The <see cref="Employee"/> entity to map.</param>
-        /// <returns>A <see cref="PersonDTORead"/> DTO.</returns>
-        public static PersonDTORead MapPersonReadToDTO(this Employee entity)
+        /// <returns>A <see cref="EmployeeDTORead"/> DTO.</returns>
+        public static EmployeeDTORead MapEmployeeReadToDTO(this Employee entity)
         {
-            var mapper = PersonMapper.InitializeReadToDTO();
+            var mapper = EmployeeMapper.InitializeReadToDTO();
 
-            return mapper.Map<PersonDTORead>(entity);
+            return mapper.Map<EmployeeDTORead>(entity);
         }
 
         /// <summary>
-        /// Maps a <see cref="Employee"/> entity to a <see cref="PersonDTOInsertUpdate"/> DTO.
+        /// Maps a <see cref="Employee"/> entity to a <see cref="EmployeeDTOInsertUpdate"/> DTO.
         /// </summary>
         /// <param name="entity">The <see cref="Employee"/> entity to map.</param>
-        /// <returns>A <see cref="PersonDTOInsertUpdate"/> DTO.</returns>
-        public static PersonDTOInsertUpdate MapPersonInsertUpdatedToDTO(this Employee entity)
+        /// <returns>A <see cref="EmployeeDTOInsertUpdate"/> DTO.</returns>
+        public static EmployeeDTOInsertUpdate MapEmployeeInsertUpdatedToDTO(this Employee entity)
         {
-            var mapper = PersonMapper.InitializeInsertUpdateToDTO();
+            var mapper = EmployeeMapper.InitializeInsertUpdateToDTO();
 
-            return mapper.Map<PersonDTOInsertUpdate>(entity);
+            return mapper.Map<EmployeeDTOInsertUpdate>(entity);
         }
 
         /// <summary>
-        /// Maps a <see cref="PersonDTOInsertUpdate"/> DTO to a <see cref="Employee"/> entity.
+        /// Maps a <see cref="EmployeeDTOInsertUpdate"/> DTO to a <see cref="Employee"/> entity.
         /// </summary>
-        /// <param name="dto">The <see cref="PersonDTOInsertUpdate"/> DTO to map.</param>
+        /// <param name="dto">The <see cref="EmployeeDTOInsertUpdate"/> DTO to map.</param>
         /// <param name="entity">The <see cref="Employee"/> entity to update.</param>
         /// <returns>The updated <see cref="Employee"/> entity.</returns>
-        public static Employee MapPersonInsertUpdateFromDTO(this PersonDTOInsertUpdate dto, Employee entity)
+        public static Employee MapEmployeeInsertUpdateFromDTO(this EmployeeDTOInsertUpdate dto, Employee entity)
         {
             entity.FirstName = dto.firstName;
             entity.LastName = dto.lastName;
