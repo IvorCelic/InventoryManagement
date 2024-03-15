@@ -3,9 +3,9 @@
 namespace InventoryManagementAPP.Models
 {
     /// <summary>
-    /// Represents a user entity in the inventory management system.
+    /// Represents a Plain Old CLR Object (POCO) class mapped to the database for managing employees.
     /// </summary>
-    public class Person : Entity
+    public class Employee : Entity
     {
         /// <summary>
         /// Gets or sets the first name of the person.

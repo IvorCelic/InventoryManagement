@@ -3,7 +3,7 @@
 namespace InventoryManagementAPP.Models
 {
     /// <summary>
-    /// Represents the top-level base class containing fundamental attributes such as code, operator, entry date, changes, etc.
+    /// Represents the top-level base class containing fundamental attribute ID.
     /// </summary>
     public abstract class Entity
     {

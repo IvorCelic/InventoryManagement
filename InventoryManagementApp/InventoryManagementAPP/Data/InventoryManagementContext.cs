@@ -18,13 +18,13 @@ namespace InventoryManagementAPP.Data
         }
 
         /// <summary>
-        /// Gets or sets the dataset representing locations in the database.
+        /// Gets or sets the dataset representing warehouses in the database.
         /// </summary>
-        public DbSet<Location> Locations { get; set; }
+        public DbSet<Warehouse> Warehouses { get; set; }
 
         /// <summary>
-        /// Gets or sets the dataset representing persons in the database.
+        /// Gets or sets the dataset representing employees in the database.
         /// </summary>
-        public DbSet<Person> Persons { get; set; }
+        public DbSet<Employee> Employees { get; set; }
     }
 }
