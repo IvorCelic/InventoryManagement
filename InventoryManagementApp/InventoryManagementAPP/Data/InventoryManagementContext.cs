@@ -26,5 +26,10 @@ namespace InventoryManagementAPP.Data
         /// Gets or sets the dataset representing employees in the database.
         /// </summary>
         public DbSet<Employee> Employees { get; set; }
+
+        /// <summary>
+        /// Gets or sets the dataset representing products in the database
+        /// </summary>
+        public DbSet<Product> Products { get; set; }
     }
 }

@@ -84,9 +84,9 @@ values ('Laptop', 'High-performance laptop with SSD', 1),
 
 -- insert into inventorytransactions
 insert into InventoryTransactions (Employee, TransactionStatus, TransactionDateTime, AdditionalDetails)
-values (1, 'Completed', getdate(), 'Received new shipment of laptops'),
-       (2, 'In progress', getdate(), 'Preparing order for shipment'),
-       (3, 'Planned', getdate(), 'Inventory audit scheduled for next week');
+values (1, 0, getdate(), 'Received new shipment of laptops'),
+       (2, 1, getdate(), 'Preparing order for shipment'),
+       (3, 2, getdate(), 'Inventory audit scheduled for next week');
 
 -- insert into inventorytransactionitems
 insert into InventoryTransactionItems (InventoryTransaction, Product, Warehouse, Quantity)

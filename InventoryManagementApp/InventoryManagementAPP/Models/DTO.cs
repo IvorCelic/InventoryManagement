@@ -19,4 +19,14 @@
     /// Data Transfer Object (DTO) representing the data needed for inserting or updating a person
     /// </summary>
     public record EmployeeDTOInsertUpdate(string firstName, string lastName, string email, string password);
+
+    /// <summary>
+    /// Data Transfer Object (DTO) representing a read-only view of a product
+    /// </summary>
+    public record ProductDTORead(int id, string productName, string description, bool isUnitary);
+
+    /// <summary>
+    /// Data Transfer Object (DTO) representing the data needed for inserting or updating a product
+    /// </summary>
+    public record ProductDTOInsertUpdate(string productName, string description, bool isUnitary);
 }
