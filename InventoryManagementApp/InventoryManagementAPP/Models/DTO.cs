@@ -3,12 +3,12 @@
     /// <summary>
     /// Data Transfer Object (DTO) representing a read-only view of a location.
     /// </summary>
-    public record LocationDTORead(int id, string name, string description);
+    public record WarehouseDTORead(int id, string warehouseName, string description);
 
     /// <summary>
     /// Data Transfer Object (DTO) representing the data needed for inserting or updating a location.
     /// </summary>
-    public record LocationDTOInsertUpdate(string name, string description);
+    public record WarehouseDTOInsertUpdate(string warehouseName, string description);
 
     /// <summary>
     /// Data Transfer Object (DTO) representing a read-only view of a person
