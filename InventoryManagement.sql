@@ -1,13 +1,13 @@
 -- For local use
---use master;
---go
---drop database if exists InventoryManagement;
---go
---create database InventoryManagement;
---go
---alter database InventoryManagement collate Croatian_CI_AS;
---go
---use InventoryManagement;
+use master;
+go
+drop database if exists InventoryManagement;
+go
+create database InventoryManagement;
+go
+alter database InventoryManagement collate Croatian_CI_AS;
+go
+use InventoryManagement;
 
 
 -- For production use
@@ -43,15 +43,13 @@ CREATE TABLE Products (
     Id int primary key identity (1, 1) not null,
     ProductName varchar(100) not null,
     Description varchar(255),
-    UnitPrice decimal(18, 2),
     IsUnitary bit not null
 );
 
 CREATE TABLE InventoryTransactions (
     Id int primary key identity (1, 1) not null,
     Employee int references Employees (Id) not null,
-    TransactionType varchar(255),
-    TransactionStatus varchar(255),
+    TransactionStatus int not null,
     TransactionDateTime datetime,
     AdditionalDetails varchar(255)
 );
@@ -79,16 +77,16 @@ values ('Warehouse A', 'Main warehouse for storing electronics'),
        ('Warehouse C', 'Overflow warehouse for general items');
 
 -- insert into products
-insert into Products (ProductName, Description, UnitPrice, IsUnitary)
-values ('Laptop', 'High-performance laptop with SSD', 1200.00, 1),
-       ('T-shirt', 'Cotton t-shirt for casual wear', 15.99, 1),
-       ('Smartphone', 'Latest smartphone model with OLED display', 799.99, 1);
+insert into Products (ProductName, Description, IsUnitary)
+values ('Laptop', 'High-performance laptop with SSD', 1),
+       ('T-shirt', 'Cotton t-shirt for casual wear', 1),
+       ('Smartphone', 'Latest smartphone model with OLED display', 1);
 
 -- insert into inventorytransactions
-insert into InventoryTransactions (Employee, TransactionType, TransactionStatus, TransactionDateTime, AdditionalDetails)
-values (1, 'Incoming', 'Completed', getdate(), 'Received new shipment of laptops'),
-       (2, 'Outgoing', 'In progress', getdate(), 'Preparing order for shipment'),
-       (3, 'Internal', 'Planned', getdate(), 'Inventory audit scheduled for next week');
+insert into InventoryTransactions (Employee, TransactionStatus, TransactionDateTime, AdditionalDetails)
+values (1, 'Completed', getdate(), 'Received new shipment of laptops'),
+       (2, 'In progress', getdate(), 'Preparing order for shipment'),
+       (3, 'Planned', getdate(), 'Inventory audit scheduled for next week');
 
 -- insert into inventorytransactionitems
 insert into InventoryTransactionItems (InventoryTransaction, Product, Warehouse, Quantity)
