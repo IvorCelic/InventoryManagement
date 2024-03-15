@@ -1,19 +1,18 @@
 export const RoutesNames = {
-    LOGIN: '/',
-    HOME: 'home',
+    LOGIN: "/",
+    HOME: "home",
 
-    LOCATIONS_LIST: '/locations',
-    LOCATIONS_CREATE: '/locations/add',
-    LOCATIONS_EDIT: '/locations/:id',
+    WAREHOUSES_LIST: "/warehouses",
+    WAREHOUSES_CREATE: "/warehouses/add",
+    WAREHOUSES_EDIT: "/warehouses/:id",
 
-    PERSONS_LIST: '/persons',
-    PERSONS_CREATE: '/persons/add',
-    PERSONS_EDIT: '/persons/:id',
+    EMPLOYEES_LIST: "/employees",
+    EMPLOYEES_CREATE: "/employees/add",
+    EMPLOYEES_EDIT: "/employees/:id",
 
-    PRODUCTS_LIST: '/products'
-
-}
+    PRODUCTS_LIST: "/products",
+};
 
 export const App = {
-    DEV: true
-}
+    DEV: true,
+};
