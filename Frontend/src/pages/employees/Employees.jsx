@@ -1,19 +1,19 @@
-import { Container, Table, Button } from "react-bootstrap";
+import { Button, Container, Table } from "react-bootstrap";
 import { RoutesNames } from "../../constants";
+import { useNavigate } from "react-router-dom";
+import { FaEdit, FaTrash } from "react-icons/fa";
 import SearchAndAdd from "../../components/SearchAndAdd";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import ProductService from "../../services/ProductService";
-import { FaEdit, FaTrash } from "react-icons/fa";
+import EmployeeService from "../../services/EmployeeService";
 
-export default function Products() {
-    const [products, setProducts] = useState();
-    const navigate = useNavigate();
+export default function Employees() {
+    const [employees, setEmployees] = useState();
+    let navigate = useNavigate();
 
-    async function fetchProducts() {
-        await ProductService.get()
+    async function fetchEmployees() {
+        await EmployeeService.get()
             .then((res) => {
-                setProducts(res.data);
+                setEmployees(res.data);
             })
             .catch((error) => {
                 alert(error);
@@ -21,52 +21,53 @@ export default function Products() {
     }
 
     useEffect(() => {
-        fetchProducts();
-    });
+        fetchEmployees();
+    }, []);
 
-    async function removeProduct(id) {
-        const response = await ProductService.remove(id);
+    async function removeEmployee(id) {
+        const response = await EmployeeService.remove(id);
+
         if (response.ok) {
             alert(response.message.data.message);
-            fetchProducts();
+            fetchEmployees();
+        } else {
+            alert(response.message);
         }
     }
 
     return (
         <Container>
             <Container>
-                <SearchAndAdd RouteName={RoutesNames.PRODUCTS_CREATE} entity={"product"} />
+                <SearchAndAdd RouteName={RoutesNames.EMPLOYEES_CREATE} entity={"employee"} />
             </Container>
             <Table striped bordered hover responsive>
                 <thead>
                     <tr>
-                        <th>Name</th>
-                        <th>Description</th>
-                        <th>Is Unitary</th>
+                        <th>First name</th>
+                        <th>Last name</th>
                         <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {products &&
-                        products.map((product, index) => (
+                    {employees &&
+                        employees.map((employee, index) => (
                             <tr key={index}>
-                                <td>{product.productName}</td>
-                                <td>{product.description}</td>
-                                <td>{product.isUnitary}</td>
+                                <td>{employee.firstName}</td>
+                                <td>{employee.lastName}</td>
                                 <td>
                                     <Container className="d-flex justify-content-center">
                                         <Button
                                             variant="link"
                                             className="me-2 actionButton"
                                             onClick={() => {
-                                                navigate(`/products/${product.id}`);
+                                                navigate(`/employees/${employee.id}`);
                                             }}
                                         >
                                             <FaEdit size={25} />
                                         </Button>
                                         <Button
                                             className="link-danger actionButton"
-                                            onClick={() => removeProduct(product.id)}
+                                            onClick={() => removeEmployee(employee.id)}
                                         >
                                             <FaTrash size={25} />
                                         </Button>

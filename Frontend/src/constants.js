@@ -11,6 +11,8 @@ export const RoutesNames = {
     EMPLOYEES_EDIT: "/employees/:id",
 
     PRODUCTS_LIST: "/products",
+    PRODUCTS_CREATE: "/products/add",
+    PRODUCTS_EDIT: "/products/:id",
 };
 
 export const App = {

@@ -33,6 +33,8 @@ function App() {
                     <Route path={RoutesNames.EMPLOYEES_EDIT} element={<EmployeesEdit />} />
 
                     <Route path={RoutesNames.PRODUCTS_LIST} element={<Products />} />
+                    <Route path={RoutesNames.PRODUCTS_CREATE} />
+                    <Route path={RoutesNames.PRODUCTS_EDIT} />
                 </>
             </Routes>
         </>
