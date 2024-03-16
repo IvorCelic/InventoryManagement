@@ -29,4 +29,7 @@
     /// Data Transfer Object (DTO) representing the data needed for inserting or updating a product
     /// </summary>
     public record ProductDTOInsertUpdate(string productName, string description, bool isUnitary);
+
+    public record PersonDTORead(int id, string firstName, string lastName, string email);
+    public record PersonDTOInsertUpdate(string firstName, string lastName, string email);
 }

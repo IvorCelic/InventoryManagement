@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq;
+using System.Runtime.ConstrainedExecution;
 
 namespace InventoryManagementAPP.Controllers
 {
@@ -13,15 +14,15 @@ namespace InventoryManagementAPP.Controllers
     /// </summary>
     [ApiController]
     [Route("api/v1/[controller]")]
-    public class EmployeeController : ControllerBase
+    public class PersonController : ControllerBase
     {
         private readonly InventoryManagementContext _context;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="EmployeeController"/> class.
+        /// Initializes a new instance of the <see cref="PersonController"/> class.
         /// </summary>
         /// <param name="context">The database context.</param>
-        public EmployeeController(InventoryManagementContext context)
+        public PersonController(InventoryManagementContext context)
         {
             _context = context;
         }
@@ -49,14 +50,14 @@ namespace InventoryManagementAPP.Controllers
 
             try
             {
-                var employees = _context.Employees.ToList();
+                var persons = _context.Persons.ToList();
 
-                if (employees == null || employees.Count == 0)
+                if (persons == null || persons.Count == 0)
                 {
                     return new EmptyResult();
                 }
 
-                return new JsonResult(employees.MapEmployeeReadList());
+                return new JsonResult(persons.MapPersonReadList());
             }
             catch (Exception ex)
             {
@@ -92,14 +93,14 @@ namespace InventoryManagementAPP.Controllers
 
             try
             {
-                var employee = _context.Employees.Find(id);
+                var person = _context.Persons.Find(id);
 
-                if (employee == null)
+                if (person == null)
                 {
                     return new EmptyResult();
                 }
 
-                return new JsonResult(employee.MapEmployeeInsertUpdatedToDTO());
+                return new JsonResult(person.MapEmployeeInsertUpdatedToDTO());
             }
             catch (Exception ex)
             {
@@ -110,7 +111,7 @@ namespace InventoryManagementAPP.Controllers
         /// <summary>
         /// Creates a new employee.
         /// </summary>
-        /// <param name="employeeDTO">The employee to be created.</param>
+        /// <param name="personDTO">The employee to be created.</param>
         /// <returns>
         /// <response code="201">Created - Returns the created employee.</response>
         /// <response code="400">Bad Request - If the request is invalid or missing required fields.</response>
@@ -120,20 +121,20 @@ namespace InventoryManagementAPP.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status503ServiceUnavailable)]
-        public IActionResult Post(EmployeeDTOInsertUpdate employeeDTO)
+        public IActionResult Post(PersonDTOInsertUpdate personDTO)
         {
-            if (!ModelState.IsValid || employeeDTO == null)
+            if (!ModelState.IsValid || personDTO == null)
             {
                 return BadRequest();
             }
 
             try
             {
-                var employee = employeeDTO.MapEmployeeInsertUpdateFromDTO(new Employee());
-                _context.Employees.Add(employee);
+                var person = personDTO.MapPersonInsertUpdateFromDTO(new Person());
+                _context.Persons.Add(person);
                 _context.SaveChanges();
 
-                return StatusCode(StatusCodes.Status201Created, employee.MapEmployeeReadToDTO());
+                return StatusCode(StatusCodes.Status201Created, person.MapPersonReadToDTO());
             }
             catch (Exception ex)
             {
@@ -141,11 +142,45 @@ namespace InventoryManagementAPP.Controllers
             }
         }
 
+        [HttpPost]
+        [Route("test")]
+        public IActionResult PostExact(int number, PersonDTOInsertUpdate personDTO)
+        {
+            if (!ModelState.IsValid || personDTO == null)
+            {
+                return BadRequest();
+            }
+
+            try
+            {
+                for (int i = 0; i <= number; i++)
+                {
+                    var fakePerson = new Person
+                    {
+                        FirstName = Faker.Name.First(),
+                        LastName = Faker.Name.Last(),
+                        Email = Faker.Internet.Email()
+                    };
+
+                    _context.Persons.Add(fakePerson);
+                }
+
+                _context.SaveChanges();
+
+                return StatusCode(StatusCodes.Status201Created);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status503ServiceUnavailable, ex.Message);
+            }
+
+        }
+
         /// <summary>
         /// Updates the data of an existing employee.
         /// </summary>
         /// <param name="id">The ID of the employee to be updated.</param>
-        /// <param name="employeeDTO">The updated employee information.</param>
+        /// <param name="personDTO">The updated employee information.</param>
         /// <returns>
         /// <response code="200">OK - Returns the updated employee.</response>
         /// <response code="400">Bad Request - If the request is invalid or missing required fields.</response>
@@ -158,28 +193,28 @@ namespace InventoryManagementAPP.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status503ServiceUnavailable)]
-        public IActionResult Put(int id, EmployeeDTOInsertUpdate employeeDTO)
+        public IActionResult Put(int id, PersonDTOInsertUpdate personDTO)
         {
-            if (id <= 0 || !ModelState.IsValid || employeeDTO == null)
+            if (id <= 0 || !ModelState.IsValid || personDTO == null)
             {
                 return BadRequest();
             }
 
             try
             {
-                var employeeFromDB = _context.Employees.Find(id);
+                var personFromDB = _context.Persons.Find(id);
 
-                if (employeeFromDB == null)
+                if (personFromDB == null)
                 {
                     return StatusCode(StatusCodes.Status204NoContent, id);
                 }
 
-                var employee = employeeDTO.MapEmployeeInsertUpdateFromDTO(employeeFromDB);
+                var persons = personDTO.MapPersonInsertUpdateFromDTO(personFromDB);
 
-                _context.Employees.Update(employee);
+                _context.Persons.Update(persons);
                 _context.SaveChanges();
 
-                return StatusCode(StatusCodes.Status200OK, employee.MapEmployeeReadToDTO());
+                return StatusCode(StatusCodes.Status200OK, persons.MapPersonReadToDTO());
             }
             catch (Exception ex)
             {
@@ -210,17 +245,17 @@ namespace InventoryManagementAPP.Controllers
 
             try
             {
-                var employeeFromDB = _context.Employees.Find(id);
+                var personFromDB = _context.Persons.Find(id);
 
-                if (employeeFromDB == null)
+                if (personFromDB == null)
                 {
                     return StatusCode(StatusCodes.Status204NoContent, id);
                 }
 
-                _context.Employees.Remove(employeeFromDB);
+                _context.Persons.Remove(personFromDB);
                 _context.SaveChanges();
 
-                return new JsonResult(new { message = "Employee deleted successfully." });
+                return new JsonResult(new { message = "Person deleted successfully." });
             }
             catch (Exception ex)
             {
