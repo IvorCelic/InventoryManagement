@@ -13,6 +13,7 @@ export default function Warehouses() {
     async function fetchWarehouses() {
         await WarehouseService.get()
             .then((res) => {
+                console.log(res.data);
                 setWarehouses(res.data);
             })
             .catch((error) => {

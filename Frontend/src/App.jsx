@@ -8,8 +8,12 @@ import Login from "./pages/Login";
 import Home from "./pages/Home";
 
 import Warehouses from "./pages/warehouses/Warehouses";
+import WarehousesCreate from "./pages/warehouses/WarehousesCreate";
+import WarehousesEdit from "./pages/warehouses/WarehousesEdit";
 
 import Products from "./pages/products/Products";
+import ProductsCreate from "./pages/products/ProductsCreate";
+import ProductsEdit from "./pages/products/ProductsEdit";
 
 import Employees from "./pages/employees/Employees";
 import EmployeesCreate from "./pages/employees/EmployeesCreate";
@@ -25,16 +29,16 @@ function App() {
                     <Route path={RoutesNames.HOME} element={<Home />} />
 
                     <Route path={RoutesNames.WAREHOUSES_LIST} element={<Warehouses />} />
-                    <Route path={RoutesNames.WAREHOUSES_CREATE} element={<Warehouses />} />
-                    <Route path={RoutesNames.WAREHOUSES_EDIT} element={<Warehouses />} />
+                    <Route path={RoutesNames.WAREHOUSES_CREATE} element={<WarehousesCreate />} />
+                    <Route path={RoutesNames.WAREHOUSES_EDIT} element={<WarehousesEdit />} />
 
                     <Route path={RoutesNames.EMPLOYEES_LIST} element={<Employees />} />
                     <Route path={RoutesNames.EMPLOYEES_CREATE} element={<EmployeesCreate />} />
                     <Route path={RoutesNames.EMPLOYEES_EDIT} element={<EmployeesEdit />} />
 
                     <Route path={RoutesNames.PRODUCTS_LIST} element={<Products />} />
-                    <Route path={RoutesNames.PRODUCTS_CREATE} />
-                    <Route path={RoutesNames.PRODUCTS_EDIT} />
+                    <Route path={RoutesNames.PRODUCTS_CREATE} element={<ProductsCreate />} />
+                    <Route path={RoutesNames.PRODUCTS_EDIT} element={<ProductsEdit />} />
                 </>
             </Routes>
         </>

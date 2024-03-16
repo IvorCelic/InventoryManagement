@@ -32,6 +32,12 @@ export default function Products() {
         }
     }
 
+    function isUnitary(product){
+        if (product.isUnitary==null) return 'Not defined';
+        if(product.isUnitary) return 'Yes';
+        return 'No';
+    }
+
     return (
         <Container>
             <Container>
@@ -52,7 +58,7 @@ export default function Products() {
                             <tr key={index}>
                                 <td>{product.productName}</td>
                                 <td>{product.description}</td>
-                                <td>{product.isUnitary}</td>
+                                <td>{isUnitary(product)}</td>
                                 <td>
                                     <Container className="d-flex justify-content-center">
                                         <Button

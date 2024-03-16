@@ -1,19 +1,19 @@
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { RoutesNames } from "../../constants";
-import PersonService from "../../services/EmployeeService";
+import EmployeeService from "../../services/EmployeeService";
 import { useEffect, useState } from "react";
 
-export default function PersonsEdit() {
+export default function EmployeesEdit() {
     const navigate = useNavigate();
     const routeParams = useParams();
-    const [person, setPerson] = useState({});
-    const entityName = "person";
+    const [employee, setEmployee] = useState({});
+    const entityName = "employee";
 
-    async function fetchPerson() {
-        await PersonService.getById(routeParams.id)
+    async function fetchEmployee() {
+        await EmployeeService.getById(routeParams.id)
             .then((res) => {
-                setPerson(res.data);
+                setEmployee(res.data);
             })
             .catch((error) => {
                 alert(error.message);
@@ -21,13 +21,13 @@ export default function PersonsEdit() {
     }
 
     useEffect(() => {
-        fetchPerson();
+        fetchEmployee();
     }, []);
 
-    async function editPerson(entityName) {
-        const response = await PersonService.edit(routeParams.id, entityName);
+    async function editEmployee(entityName) {
+        const response = await EmployeeService.edit(routeParams.id, entityName);
         if (response.ok) {
-            navigate(RoutesNames.PERSONS_LIST);
+            navigate(RoutesNames.EMPLOYEES_LIST);
         } else {
             console.log(response);
             alert(response.message);
@@ -45,7 +45,7 @@ export default function PersonsEdit() {
             password: data.get("password"),
         };
 
-        editPerson(entityName);
+        editEmployee(entityName);
     }
 
     return (
@@ -57,7 +57,7 @@ export default function PersonsEdit() {
                         <Form.Label>First name</Form.Label>
                         <Form.Control
                             type="text"
-                            defaultValue={person.firstName}
+                            defaultValue={employee.firstName}
                             name="firstName"
                             required
                         />
@@ -66,7 +66,7 @@ export default function PersonsEdit() {
                         <Form.Label className="pt-4">Last name</Form.Label>
                         <Form.Control
                             type="text"
-                            defaultValue={person.lastName}
+                            defaultValue={employee.lastName}
                             name="lastName"
                             required
                         />
@@ -75,7 +75,7 @@ export default function PersonsEdit() {
                         <Form.Label className="pt-4">Email</Form.Label>
                         <Form.Control
                             type="text"
-                            defaultValue={person.email}
+                            defaultValue={employee.email}
                             name="email"
                             required
                         />
@@ -85,14 +85,14 @@ export default function PersonsEdit() {
                         <Form.Control
                             type="password"
                             minLength={8}
-                            defaultValue={person.password}
+                            defaultValue={employee.password}
                             name="password"
                             required
                         />
                     </Form.Group>
                     <Row className="mb-0 flex-column flex-sm-row">
                         <Col className="d-flex align-items-center mb-2 mb-sm-0">
-                            <Link className="btn btn-danger myButton" to={RoutesNames.PERSONS_LIST}>
+                            <Link className="btn btn-danger myButton" to={RoutesNames.EMPLOYEES_LIST}>
                                 Cancel
                             </Link>
                         </Col>

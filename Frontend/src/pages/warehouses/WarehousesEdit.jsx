@@ -1,19 +1,19 @@
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { RoutesNames } from "../../constants";
-import LocationService from "../../services/WarehouseService";
+import WarehouseService from "../../services/WarehouseService";
 import { useEffect, useState } from "react";
 
-export default function LocationsEdit() {
+export default function WarehousesEdit() {
     const navigate = useNavigate();
     const routeParams = useParams();
-    const [location, setLocation] = useState({});
-    const entityName = "location";
+    const [warehouse, setWarehouse] = useState({});
+    const entityName = "warehouse";
 
-    async function fetchLocation() {
-        await LocationService.getById(routeParams.id)
+    async function fetchWarehouse() {
+        await WarehouseService.getById(routeParams.id)
             .then((res) => {
-                setLocation(res.data);
+                setWarehouse(res.data);
             })
             .catch((error) => {
                 alert(error.message);
@@ -21,13 +21,13 @@ export default function LocationsEdit() {
     }
 
     useEffect(() => {
-        fetchLocation();
+        fetchWarehouse();
     }, []);
 
-    async function editLocation(entityName) {
-        const response = await LocationService.edit(routeParams.id, entityName);
+    async function editWarehouse(entityName) {
+        const response = await WarehouseService.edit(routeParams.id, entityName);
         if (response.ok) {
-            navigate(RoutesNames.LOCATIONS_LIST);
+            navigate(RoutesNames.WAREHOUSES_LIST);
         } else {
             console.log(response);
             alert(response.message);
@@ -39,31 +39,31 @@ export default function LocationsEdit() {
         const data = new FormData(error.target);
 
         const entityName = {
-            name: data.get("name"),
+            warehouseName: data.get("warehousename"),
             description: data.get("description"),
         };
 
-        editLocation(entityName);
+        editWarehouse(entityName);
     }
 
     return (
         <Container>
             <Container className="square border mt-5">
-                <h2 className="mt-5 ms-5">Edit location</h2>
+                <h2 className="mt-5 ms-5">Edit warehouse</h2>
                 <Form className="m-5" onSubmit={handleSubmit}>
-                    <Form.Group controlId="name">
+                    <Form.Group controlId="warehouseName">
                         <Form.Label>Name</Form.Label>
                         <Form.Control
                             type="text"
-                            defaultValue={location.name}
-                            name="name"
+                            defaultValue={warehouse.warehouseName}
+                            name="warehousename"
                         />
                     </Form.Group>
                     <Form.Group controlId="description">
                         <Form.Label className="pt-4">Description</Form.Label>
                         <Form.Control
                             type="text"
-                            defaultValue={location.description}
+                            defaultValue={warehouse.description}
                             name="description"
                         />
                     </Form.Group>
@@ -71,7 +71,7 @@ export default function LocationsEdit() {
                         <Col>
                             <Link
                                 className="btn btn-danger myButton"
-                                to={RoutesNames.LOCATIONS_LIST}
+                                to={RoutesNames.WAREHOUSES_LIST}
                             >
                                 Cancel
                             </Link>

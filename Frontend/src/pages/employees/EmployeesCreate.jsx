@@ -1,16 +1,16 @@
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { RoutesNames } from "../../constants";
-import PersonService from "../../services/EmployeeService";
+import EmployeeService from "../../services/EmployeeService";
 
-export default function PersonsCreate() {
+export default function EmployeesCreate() {
     const navigate = useNavigate();
-    const entityName = "person";
+    const entityName = "employee";
 
-    async function addPerson(entityName) {
-        const response = await PersonService.add(entityName);
+    async function addEmployee(entityName) {
+        const response = await EmployeeService.add(entityName);
         if (response.ok) {
-            navigate(RoutesNames.PERSONS_LIST);
+            navigate(RoutesNames.EMPLOYEES_LIST);
         } else {
             console.log(response);
             alert(response.message);
@@ -28,7 +28,7 @@ export default function PersonsCreate() {
             password: data.get("password"),
         };
 
-        addPerson(entityName);
+        addEmployee(entityName);
     }
 
     return (
@@ -39,7 +39,7 @@ export default function PersonsCreate() {
                     <Form.Group controlId="firstName">
                         <Form.Label>First name</Form.Label>
                         <Form.Control
-                            placeholder="Person's first name"
+                            placeholder="Employee's first name"
                             type="text"
                             name="firstName"
                             required
@@ -48,7 +48,7 @@ export default function PersonsCreate() {
                     <Form.Group controlId="lastName">
                         <Form.Label className="pt-4">Last name</Form.Label>
                         <Form.Control
-                            placeholder="Person's last name"
+                            placeholder="Employee's last name"
                             type="text"
                             name="lastName"
                             required
@@ -57,7 +57,7 @@ export default function PersonsCreate() {
                     <Form.Group controlId="email">
                         <Form.Label className="pt-4">Email</Form.Label>
                         <Form.Control
-                            placeholder="Person's email"
+                            placeholder="Employee's email"
                             type="text"
                             name="email"
                             required
@@ -66,7 +66,7 @@ export default function PersonsCreate() {
                     <Form.Group controlId="password">
                         <Form.Label className="pt-4">Password</Form.Label>
                         <Form.Control
-                            placeholder="Person's password"
+                            placeholder="Employee's password"
                             type="password"
                             minLength={8}
                             name="password"
@@ -75,7 +75,7 @@ export default function PersonsCreate() {
                     </Form.Group>
                     <Row className="mb-0 flex-column flex-sm-row">
                         <Col className="d-flex align-items-center mb-2 mb-sm-0">
-                            <Link className="btn btn-danger myButton" to={RoutesNames.PERSONS_LIST}>
+                            <Link className="btn btn-danger myButton" to={RoutesNames.EMPLOYEES_LIST}>
                                 Cancel
                             </Link>
                         </Col>
