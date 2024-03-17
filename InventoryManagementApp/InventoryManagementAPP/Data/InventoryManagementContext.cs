@@ -31,7 +31,5 @@ namespace InventoryManagementAPP.Data
         /// Gets or sets the dataset representing products in the database
         /// </summary>
         public DbSet<Product> Products { get; set; }
-
-        public DbSet<Person> Persons { get; set; }
     }
 }
