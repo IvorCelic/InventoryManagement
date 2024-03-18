@@ -60,7 +60,7 @@ export default function ProductsCreate() {
                     </Form.Group>
                     <Row className="mb-0 flex-column flex-sm-row">
                         <Col className="d-flex align-items-center mb-2 mb-sm-0">
-                            <Link className="btn btn-danger myButton" to={RoutesNames.Products_LIST}>
+                            <Link className="btn btn-danger myButton" to={RoutesNames.PRODUCTS_LIST}>
                                 Cancel
                             </Link>
                         </Col>
