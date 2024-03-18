@@ -11,6 +11,6 @@ namespace InventoryManagementAPP.Models
         /// Gets or sets the primary key attribute in the database with generating value identities (1, 1).
         /// </summary>
         [Key]
-        public int? Id { get; set; }
+        public int Id { get; set; }
     }
 }

@@ -29,4 +29,15 @@
     /// Data Transfer Object (DTO) representing the data needed for inserting or updating a product
     /// </summary>
     public record ProductDTOInsertUpdate(string productName, string description, bool isUnitary);
+
+    /// <summary>
+    /// Data Transfer Object (DTO) representing a read-only view of a inventory transaction
+    /// </summary>
+    public record InventoryTransactionDTORead(int id, string? employeeFirstLastName, int? transactionStatus, DateTime? transactionDate, string? additionalDetails );
+
+    /// <summary>
+    /// Data Transfer Object (DTO) representing the data needed for inserting or updating a inventory transaction
+    /// </summary>
+    public record InventoryTransactionDTOInsertUpdate(int? employeeId, int? transactionStatus, DateTime? transactionDate, string? additionalDetails);
+
 }

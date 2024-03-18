@@ -31,5 +31,19 @@ namespace InventoryManagementAPP.Data
         /// Gets or sets the dataset representing products in the database
         /// </summary>
         public DbSet<Product> Products { get; set; }
+
+        /// <summary>
+        /// Gets or sets the dataset representing inventory transactions in the database
+        /// </summary>
+        public DbSet<InventoryTransaction> InventoryTransactions { get; set; }
+
+        /// <summary>
+        /// Method for configuring the database schema and relationships between entities in the InventoryManagementContext.
+        /// </summary>
+        /// <param name="modelBuilder">The builder used to construct the database model for this context.</param>
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<InventoryTransaction>().HasOne(it => it.Employee);
+        }
     }
 }
