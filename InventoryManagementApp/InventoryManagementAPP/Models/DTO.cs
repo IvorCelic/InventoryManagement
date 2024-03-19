@@ -33,11 +33,11 @@
     /// <summary>
     /// Data Transfer Object (DTO) representing a read-only view of a inventory transaction
     /// </summary>
-    public record InventoryTransactionDTORead(int id, string? employeeFirstLastName, int? transactionStatus, DateTime? transactionDate, string? additionalDetails );
+    public record InventoryTransactionDTORead(int id, string? employeeFirstLastName, Enumi? transactionStatus, DateTime? transactionDate, string? additionalDetails );
 
     /// <summary>
     /// Data Transfer Object (DTO) representing the data needed for inserting or updating a inventory transaction
     /// </summary>
-    public record InventoryTransactionDTOInsertUpdate(int? employeeId, int? transactionStatus, DateTime? transactionDate, string? additionalDetails);
+    public record InventoryTransactionDTOInsertUpdate(int? employeeId, Enumi? transactionStatus, DateTime? transactionDate, string? additionalDetails);
 
 }

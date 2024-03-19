@@ -15,7 +15,7 @@ namespace InventoryManagementAPP.Models
         /// <summary>
         /// Gets or sets the transaction status in the database.
         /// </summary>
-        public int? TransactionStatus { get; set; }
+        public Enumi? TransactionStatus { get; set; }
         /// <summary>
         /// Gets or sets the transaction datetime in the database.
         /// </summary>
@@ -25,5 +25,21 @@ namespace InventoryManagementAPP.Models
         /// </summary>
         public string? AdditionalDetails { get; set; }
 
+    }
+
+    public enum Enumi
+    {
+        /// <summary>
+        /// 0 - Transaction is currently closed
+        /// </summary>
+        TransactionClosed,
+        /// <summary>
+        /// 1 - Transaction is currently opened
+        /// </summary>
+        TransactionOpened,
+        /// <summary>
+        /// 2 - Transaction is invalid
+        /// </summary>
+        TransactionInvalid
     }
 }

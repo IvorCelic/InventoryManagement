@@ -50,7 +50,7 @@ CREATE TABLE InventoryTransactions (
     Id int primary key identity (1, 1) not null,
     Employee int references Employees (Id) not null,
     TransactionStatus int not null,
-    TransactionDateTime datetime,
+    TransactionDate datetime,
     AdditionalDetails varchar(255)
 );
 
