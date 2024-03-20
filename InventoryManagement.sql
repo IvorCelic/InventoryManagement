@@ -46,10 +46,15 @@ CREATE TABLE Products (
     IsUnitary bit not null
 );
 
+CREATE TABLE TransactionStatuses (
+	Id int primary key identity (1, 1) not null,
+	StatusName varchar(50) not null
+);
+
 CREATE TABLE InventoryTransactions (
     Id int primary key identity (1, 1) not null,
     Employee int references Employees (Id) not null,
-    TransactionStatus int not null,
+    TransactionStatus int references TransactionStatuses (Id) not null,
     TransactionDate datetime,
     AdditionalDetails varchar(255)
 );
@@ -82,11 +87,17 @@ values ('Laptop', 'High-performance laptop with SSD', 1),
        ('T-shirt', 'Cotton t-shirt for casual wear', 1),
        ('Smartphone', 'Latest smartphone model with OLED display', 1);
 
+-- insert into transactionstatuses
+insert into TransactionStatuses (StatusName)
+values ('Transaction opened'),
+	   ('Transaction closed'),
+	   ('Transaction invalid');
+
 -- insert into inventorytransactions
-insert into InventoryTransactions (Employee, TransactionStatus, TransactionDateTime, AdditionalDetails)
-values (1, 0, getdate(), 'Received new shipment of laptops'),
-       (2, 1, getdate(), 'Preparing order for shipment'),
-       (3, 2, getdate(), 'Inventory audit scheduled for next week');
+insert into InventoryTransactions (Employee, TransactionStatus, TransactionDate, AdditionalDetails)
+values (1, 2, getdate(), 'Inventory for 2023.'),
+       (2, 1, getdate(), 'Inventory for 2024.'),
+       (3, 3, getdate(), 'Failed inventory');
 
 -- insert into inventorytransactionitems
 insert into InventoryTransactionItems (InventoryTransaction, Product, Warehouse, Quantity)
