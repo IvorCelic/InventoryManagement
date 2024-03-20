@@ -51,7 +51,9 @@ namespace InventoryManagementAPP.Controllers
             try
             {
                 var list = _context.InventoryTransactions
-                    .Include(it => it.Employee).ToList();
+                    .Include(it => it.Employee)
+                    .Include(it => it.TransactionStatus)
+                    .ToList();
 
                 if (list == null || list.Count == 0)
                 {
@@ -94,8 +96,10 @@ namespace InventoryManagementAPP.Controllers
 
             try
             {
-                var it = _context.InventoryTransactions.Include(transaction => transaction.Employee)
-                                                       .FirstOrDefault(x => x.Id == id);
+                var it = _context.InventoryTransactions
+                    .Include(transaction => transaction.Employee)
+                    .Include(transaction => transaction.TransactionStatus)
+                    .FirstOrDefault(x => x.Id == id);
 
                 if (it == null)
                 {
@@ -137,9 +141,17 @@ namespace InventoryManagementAPP.Controllers
                 return BadRequest();
             }
 
+            var transactionStatus = _context.TransactionStatuses.Find(inventoryTransactionDTO.transactionStatusId);
+
+            if (transactionStatus == null)
+            {
+                return BadRequest();
+            }
+
             var entity = inventoryTransactionDTO.MapInventoryTransactionInsertUpdateFromDTO(new InventoryTransaction());
 
             entity.Employee = employee;
+            entity.TransactionStatus = transactionStatus;
 
             try
             {
@@ -180,7 +192,10 @@ namespace InventoryManagementAPP.Controllers
 
             try
             {
-                var entity = _context.InventoryTransactions.Include(transaction => transaction.Employee).FirstOrDefault(x => x.Id == id);
+                var entity = _context.InventoryTransactions
+                    .Include(transaction => transaction.Employee)
+                    .Include(transaction => transaction.TransactionStatus)
+                    .FirstOrDefault(x => x.Id == id);
 
                 if (entity == null)
                 {
@@ -194,9 +209,17 @@ namespace InventoryManagementAPP.Controllers
                     return BadRequest();
                 }
 
+                var transactionStatus = _context.TransactionStatuses.Find(inventoryTransactionDTO.transactionStatusId);
+
+                if (transactionStatus == null)
+                {
+                    return BadRequest();
+                }
+
                 entity = inventoryTransactionDTO.MapInventoryTransactionInsertUpdateFromDTO(entity);
 
                 entity.Employee = employee;
+                entity.TransactionStatus = transactionStatus;
 
                 _context.InventoryTransactions.Update(entity);
                 _context.SaveChanges();

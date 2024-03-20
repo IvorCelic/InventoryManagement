@@ -22,7 +22,7 @@ namespace InventoryManagementAPP.Mappers
                     new InventoryTransactionDTORead(
                         entity.Id,
                         entity.Employee == null ? "" : (entity.Employee.FirstName + " " + entity.Employee.LastName).Trim(),
-                        entity.TransactionStatus,
+                        entity.TransactionStatus == null ? "" : entity.TransactionStatus.StatusName.Trim(),
                         entity.TransactionDate,
                         entity.AdditionalDetails));
                 })
@@ -42,7 +42,7 @@ namespace InventoryManagementAPP.Mappers
                     .ConstructUsing(entity =>
                     new InventoryTransactionDTOInsertUpdate(
                         entity.Employee == null ? null : entity.Employee.Id,
-                        entity.TransactionStatus,
+                        entity.TransactionStatus == null ? null : entity.TransactionStatus.Id,
                         entity.TransactionDate,
                         entity.AdditionalDetails));
                 })
