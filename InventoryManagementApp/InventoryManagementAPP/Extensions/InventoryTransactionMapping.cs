@@ -4,7 +4,7 @@ using InventoryManagementAPP.Models;
 namespace InventoryManagementAPP.Extensions
 {
     /// <summary>
-    /// Extension methods for mapping employees between entities and Data Transfer Objects (DTOs) in the inventory management application.
+    /// Extension methods for mapping inventorytransactions between entities and Data Transfer Objects (DTOs) in the inventory management application.
     /// </summary>
     public static class InventoryTransactionMapping
     {
