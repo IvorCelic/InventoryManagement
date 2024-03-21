@@ -14,7 +14,7 @@ namespace InventoryManagementAPP.Mappers
                     .ConstructUsing(entity =>
                     new InventoryTransactionItemDTORead(
                         entity.Id,
-                        entity.InventoryTransaction.TransactionDate,
+                        entity.InventoryTransaction.TransactionStatus.StatusName,
                         entity.Product == null ? "" : entity.Product.ProductName.Trim(),
                         entity.Warehouse == null ? "" : entity.Warehouse.WarehouseName.Trim(),
                         entity.Quantity == null ? 0 : entity.Quantity));

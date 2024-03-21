@@ -55,7 +55,7 @@ namespace InventoryManagementAPP.Data
             modelBuilder.Entity<InventoryTransaction>().HasOne(it => it.Employee);
             modelBuilder.Entity<InventoryTransaction>().HasOne(it => it.TransactionStatus);
 
-            //modelBuilder.Entity<InventoryTransactionItem>().HasOne(iti => iti.InventoryTransaction);
+            modelBuilder.Entity<InventoryTransactionItem>().HasOne(iti => iti.InventoryTransaction);
             modelBuilder.Entity<InventoryTransactionItem>().HasOne(iti => iti.Product);
             modelBuilder.Entity<InventoryTransactionItem>().HasOne(iti => iti.Warehouse);
         }

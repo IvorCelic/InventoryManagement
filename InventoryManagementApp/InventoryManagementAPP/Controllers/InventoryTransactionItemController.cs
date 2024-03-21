@@ -10,7 +10,7 @@ using System.Linq;
 namespace InventoryManagementAPP.Controllers
 {
     /// <summary>
-    /// Inventory Management API controllers for InventoryTransactions entity CRUD operations.
+    /// Inventory Management API controllers for InventoryTransactionItems entity CRUD operations.
     /// </summary>
     [ApiController]
     [Route("api/v1/[controller]")]
@@ -51,7 +51,8 @@ namespace InventoryManagementAPP.Controllers
             try
             {
                 var list = _context.InventoryTransactionItems
-                    //.Include(iti => iti.InventoryTransaction)
+                    .Include(iti => iti.InventoryTransaction) // InventoryTransactionItem -> ITI
+                        .ThenInclude(ts => ts.TransactionStatus) // TransactionStatus -> TS
                     .Include(iti => iti.Product)
                     .Include(iti => iti.Warehouse)
                     .ToList();
