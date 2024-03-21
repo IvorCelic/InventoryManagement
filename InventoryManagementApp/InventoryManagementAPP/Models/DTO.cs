@@ -43,7 +43,7 @@
     /// <summary>
     /// Data Transfer Object (DTO) representing a read-only view of a inventory transaction items
     /// </summary>
-    public record InventoryTransactionItemDTORead(int id, string? transactionStatus, string? productName, string? warehouseName, int? quantity);
+    public record InventoryTransactionItemDTORead(int id, string? transactionStatus, int? inventoryTransactionId, string? productName, string? warehouseName, int? quantity);
 
     /// <summary>
     /// Data Transfer Object (DTO) representing the data needed for inserting or updating a inventory transaction items

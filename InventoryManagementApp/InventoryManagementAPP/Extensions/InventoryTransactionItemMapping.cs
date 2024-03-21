@@ -32,7 +32,7 @@ namespace InventoryManagementAPP.Extensions
         /// <returns>A <see cref="InventoryTransactionItemDTORead"/> DTO.</returns>
         public static InventoryTransactionItemDTORead MapInventoryTransactionItemReadToDTO(this InventoryTransactionItem entity)
         {
-            var mapper = InventoryTransactionMapper.InitializeReadToDTO();
+            var mapper = InventoryTransactionItemMapper.InitializeReadToDTO();
 
             return mapper.Map<InventoryTransactionItemDTORead>(entity);
         }
@@ -42,7 +42,7 @@ namespace InventoryManagementAPP.Extensions
         /// </summary>
         /// <param name="entity">The <see cref="InventoryTransactionItem"/> entity to map.</param>
         /// <returns>A <see cref="InventoryTransactionItemDTOInsertUpdate"/> DTO.</returns>
-        public static InventoryTransactionItemDTOInsertUpdate MapInventoryTransactionInsertUpdatedToDTO(this InventoryTransactionItem entity)
+        public static InventoryTransactionItemDTOInsertUpdate MapInventoryTransactionItemInsertUpdatedToDTO(this InventoryTransactionItem entity)
         {
             var mapper = InventoryTransactionItemMapper.InitializeInsertUpdateToDTO();
 

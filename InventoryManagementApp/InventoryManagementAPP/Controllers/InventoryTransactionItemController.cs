@@ -1,11 +1,8 @@
 ﻿using InventoryManagementAPP.Data;
 using InventoryManagementAPP.Extensions;
 using InventoryManagementAPP.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Linq;
 
 namespace InventoryManagementAPP.Controllers
 {
@@ -67,6 +64,153 @@ namespace InventoryManagementAPP.Controllers
             catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status503ServiceUnavailable)]
+        public IActionResult Post(InventoryTransactionItemDTOInsertUpdate inventoryTransactionItemDTO)
+        {
+            if (!ModelState.IsValid || inventoryTransactionItemDTO == null)
+            {
+                return BadRequest();
+            }
+
+            var inventoryTransaction = _context.InventoryTransactions
+                .Include(it=>it.TransactionStatus).FirstOrDefault(it=>it.Id== inventoryTransactionItemDTO.inventoryTransactionId);
+
+            if (inventoryTransaction == null)
+            {
+                return BadRequest();
+            }
+
+            var warehouse = _context.Warehouses.Find(inventoryTransactionItemDTO.warehouseId);
+
+            if (warehouse == null)
+            {
+                return BadRequest();
+            }
+
+            var product = _context.Products.Find(inventoryTransactionItemDTO.productId);
+
+            if (product == null)
+            {
+                return BadRequest();
+            }
+
+            var entity = inventoryTransactionItemDTO.MapInventoryTransactionItemInsertUpdateFromDTO(new InventoryTransactionItem());
+
+            entity.InventoryTransaction = inventoryTransaction;
+            entity.Warehouse = warehouse;
+            entity.Product = product;
+            
+
+            try
+            {
+                _context.InventoryTransactionItems.Add(entity);
+                _context.SaveChanges();
+
+                return StatusCode(StatusCodes.Status201Created, entity.MapInventoryTransactionItemReadToDTO());
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status503ServiceUnavailable, ex.Message);
+            }
+        }
+
+
+        [HttpPut]
+        [Route("{id:int}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status503ServiceUnavailable)]
+        public IActionResult Put(int id, InventoryTransactionItemDTOInsertUpdate inventoryTransactionItemDTO)
+        {
+            if (id <= 0 || !ModelState.IsValid || inventoryTransactionItemDTO == null)
+            {
+                return BadRequest();
+            }
+
+            try
+            {
+                var entity = _context.InventoryTransactionItems
+                    .Include(transaction => transaction.InventoryTransaction)
+                    .Include(transaction => transaction.Warehouse)
+                    .Include(transaction => transaction.Product)
+                    .FirstOrDefault(x => x.Id == id);
+
+                if (entity == null)
+                {
+                    return StatusCode(StatusCodes.Status204NoContent, id);
+                }
+
+                var inventoryTransaction = _context.InventoryTransactions.Find(inventoryTransactionItemDTO.inventoryTransactionId);
+                if (inventoryTransaction == null)
+                {
+                    return BadRequest();
+                }
+
+                var warehouse = _context.Warehouses.Find(inventoryTransactionItemDTO.warehouseId);
+                if (warehouse == null)
+                {
+                    return BadRequest();
+                }
+
+                var product = _context.Products.Find(inventoryTransactionItemDTO.productId);
+                if (product == null)
+                {
+                    return BadRequest();
+                }
+
+                entity = inventoryTransactionItemDTO.MapInventoryTransactionItemInsertUpdateFromDTO(entity);
+                entity.Warehouse = warehouse;
+                entity.Product = product;
+
+                _context.InventoryTransactionItems.Update(entity);
+                _context.SaveChanges();
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status503ServiceUnavailable, ex.Message);
+            }
+        }
+
+
+        [HttpDelete]
+        [Route("{id:int}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status503ServiceUnavailable)]
+        public IActionResult Delete(int id)
+        {
+            if (!ModelState.IsValid || id <= 0)
+            {
+                return BadRequest();
+            }
+
+            try
+            {
+                var inventoryTransactionItemFromDB = _context.InventoryTransactionItems.Find(id);
+
+                if (inventoryTransactionItemFromDB == null)
+                {
+                    return StatusCode(StatusCodes.Status204NoContent, id);
+                }
+
+                _context.InventoryTransactionItems.Remove(inventoryTransactionItemFromDB);
+                _context.SaveChanges();
+
+                return new JsonResult(new { message = "Item from transaction deleted successfully." });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status503ServiceUnavailable, ex.Message);
             }
         }
 

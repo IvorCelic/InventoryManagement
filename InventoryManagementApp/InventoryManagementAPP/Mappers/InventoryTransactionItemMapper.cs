@@ -14,10 +14,11 @@ namespace InventoryManagementAPP.Mappers
                     .ConstructUsing(entity =>
                     new InventoryTransactionItemDTORead(
                         entity.Id,
-                        entity.InventoryTransaction.TransactionStatus.StatusName,
+                        entity.InventoryTransaction.TransactionStatus ==null ? null : entity.InventoryTransaction.TransactionStatus.StatusName,
+                        entity.InventoryTransaction == null ? null : entity.InventoryTransaction.Id,
                         entity.Product == null ? "" : entity.Product.ProductName.Trim(),
                         entity.Warehouse == null ? "" : entity.Warehouse.WarehouseName.Trim(),
-                        entity.Quantity == null ? 0 : entity.Quantity));
+                        entity.Quantity == null ? null : entity.Quantity));
                 })
                 );
         }

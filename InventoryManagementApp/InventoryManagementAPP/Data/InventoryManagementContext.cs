@@ -42,6 +42,9 @@ namespace InventoryManagementAPP.Data
         /// </summary>
         public DbSet<InventoryTransaction> InventoryTransactions { get; set; }
 
+        /// <summary>
+        /// Gets or sets the dataset representing inventory transaction items in the database
+        /// </summary>
         public DbSet<InventoryTransactionItem> InventoryTransactionItems { get; set; }
 
 
