@@ -51,7 +51,7 @@ namespace InventoryManagementAPP.Controllers
             try
             {
                 var list = _context.InventoryTransactionItems
-                    .Include(iti => iti.InventoryTransaction)
+                    //.Include(iti => iti.InventoryTransaction)
                     .Include(iti => iti.Product)
                     .Include(iti => iti.Warehouse)
                     .ToList();
