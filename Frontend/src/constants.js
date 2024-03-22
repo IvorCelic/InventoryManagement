@@ -13,6 +13,8 @@ export const RoutesNames = {
     PRODUCTS_LIST: "/products",
     PRODUCTS_CREATE: "/products/add",
     PRODUCTS_EDIT: "/products/:id",
+
+    TRANSACTIONS_LIST: "/transactions"
 };
 
 export const App = {

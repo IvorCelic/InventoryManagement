@@ -27,6 +27,9 @@ function NavBar() {
                             <Nav.Link onClick={() => navigate(RoutesNames.EMPLOYEES_LIST)}>
                                 Employees
                             </Nav.Link>
+                            <Nav.Link onClick={() => navigate(RoutesNames.TRANSACTIONS_LIST)}>
+                                Transactions
+                            </Nav.Link>
                         </Nav>
                         <Nav>
                             <Nav.Link

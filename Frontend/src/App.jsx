@@ -19,6 +19,8 @@ import Employees from "./pages/employees/Employees";
 import EmployeesCreate from "./pages/employees/EmployeesCreate";
 import EmployeesEdit from "./pages/employees/EmployeesEdit";
 
+import Transactions from "./pages/transactions/Transactions";
+
 function App() {
     return (
         <>
@@ -39,6 +41,8 @@ function App() {
                     <Route path={RoutesNames.PRODUCTS_LIST} element={<Products />} />
                     <Route path={RoutesNames.PRODUCTS_CREATE} element={<ProductsCreate />} />
                     <Route path={RoutesNames.PRODUCTS_EDIT} element={<ProductsEdit />} />
+
+                    <Route path={RoutesNames.TRANSACTIONS_LIST} element={<Transactions />} />
                 </>
             </Routes>
         </>
