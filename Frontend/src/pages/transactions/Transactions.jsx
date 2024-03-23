@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
-import { Container, Table } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
+import { Button, Container, Table } from "react-bootstrap";
+import { Link, useNavigate } from "react-router-dom";
 import TransactionService from "../../services/TransactionService";
 import moment from "moment";
+import { FaEdit, FaTrash } from "react-icons/fa";
 
 export default function Transactions() {
     const [transactions, setTransactions] = useState();
@@ -37,24 +38,42 @@ export default function Transactions() {
                     <tr>
                         <th>Transaction date</th>
                         <th>Status</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
                     {transactions &&
                         transactions.map((inventoryTransaction, index) => (
-                            <tr key={index}>
-                                <td>
-                                    {inventoryTransaction.transactionDate ==
-                                    null
-                                        ? 'Not defined'
-                                        : formatDate(
-                                              inventoryTransaction.transactionDate
-                                          )}
-                                </td>
-                                <td>
-                                    {inventoryTransaction.transactionStatusName}
-                                </td>
-                            </tr>
+                            <Link>
+                                <tr key={index}>
+                                    <td>
+                                        {inventoryTransaction.transactionDate == null
+                                            ? "Not defined"
+                                            : formatDate(inventoryTransaction.transactionDate)}
+                                    </td>
+                                    <td>{inventoryTransaction.transactionStatusName}</td>
+                                    <td>
+                                        {" "}
+                                        <Container className="d-flex justify-content-center">
+                                            <Button
+                                                variant="link"
+                                                className="me-2 actionButton"
+                                                // onClick={() => {
+                                                //     navigate(`/products/${product.id}`);
+                                                // }}
+                                            >
+                                                <FaEdit size={25} />
+                                            </Button>
+                                            <Button
+                                                className="link-danger actionButton"
+                                                // onClick={() => removeProduct(product.id)}
+                                            >
+                                                <FaTrash size={25} />
+                                            </Button>
+                                        </Container>
+                                    </td>
+                                </tr>
+                            </Link>
                         ))}
                 </tbody>
             </Table>
