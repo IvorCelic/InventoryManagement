@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
+using System.Transactions;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace InventoryManagementAPP.Controllers
 {
@@ -106,7 +108,7 @@ namespace InventoryManagementAPP.Controllers
                     return new EmptyResult();
                 }
 
-                return new JsonResult(it.MapInventoryTransactionInsertUpdatedToDTO());
+                return new JsonResult(it.MapInventoryTransactionInsertToDTO());
             }
             catch (Exception ex)
             {
@@ -127,7 +129,7 @@ namespace InventoryManagementAPP.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status503ServiceUnavailable)]
-        public IActionResult Post(InventoryTransactionDTOInsertUpdate inventoryTransactionDTO)
+        public IActionResult Post(InventoryTransactionDTOInsert inventoryTransactionDTO)
         {
             if (!ModelState.IsValid || inventoryTransactionDTO == null)
             {
@@ -148,7 +150,7 @@ namespace InventoryManagementAPP.Controllers
                 return BadRequest();
             }
 
-            var entity = inventoryTransactionDTO.MapInventoryTransactionInsertUpdateFromDTO(new InventoryTransaction());
+            var entity = inventoryTransactionDTO.MapInventoryTransactionInsertFromDTO(new InventoryTransaction());
 
             entity.Employee = employee;
             entity.TransactionStatus = transactionStatus;
@@ -183,7 +185,7 @@ namespace InventoryManagementAPP.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status503ServiceUnavailable)]
-        public IActionResult Put(int id, InventoryTransactionDTOInsertUpdate inventoryTransactionDTO)
+        public IActionResult Put(int id, InventoryTransactionDTOUpdate inventoryTransactionDTO)
         {
             if (id <= 0 || !ModelState.IsValid || inventoryTransactionDTO == null)
             {
@@ -193,20 +195,12 @@ namespace InventoryManagementAPP.Controllers
             try
             {
                 var entity = _context.InventoryTransactions
-                    .Include(transaction => transaction.Employee)
                     .Include(transaction => transaction.TransactionStatus)
                     .FirstOrDefault(x => x.Id == id);
 
                 if (entity == null)
                 {
                     return StatusCode(StatusCodes.Status204NoContent, id);
-                }
-
-                var employee = _context.Employees.Find(inventoryTransactionDTO.employeeId);
-
-                if (employee == null)
-                {
-                    return BadRequest();
                 }
 
                 var transactionStatus = _context.TransactionStatuses.Find(inventoryTransactionDTO.transactionStatusId);
@@ -216,21 +210,21 @@ namespace InventoryManagementAPP.Controllers
                     return BadRequest();
                 }
 
-                entity = inventoryTransactionDTO.MapInventoryTransactionInsertUpdateFromDTO(entity);
+                entity = inventoryTransactionDTO.MapInventoryTransactionUpdateFromDTO(entity);
 
-                entity.Employee = employee;
                 entity.TransactionStatus = transactionStatus;
 
                 _context.InventoryTransactions.Update(entity);
                 _context.SaveChanges();
 
-                return StatusCode(StatusCodes.Status200OK, entity.MapInventoryTransactionReadToDTO());
+                return StatusCode(StatusCodes.Status200OK);
             }
             catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status503ServiceUnavailable, ex.Message);
             }
         }
+
 
         /// <summary>
         /// Deletes the specified inventory transaction.
@@ -272,6 +266,80 @@ namespace InventoryManagementAPP.Controllers
                 return StatusCode(StatusCodes.Status503ServiceUnavailable, ex.Message);
             }
         }
+
+
+        //[HttpPatch]
+        //[Route("{id:int}")]
+        //public async Task<ActionResult> Patch(int id, InventoryTransactionDTOUpdate inventoryTransactionDTO)
+        //{
+        //    if (!ModelState.IsValid || id <= 0 || inventoryTransactionDTO == null)
+        //    {
+        //        return BadRequest();
+        //    }
+
+        //    try
+        //    {
+        //        var inventoryTransactionFromDB = await _context.InventoryTransactions.FindAsync(id);
+
+        //        if (inventoryTransactionFromDB == null)
+        //        {
+        //            return StatusCode(StatusCodes.Status204NoContent, id);
+        //        }
+
+        //        // Update only the TransactionStatusId
+        //        if (inventoryTransactionDTO.transactionStatusId.HasValue)
+        //        {
+        //            inventoryTransactionFromDB.TransactionStatus.Id = inventoryTransactionDTO.transactionStatusId.Value;
+        //        }
+
+        //        await _context.SaveChangesAsync();
+
+        //        string message = inventoryTransactionDTO.transactionStatusId == 1 ? "Transaction opened" : "Transaction closed";
+
+        //        return new JsonResult(new { message });
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return StatusCode(StatusCodes.Status503ServiceUnavailable, ex.Message);
+        //    }
+        //}
+
+        //[HttpPatch("{id}")]
+        //public async Task<ActionResult> Patch(int id, InventoryTransactionDTOUpdate dto)
+        //{
+        //    if (!ModelState.IsValid || id <= 0 || dto == null || dto.transactionStatusId == null)
+        //    {
+        //        return BadRequest();
+        //    }
+
+        //    try
+        //    {
+        //        var inventoryTransactionFromDB = await _context.InventoryTransactions
+        //            .Include(it => it.TransactionStatus) // Eager loading TransactionStatus
+        //            .FirstOrDefaultAsync(it => it.Id == id);
+
+        //        if (inventoryTransactionFromDB == null)
+        //        {
+        //            return NotFound(id);
+        //        }
+
+        //        // Automatically change transactionStatusId based on the incoming request
+        //        inventoryTransactionFromDB.tra = dto.TransactionStatusId.Value;
+
+        //        await _context.SaveChangesAsync();
+
+        //        string message = dto.TransactionStatusId == 1 ? "Transaction opened" : "Transaction closed";
+
+        //        return new JsonResult(new { message });
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return StatusCode(StatusCodes.Status503ServiceUnavailable, ex.Message);
+        //    }
+        //}
+
+
+
 
     }
 }

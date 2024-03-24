@@ -38,28 +38,46 @@ namespace InventoryManagementAPP.Extensions
         }
 
         /// <summary>
-        /// Maps a <see cref="InventoryTransaction"/> entity to a <see cref="InventoryTransactionDTOInsertUpdate"/> DTO.
+        /// Maps a <see cref="InventoryTransaction"/> entity to a <see cref="InventoryTransactionDTOInsert"/> DTO.
         /// </summary>
         /// <param name="entity">The <see cref="InventoryTransaction"/> entity to map.</param>
-        /// <returns>A <see cref="InventoryTransactionDTOInsertUpdate"/> DTO.</returns>
-        public static InventoryTransactionDTOInsertUpdate MapInventoryTransactionInsertUpdatedToDTO(this InventoryTransaction entity)
+        /// <returns>A <see cref="InventoryTransactionDTOInsert"/> DTO.</returns>
+        public static InventoryTransactionDTOInsert MapInventoryTransactionInsertToDTO(this InventoryTransaction entity)
         {
-            var mapper = InventoryTransactionMapper.InitializeInsertUpdateToDTO();
+            var mapper = InventoryTransactionMapper.InitializeInsertToDTO();
 
-            return mapper.Map<InventoryTransactionDTOInsertUpdate>(entity);
+            return mapper.Map<InventoryTransactionDTOInsert>(entity);
         }
 
         /// <summary>
-        /// Maps a <see cref="InventoryTransactionDTOInsertUpdate"/> DTO to a <see cref="InventoryTransaction"/> entity.
+        /// Maps a <see cref="InventoryTransactionDTOInsert"/> DTO to a <see cref="InventoryTransaction"/> entity.
         /// </summary>
-        /// <param name="dto">The <see cref="InventoryTransactionDTOInsertUpdate"/> DTO to map.</param>
+        /// <param name="dto">The <see cref="InventoryTransactionDTOInsert"/> DTO to map.</param>
         /// <param name="entity">The <see cref="InventoryTransaction"/> entity to update.</param>
         /// <returns>The updated <see cref="InventoryTransaction"/> entity.</returns>
-        public static InventoryTransaction MapInventoryTransactionInsertUpdateFromDTO(this InventoryTransactionDTOInsertUpdate dto, InventoryTransaction entity)
+        public static InventoryTransaction MapInventoryTransactionInsertFromDTO(this InventoryTransactionDTOInsert dto, InventoryTransaction entity)
         {
             entity.TransactionDate = dto.transactionDate;
             entity.AdditionalDetails = dto.additionalDetails;
 
+            return entity;
+        }
+
+        public static InventoryTransactionDTOUpdate MapInventoryTransactionUpdateToDTO(this InventoryTransaction entity)
+        {
+            var mapper = InventoryTransactionMapper.InitializeUpdateToDTO();
+
+            return mapper.Map<InventoryTransactionDTOUpdate>(entity);
+        }
+
+        /// <summary>
+        /// Maps a <see cref="InventoryTransactionDTOUpdate"/> DTO to a <see cref="InventoryTransaction"/> entity.
+        /// </summary>
+        /// <param name="dto">The <see cref="InventoryTransactionDTOUpdate"/> DTO to map.</param>
+        /// <param name="entity">The <see cref="InventoryTransaction"/> entity to update.</param>
+        /// <returns>The updated <see cref="InventoryTransaction"/> entity.</returns>
+        public static InventoryTransaction MapInventoryTransactionUpdateFromDTO(this InventoryTransactionDTOUpdate dto, InventoryTransaction entity)
+        {
             return entity;
         }
     }

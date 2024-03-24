@@ -30,21 +30,34 @@ namespace InventoryManagementAPP.Mappers
         }
 
         /// <summary>
-        /// Initializes AutoMapper for mapping from InventoryTransaction entities to InventoryTransactionDTOInsertUpdate DTOs.
+        /// Initializes AutoMapper for mapping from InventoryTransaction entities to InventoryTransactionDTOInsert DTOs.
         /// </summary>
-        /// <returns>An instance of AutoMapper configured for inserting or updating from InventoryTransaction to InventoryTransactionDTOInsertUpdate.</returns>
-        public static Mapper InitializeInsertUpdateToDTO()
+        /// <returns>An instance of AutoMapper configured for inserting or updating from InventoryTransaction to InventoryTransactionDTOInsert.</returns>
+        public static Mapper InitializeInsertToDTO()
         {
             return new Mapper(
                 new MapperConfiguration(config =>
                 {
-                    config.CreateMap<InventoryTransaction, InventoryTransactionDTOInsertUpdate>()
+                    config.CreateMap<InventoryTransaction, InventoryTransactionDTOInsert>()
                     .ConstructUsing(entity =>
-                    new InventoryTransactionDTOInsertUpdate(
+                    new InventoryTransactionDTOInsert(
                         entity.Employee == null ? null : entity.Employee.Id,
                         entity.TransactionStatus == null ? null : entity.TransactionStatus.Id,
                         entity.TransactionDate,
                         entity.AdditionalDetails));
+                })
+                );
+        }
+
+        public static Mapper InitializeUpdateToDTO()
+        {
+            return new Mapper(
+                new MapperConfiguration(config =>
+                {
+                    config.CreateMap<InventoryTransaction, InventoryTransactionDTOUpdate>()
+                    .ConstructUsing(entity =>
+                    new InventoryTransactionDTOUpdate(
+                        entity.TransactionStatus.Id == 1 ? 2 : 1));
                 })
                 );
         }

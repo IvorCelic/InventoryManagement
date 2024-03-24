@@ -38,7 +38,9 @@
     /// <summary>
     /// Data Transfer Object (DTO) representing the data needed for inserting or updating a inventory transaction
     /// </summary>
-    public record InventoryTransactionDTOInsertUpdate(int? employeeId, int? transactionStatusId, DateTime? transactionDate, string? additionalDetails);
+    public record InventoryTransactionDTOInsert(int? employeeId, int? transactionStatusId, DateTime? transactionDate, string? additionalDetails);
+
+    public record InventoryTransactionDTOUpdate(int? transactionStatusId);
 
     /// <summary>
     /// Data Transfer Object (DTO) representing a read-only view of a inventory transaction items
