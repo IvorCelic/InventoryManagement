@@ -32,10 +32,10 @@ export default function Products() {
         }
     }
 
-    function isUnitary(product){
-        if (product.isUnitary==null) return 'Not defined';
-        if(product.isUnitary) return 'Yes';
-        return 'No';
+    function isUnitary(product) {
+        if (product.isUnitary == null) return "Not defined";
+        if (product.isUnitary) return "Yes";
+        return "No";
     }
 
     return (
@@ -71,6 +71,7 @@ export default function Products() {
                                             <FaEdit size={25} />
                                         </Button>
                                         <Button
+                                            variant="link"
                                             className="link-danger actionButton"
                                             onClick={() => removeProduct(product.id)}
                                         >

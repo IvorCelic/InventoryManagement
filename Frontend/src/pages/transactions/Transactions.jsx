@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
-import { Button, Container, Table } from "react-bootstrap";
+import { Button, Card, Container, ListGroup, ListGroupItem, Table } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import TransactionService from "../../services/TransactionService";
 import moment from "moment";
-import { FaEdit, FaTrash } from "react-icons/fa";
+import { FaFilePdf, FaPrint, FaTrash } from "react-icons/fa";
 
 export default function Transactions() {
     const [transactions, setTransactions] = useState();
+    const [transaction, setTransaction] = useState({});
     let navigate = useNavigate();
 
     async function fetchTransactions() {
@@ -31,52 +32,79 @@ export default function Transactions() {
         return mdp.format("DD. MM. YYYY. HH:mm");
     }
 
+    function transactionOpen(transactionStatusName) {
+        if (transactionStatusName == "Transaction opened") {
+            return "Close transaction";
+        }
+
+        return "Open transaction";
+    }
+
+    async function removeTransaction(id) {
+        const response = await TransactionService.remove(id);
+        if (response.ok) {
+            alert(response.message.data.message);
+            fetchTransactions();
+        }
+    }
+
+    async function changeTransactionStatus(entityName) {
+        const response = await TransactionService.edit(routeParams.id, entityName);
+        if (response.ok) {
+            navigate(RoutesNames.TRANSACTIONS_LIST);
+        } else {
+            console.log(response);
+            alert(response.message);
+        }
+    }
+
     return (
         <Container>
-            <Table striped bordered hover responsive>
-                <thead>
-                    <tr>
-                        <th>Transaction date</th>
-                        <th>Status</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {transactions &&
-                        transactions.map((inventoryTransaction, index) => (
-                            <Link>
-                                <tr key={index}>
-                                    <td>
+            <ListGroup>
+                {transactions &&
+                    transactions.map((inventoryTransaction, index) => (
+                        <ListGroup.Item key={index}>
+                            <div className="d-flex justify-content-between align-items-center">
+                                <div className="d-flex flex-column">
+                                    <p className="mb-0">
                                         {inventoryTransaction.transactionDate == null
                                             ? "Not defined"
                                             : formatDate(inventoryTransaction.transactionDate)}
-                                    </td>
-                                    <td>{inventoryTransaction.transactionStatusName}</td>
-                                    <td>
-                                        {" "}
-                                        <Container className="d-flex justify-content-center">
-                                            <Button
-                                                variant="link"
-                                                className="me-2 actionButton"
-                                                // onClick={() => {
-                                                //     navigate(`/products/${product.id}`);
-                                                // }}
-                                            >
-                                                <FaEdit size={25} />
-                                            </Button>
-                                            <Button
-                                                className="link-danger actionButton"
-                                                // onClick={() => removeProduct(product.id)}
-                                            >
-                                                <FaTrash size={25} />
-                                            </Button>
-                                        </Container>
-                                    </td>
-                                </tr>
-                            </Link>
-                        ))}
-                </tbody>
-            </Table>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;
+                                        {inventoryTransaction.transactionStatusName}
+                                    </p>
+                                </div>
+                                <div>
+                                    <Button
+                                        variant="link"
+                                        onClick={() => {
+                                            const newStatusId =
+                                                inventoryTransaction.transactionStatus;
+                                            changeTransactionStatus(inventoryTransaction);
+                                        }}
+                                    >
+                                        {transactionOpen(
+                                            inventoryTransaction.transactionStatusName
+                                        )}
+                                    </Button>
+                                    <Button variant="link" className="ml-2">
+                                        <FaFilePdf size={25} />
+                                    </Button>
+                                    <Button variant="link" className="ml-2">
+                                        <FaPrint size={25} />
+                                    </Button>
+                                    <Button
+                                        variant="link"
+                                        className="ml-2 link-danger"
+                                        onClick={() => removeTransaction(inventoryTransaction.id)}
+                                    >
+                                        <FaTrash size={25} />
+                                    </Button>
+                                </div>
+                            </div>
+                        </ListGroup.Item>
+                    ))}
+            </ListGroup>
         </Container>
     );
 }

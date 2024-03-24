@@ -66,6 +66,7 @@ export default function Employees() {
                                             <FaEdit size={25} />
                                         </Button>
                                         <Button
+                                            variant="link"
                                             className="link-danger actionButton"
                                             onClick={() => removeEmployee(employee.id)}
                                         >
