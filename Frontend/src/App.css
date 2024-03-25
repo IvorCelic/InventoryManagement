@@ -36,3 +36,109 @@
     border-color: #0d6efd!important;
     border-width: 0.15rem !important;
 }
+
+/* INVENTORY TRANSACTION CSS */
+.inventory-management {
+    display: flex;
+  }
+  
+  .transaction-list-container {
+    flex: 1;
+    margin-right: 20px;
+  }
+  
+  .transaction-list {
+    background-color: #f0f0f0;
+    border-radius: 5px;
+    padding: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .transaction-list h2 {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+  }
+  
+  .transaction-list ul {
+    padding: 0;
+  }
+  
+  .transaction-list li {
+    cursor: pointer;
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+    transition: background-color 0.3s;
+  }
+  
+  .transaction-list li:hover {
+    background-color: #e0e0e0;
+  }
+  
+  .transaction-details-container {
+    flex: 2;
+  }
+  
+  .transaction-details {
+    background-color: #fff;
+    border-radius: 5px;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .transaction-details h2 {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+  }
+  
+  .transaction-details button {
+    padding: 8px 16px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .transaction-details button:hover {
+    background-color: #0056b3;
+  }
+  
+  .transaction-details ul {
+    padding: 0;
+  }
+  
+  .transaction-details li {
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+  }
+  
+  .transaction-details li:last-child {
+    border-bottom: none;
+  }
+
+  .transaction-list li.selected {
+    background-color: #007bff;
+    color: #fff;
+  }
+  
+  .transaction-details h3 {
+    margin-top: 20px;
+    margin-bottom: 10px;
+  }
+
+  ul {
+    list-style-type: none;
+  }
+  
+  .transaction-list li {
+    cursor: pointer;
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+    transition: background-color 0.3s;
+  }
+  
+  .transaction-details ul {
+    padding: 0;
+  }
+  
