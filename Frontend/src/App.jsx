@@ -20,6 +20,7 @@ import EmployeesCreate from "./pages/employees/EmployeesCreate";
 import EmployeesEdit from "./pages/employees/EmployeesEdit";
 
 import Transactions from "./pages/transactions/Transactions";
+import TransactionItems from "./pages/transactions/transactionItems/TransactionItems";
 
 function App() {
     return (
@@ -43,6 +44,8 @@ function App() {
                     <Route path={RoutesNames.PRODUCTS_EDIT} element={<ProductsEdit />} />
 
                     <Route path={RoutesNames.TRANSACTIONS_LIST} element={<Transactions />} />
+
+                    <Route path={RoutesNames.TRANSACTIONITEMS_LIST} element={<TransactionItems />} />
                 </>
             </Routes>
         </>

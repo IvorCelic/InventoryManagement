@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import TransactionService from "../../services/TransactionService";
 import moment from "moment";
 import { FaFilePdf, FaPrint, FaTrash } from "react-icons/fa";
+import { RoutesNames } from "../../constants";
 
 export default function Transactions() {
     const [transactions, setTransactions] = useState();
@@ -63,7 +64,7 @@ export default function Transactions() {
             <ListGroup>
                 {transactions &&
                     transactions.map((inventoryTransaction, index) => (
-                        <ListGroup.Item key={index}>
+                        <ListGroup.Item action key={index} onClick={() => (RoutesNames.TRANSACTIONITEMS_LIST)}>
                             <div className="d-flex justify-content-between align-items-center">
                                 <div className="d-flex flex-column">
                                     <p className="mb-0">
