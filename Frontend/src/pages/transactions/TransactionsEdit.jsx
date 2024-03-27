@@ -16,6 +16,8 @@ export default function TransactionsEdit() {
     const [employees, setEmployees] = useState([]);
     const [employeeId, setEmployeeId] = useState(0);
 
+    const [statusId, setStatusId] = useState(0);
+
     async function fetchInitialData() {
         await fetchEmployees();
         await fetchTransaction();
@@ -41,7 +43,7 @@ export default function TransactionsEdit() {
 
         edit({
             employeeId: parseInt(employeeId),
-            transactionStatusId: transactionStatusId === 1 ? 2 : 1,
+            transactionStatusId: statusId,
             additionalDetails: data.get("additionaldetails"),
         });
     }
@@ -52,8 +54,8 @@ export default function TransactionsEdit() {
                 let transaction = res.data;
 
                 setEmployeeId(transaction.employeeId);
-
                 setTransaction(transaction);
+                setStatusId(transaction.transactionStatusId);
             })
             .catch((error) => {
                 alert(error.message);
@@ -93,6 +95,10 @@ export default function TransactionsEdit() {
         return transactionStatusId === 1 ? "Close transaction" : "Open transaction";
     }
 
+    function handleStatusToggle() {
+        setStatusId((previous) => (previous === 1 ? 2 : 1));
+    }
+
     return (
         <Container>
             <Form onSubmit={handleSubmit}>
@@ -126,9 +132,13 @@ export default function TransactionsEdit() {
                                 required
                             />
                         </Form.Group>
-                        <p className="pt-5">{transactionStatus(transaction.transactionStatusId)}</p>
-                        <Button variant="secondary" className="btn buttonStatus">
-                            {transactionStatusName(transaction.transactionStatusId)}
+                        <p className="pt-5">{transactionStatus(statusId)}</p>
+                        <Button
+                            variant="secondary"
+                            className="btn buttonStatus"
+                            onClick={handleStatusToggle}
+                        >
+                            {transactionStatusName(statusId)}
                         </Button>
                     </Col>
                     {transaction.transactionStatusId === 1 ? (
@@ -143,7 +153,7 @@ export default function TransactionsEdit() {
                     ) : null}
                 </Row>
                 <Row className="mb-0 flex-column flex-sm-row">
-                    <Col className="d-flex align-items-center mb-2 mb-sm-0">
+                    <Col>
                         <Link
                             className="btn btn-danger myButton"
                             to={RoutesNames.TRANSACTIONS_LIST}
@@ -151,9 +161,9 @@ export default function TransactionsEdit() {
                             Cancel
                         </Link>
                     </Col>
-                    <Col className="d-flex align-items-center">
+                    <Col>
                         <Button className="myButton" variant="primary" type="submit">
-                            Add {entityName}
+                            Save changes
                         </Button>
                     </Col>
                 </Row>
