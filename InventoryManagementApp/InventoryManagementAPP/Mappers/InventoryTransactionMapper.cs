@@ -57,7 +57,9 @@ namespace InventoryManagementAPP.Mappers
                     config.CreateMap<InventoryTransaction, InventoryTransactionDTOUpdate>()
                     .ConstructUsing(entity =>
                     new InventoryTransactionDTOUpdate(
-                        entity.TransactionStatus.Id == 1 ? 2 : 1));
+                        entity.Employee == null ? null : entity.Employee.Id,
+                        entity.TransactionStatus.Id == 1 ? 2 : 1,
+                        entity.AdditionalDetails));
                 })
                 );
         }

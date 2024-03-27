@@ -9,7 +9,7 @@ import { RoutesNames } from "../../constants";
 export default function TransactionsEdit() {
     const navigate = useNavigate();
     const routeParams = useParams();
-    const entityName = "Transaction";
+    const entityName = "transaction";
 
     const [transaction, setTransaction] = useState({});
 
@@ -27,8 +27,8 @@ export default function TransactionsEdit() {
         fetchInitialData();
     }, []);
 
-    async function edit(entity) {
-        const response = await TransactionService.edit(routeParams.id, entity);
+    async function edit(entityName) {
+        const response = await TransactionService.edit(routeParams.id, entityName);
         if (response.ok) {
             navigate(RoutesNames.TRANSACTIONS_LIST);
         } else {
@@ -36,14 +36,14 @@ export default function TransactionsEdit() {
         }
     }
 
-    function handleSubmit(entity) {
-        error.preventDefault();
+    function handleSubmit(event) {
+        event.preventDefault();
 
-        const data = new FormData(entity.target);
+        const data = new FormData(event.target);
 
         edit({
             employeeId: parseInt(employeeId),
-            transactionStatusId: statusId,
+            transactionStatusId: parseInt(statusId),
             additionalDetails: data.get("additionaldetails"),
         });
     }

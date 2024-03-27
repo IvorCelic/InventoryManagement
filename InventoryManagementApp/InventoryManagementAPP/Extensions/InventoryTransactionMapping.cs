@@ -78,6 +78,8 @@ namespace InventoryManagementAPP.Extensions
         /// <returns>The updated <see cref="InventoryTransaction"/> entity.</returns>
         public static InventoryTransaction MapInventoryTransactionUpdateFromDTO(this InventoryTransactionDTOUpdate dto, InventoryTransaction entity)
         {
+            entity.AdditionalDetails = dto.additionalDetails;
+
             return entity;
         }
     }
