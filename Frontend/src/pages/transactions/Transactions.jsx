@@ -64,7 +64,7 @@ export default function Transactions() {
                                 <td>
                                     {inventoryTransaction.transactionDate == null
                                         ? "Not defined"
-                                        : formatDate(inventoryTransaction.tramsactionDate)}
+                                        : formatDate(inventoryTransaction.transactionDate)}
                                 </td>
                                 <td>{inventoryTransaction.additionalDetails}</td>
                                 <td>{inventoryTransaction.employeeFirstLastName}</td>
@@ -102,12 +102,6 @@ export default function Transactions() {
                         ))}
                 </tbody>
             </Table>
-            <Container>
-                <h1></h1>
-                <ul>
-                    <li>test</li>
-                </ul>
-            </Container>
         </Container>
     );
 }

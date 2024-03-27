@@ -8,7 +8,7 @@ import TransactionService from "../../services/TransactionService";
 
 export default function TransactionsCreate() {
     const navigate = useNavigate();
-    const entityName = "inventoryTransaction";
+    const entityName = "Transaction";
 
     const [employees, setEmployees] = useState([]);
     const [employeeId, setEmployeeId] = useState(0);
