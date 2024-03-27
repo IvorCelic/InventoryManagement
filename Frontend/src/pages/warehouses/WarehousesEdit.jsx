@@ -34,9 +34,9 @@ export default function WarehousesEdit() {
         }
     }
 
-    function handleSubmit(error) {
-        error.preventDefault();
-        const data = new FormData(error.target);
+    function handleSubmit(entity) {
+        entity.preventDefault();
+        const data = new FormData(entity.target);
 
         const entityName = {
             warehouseName: data.get("warehousename"),
@@ -77,11 +77,7 @@ export default function WarehousesEdit() {
                             </Link>
                         </Col>
                         <Col>
-                            <Button
-                                className="myButton"
-                                variant="primary"
-                                type="submit"
-                            >
+                            <Button className="myButton" variant="primary" type="submit">
                                 Save changes
                             </Button>
                         </Col>

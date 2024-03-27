@@ -34,9 +34,9 @@ export default function EmployeesEdit() {
         }
     }
 
-    function handleSubmit(error) {
-        error.preventDefault();
-        const data = new FormData(error.target);
+    function handleSubmit(event) {
+        event.preventDefault();
+        const data = new FormData(event.target);
 
         const entityName = {
             firstName: data.get("firstName"),
@@ -92,7 +92,10 @@ export default function EmployeesEdit() {
                     </Form.Group>
                     <Row className="mb-0 flex-column flex-sm-row">
                         <Col className="d-flex align-items-center mb-2 mb-sm-0">
-                            <Link className="btn btn-danger myButton" to={RoutesNames.EMPLOYEES_LIST}>
+                            <Link
+                                className="btn btn-danger myButton"
+                                to={RoutesNames.EMPLOYEES_LIST}
+                            >
                                 Cancel
                             </Link>
                         </Col>

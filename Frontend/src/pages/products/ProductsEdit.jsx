@@ -34,14 +34,14 @@ export default function ProductsEdit() {
         }
     }
 
-    function handleSubmit(error) {
-        error.preventDefault();
-        const data = new FormData(error.target);
+    function handleSubmit(event) {
+        event.preventDefault();
+        const data = new FormData(event.target);
 
         const entityName = {
             productName: data.get("productname"),
             description: data.get("description"),
-            isUnitary: data.get("isunitary") == "on" ? true : false
+            isUnitary: data.get("isunitary") == "on" ? true : false,
         };
 
         editProduct(entityName);
@@ -70,7 +70,7 @@ export default function ProductsEdit() {
                         />
                     </Form.Group>
                     <Form.Group controlId="isUnitary">
-                        <Form.Check 
+                        <Form.Check
                             label="Is Unitary"
                             defaultChecked={product.isUnitary}
                             name="isunitary"
@@ -78,7 +78,10 @@ export default function ProductsEdit() {
                     </Form.Group>
                     <Row className="mb-0 flex-column flex-sm-row">
                         <Col className="d-flex align-items-center mb-2 mb-sm-0">
-                            <Link className="btn btn-danger myButton" to={RoutesNames.PRODUCTS_LIST}>
+                            <Link
+                                className="btn btn-danger myButton"
+                                to={RoutesNames.PRODUCTS_LIST}
+                            >
                                 Cancel
                             </Link>
                         </Col>
