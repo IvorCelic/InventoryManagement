@@ -61,6 +61,19 @@ namespace InventoryManagementAPP.Data
             modelBuilder.Entity<InventoryTransactionItem>().HasOne(iti => iti.InventoryTransaction);
             modelBuilder.Entity<InventoryTransactionItem>().HasOne(iti => iti.Product);
             modelBuilder.Entity<InventoryTransactionItem>().HasOne(iti => iti.Warehouse);
+
+            //modelBuilder.Entity<InventoryTransactionItem>()
+            //    .HasKey(it => new { it.InventoryTransaction, it.Product });
+
+            //modelBuilder.Entity<InventoryTransactionItem>()
+            //    .HasOne(it => it.InventoryTransaction)
+            //    .WithMany(it => it.InventoryTransactionItems)
+            //    .HasForeignKey(it => it.Id);
+
+            //modelBuilder.Entity<InventoryTransactionItem>()
+            //    .HasOne(it => it.Product)
+            //    .WithMany()
+            //    .HasForeignKey(it => it.Product);
         }
     }
 }

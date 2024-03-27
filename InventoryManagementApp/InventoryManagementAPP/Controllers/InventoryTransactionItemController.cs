@@ -215,5 +215,38 @@ namespace InventoryManagementAPP.Controllers
         }
 
 
+        //[HttpGet]
+        //[Route("Products/{transactionId:int}")]
+        //public IActionResult GetProducts(int transactionId)
+        //{
+        //    if (!ModelState.IsValid ||  transactionId <= 0)
+        //    {
+        //        BadRequest();
+        //    }
+        //    try
+        //    {
+        //        var transaction = _context.InventoryTransactions.Include(it => it.InventoryTransactionItems).ThenInclude(it => it.Product).FirstOrDefault(x => x.Id == transactionId);
+
+        //        if (transaction == null)
+        //        {
+        //            return BadRequest();
+        //        }
+
+        //        var products = transaction.InventoryTransactionItems.Select(it => it.Product).ToList();
+
+        //        if (products == null)
+        //        {
+        //            return BadRequest();
+        //        }
+
+        //        return new JsonResult(products.MapProductReadList());
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return StatusCode(StatusCodes.Status503ServiceUnavailable, ex.Message);
+        //    }
+        //}
+
+
     }
 }
