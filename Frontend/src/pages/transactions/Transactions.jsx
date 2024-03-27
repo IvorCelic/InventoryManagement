@@ -1,94 +1,113 @@
-import React, { useState } from 'react';
+import { useEffect, useState } from "react";
+import { Button, Container, Table } from "react-bootstrap";
+import { Link, useNavigate } from "react-router-dom";
+import TransactionService from "../../services/TransactionService";
+import moment from "moment";
+import { FaEdit, FaFilePdf, FaPrint, FaTrash } from "react-icons/fa";
+import SearchAndAdd from "../../components/SearchAndAdd";
+import { RoutesNames } from "../../constants";
 
-const InventoryManagementPage = () => {
-  const [selectedTransaction, setSelectedTransaction] = useState(null);
-  const [newProduct, setNewProduct] = useState({ product: '', quantity: '' });
+export default function Transactions() {
+    const [transactions, setTransactions] = useState();
+    const navigate = useNavigate();
 
-  // Dummy data - first html&css then I will implement real data
-  const transactions = [
-    { id: 1, employee: 'John Doe', date: '2024-03-25', status: 'Closed' },
-    { id: 2, employee: 'Jane Smith', date: '2024-03-24', status: 'Open' },
-  ];
+    async function fetchTransactions() {
+        await TransactionService.get()
+            .then((res) => {
+                console.log(res.data);
+                setTransactions(res.data);
+            })
+            .catch((error) => {
+                alert(error);
+            });
+    }
 
-  const transactionItems = {
-    1: {
-      "Warehouse 1": [
-        { id: 1, product: 'Product A', quantity: 10 },
-        { id: 2, product: 'Product B', quantity: 20 },
-        { id: 3, product: 'Product C', quantity: 15 },
-      ],
-      "Warehouse 2": [
-        { id: 4, product: 'Product D', quantity: 5 },
-        { id: 5, product: 'Product E', quantity: 10 },
-        { id: 6, product: 'Product F', quantity: 8 },
-      ],
-    },
-    2: {
-      "Warehouse 1": [
-        { id: 7, product: 'Product G', quantity: 12 },
-        { id: 8, product: 'Product H', quantity: 18 },
-        { id: 9, product: 'Product I', quantity: 20 },
-      ],
-      "Warehouse 2": [
-        { id: 10, product: 'Product J', quantity: 7 },
-        { id: 11, product: 'Product K', quantity: 15 },
-        { id: 12, product: 'Product L', quantity: 10 },
-      ],
-    },
-  };
+    useEffect(() => {
+        fetchTransactions();
+    }, []);
 
-  const handleTransactionClick = (transactionId) => {
-    setSelectedTransaction(transactionId);
-  };
+    async function removeTransaction(id) {
+        const response = await TransactionService.remove(id);
+        if (response.ok) {
+            alert(response.message.data.message);
+            fetchTransactions();
+        }
+    }
 
-  const handleCloseTransaction = () => {
-    setSelectedTransaction(null);
-  };
+    function formatDate(transactionDate) {
+        let mdp = moment.utc(transactionDate);
+        if (mdp.hour() == 0 && mdp.minutes() == 0) {
+            return mdp.format("DD. MM. YYYY.");
+        }
+        return mdp.format("DD. MM. YYYY. HH:mm");
+    }
 
-  return (
-    <div className="inventory-management">
-      <div className="transaction-list-container">
-        <div className="transaction-list">
-          <h2>Transactions</h2>
-          <ul>
-            {transactions.map((transaction) => (
-              <li
-                key={transaction.id}
-                onClick={() => handleTransactionClick(transaction.id)}
-                className={selectedTransaction === transaction.id ? 'selected' : ''}
-              >
-                {`Transaction ID: ${transaction.id}, Employee: ${transaction.employee}, Date: ${transaction.date}, Status: ${transaction.status}`}
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
-      <div className="transaction-details-container">
-        {selectedTransaction && (
-          <div className="transaction-details">
-            <h2>Transaction Details</h2>
-            <button onClick={handleCloseTransaction}>Close Transaction</button>
-            {Object.entries(transactionItems[selectedTransaction]).map(([warehouse, items]) => (
-              <div key={warehouse}>
-                <h3>{`Warehouse: ${warehouse}`}</h3>
+    return (
+        <Container>
+            <Container>
+                <SearchAndAdd RouteName={RoutesNames.TRANSACTIONS_CREATE} entity={"transaction"} />
+            </Container>
+            <Table striped bordered hover responsive>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Details</th>
+                        <th>Employee</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {transactions &&
+                        transactions.map((inventoryTransaction, index) => (
+                            <tr key={index}>
+                                <td>
+                                    {inventoryTransaction.transactionDate == null
+                                        ? "Not defined"
+                                        : formatDate(inventoryTransaction.tramsactionDate)}
+                                </td>
+                                <td>{inventoryTransaction.additionalDetails}</td>
+                                <td>{inventoryTransaction.employeeFirstLastName}</td>
+                                <td>{inventoryTransaction.transactionStatusName}</td>
+                                <td>
+                                    <Container className="d-flex justify-content-center">
+                                        <Button
+                                            variant="link"
+                                            onClick={() => {
+                                                navigate(
+                                                    `/transactions/${inventoryTransaction.id}`
+                                                );
+                                            }}
+                                        >
+                                            <FaEdit size={25} />
+                                        </Button>
+                                        <Button variant="link">
+                                            <FaFilePdf size={25} />
+                                        </Button>
+                                        <Button variant="link">
+                                            <FaPrint size={25} />
+                                        </Button>
+                                        <Button
+                                            variant="link"
+                                            className="link-danger"
+                                            onClick={() =>
+                                                removeTransaction(inventoryTransaction.id)
+                                            }
+                                        >
+                                            <FaTrash size={25} />
+                                        </Button>
+                                    </Container>
+                                </td>
+                            </tr>
+                        ))}
+                </tbody>
+            </Table>
+            <Container>
+                <h1></h1>
                 <ul>
-                  {items.map((item) => (
-                    <li key={item.id}>
-                      {`Product: ${item.product}, Quantity: ${item.quantity}`}
-                      <button>Delete</button>
-                    </li>
-                  ))}
+                    <li>test</li>
                 </ul>
-                <input type="text" placeholder="Product Name" value={newProduct.product} onChange={(e) => setNewProduct({ ...newProduct, product: e.target.value })} />
-                <input type="number" placeholder="Quantity" value={newProduct.quantity} onChange={(e) => setNewProduct({ ...newProduct, quantity: e.target.value })} />
-                <button>Add Product</button>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-    </div>
-  );
-};
-
-export default InventoryManagementPage;
+            </Container>
+        </Container>
+    );
+}

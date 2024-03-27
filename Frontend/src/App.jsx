@@ -21,6 +21,7 @@ import EmployeesEdit from "./pages/employees/EmployeesEdit";
 
 import Transactions from "./pages/transactions/Transactions";
 import TransactionItems from "./pages/transactions/transactionItems/TransactionItems";
+import TransactionsCreate from "./pages/transactions/TransactionsCreate";
 
 function App() {
     return (
@@ -44,8 +45,15 @@ function App() {
                     <Route path={RoutesNames.PRODUCTS_EDIT} element={<ProductsEdit />} />
 
                     <Route path={RoutesNames.TRANSACTIONS_LIST} element={<Transactions />} />
+                    <Route
+                        path={RoutesNames.TRANSACTIONS_CREATE}
+                        element={<TransactionsCreate />}
+                    />
 
-                    <Route path={RoutesNames.TRANSACTIONITEMS_LIST} element={<TransactionItems />} />
+                    <Route
+                        path={RoutesNames.TRANSACTIONITEMS_LIST}
+                        element={<TransactionItems />}
+                    />
                 </>
             </Routes>
         </>
