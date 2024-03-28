@@ -17,5 +17,7 @@ namespace InventoryManagementAPP.Models
         /// Gets or sets the description of the location in the database.
         /// </summary>
         public string? Description { get; set; }
+
+        public ICollection<InventoryTransaction> InventoryTransactions { get; } = new List<InventoryTransaction>();
     }
 }

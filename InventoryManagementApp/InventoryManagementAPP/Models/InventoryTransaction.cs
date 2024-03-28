@@ -28,5 +28,7 @@ namespace InventoryManagementAPP.Models
 
         public List<Product>? Products { get; set; }
 
+        public List<Warehouse> Warehouses { get; set; }
+
     }
 }

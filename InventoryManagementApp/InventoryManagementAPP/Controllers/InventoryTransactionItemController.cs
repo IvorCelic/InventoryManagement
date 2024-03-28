@@ -241,5 +241,32 @@ namespace InventoryManagementAPP.Controllers
         }
 
 
+        [HttpGet]
+        [Route("Warehouses/{transactionId:int}")]
+        public IActionResult GetWarehouses(int transactionId)
+        {
+            if (!ModelState.IsValid || transactionId <= 0)
+            {
+                BadRequest();
+            }
+
+            try
+            {
+                var transaction = _context.InventoryTransactions.Include(it => it.Warehouses).FirstOrDefault(x => x.Id == transactionId);
+
+                if (transaction == null)
+                {
+                    return BadRequest();
+                }
+
+                return new JsonResult(transaction.Warehouses!.MapWarehouseReadList());
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status503ServiceUnavailable, ex.Message);
+            }
+        }
+
+
     }
 }
