@@ -268,5 +268,35 @@ namespace InventoryManagementAPP.Controllers
         }
 
 
+        [HttpGet]
+        [Route("Transactions/{transactionId:int}/Warehouses/{warehouseId:int}")]
+        public IActionResult GetProductsOnWarehouse(int transactionId, int warehouseId)
+        {
+            if (!ModelState.IsValid || transactionId <= 0 | warehouseId <= 0)
+            {
+                return BadRequest();
+            }
+
+            try
+            {
+                var productsInWarehouse = _context.InventoryTransactionItems
+                    .Where(iti => iti.InventoryTransaction.Id == transactionId && iti.Warehouse.Id == warehouseId)
+                    .Select(iti => iti.Product)
+                    .ToList();
+
+                if (productsInWarehouse == null)
+                {
+                    return BadRequest();
+                }
+
+                return new JsonResult(productsInWarehouse.MapProductReadList());
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status503ServiceUnavailable, ex.Message);
+            }
+        }
+
+
     }
 }

@@ -18,6 +18,8 @@ namespace InventoryManagementAPP.Models
         /// </summary>
         public string? Description { get; set; }
 
+        public List<Product> Products { get; set; }
+
         public ICollection<InventoryTransaction> InventoryTransactions { get; } = new List<InventoryTransaction>();
     }
 }
