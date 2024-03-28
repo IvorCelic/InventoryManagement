@@ -23,6 +23,6 @@ namespace InventoryManagementAPP.Models
         /// </summary>
         public bool? IsUnitary { get; set; }
 
-        public ICollection<InventoryTransaction> InventoryTransactions { get; } = new List<InventoryTransaction>();
+       // public ICollection<InventoryTransaction> InventoryTransactions { get; } = new List<InventoryTransaction>();
     }
 }

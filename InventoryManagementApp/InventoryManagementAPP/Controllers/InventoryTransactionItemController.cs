@@ -225,21 +225,28 @@ namespace InventoryManagementAPP.Controllers
             }
             try
             {
-                var transaction = _context.InventoryTransactions.Include(it => it.Products).FirstOrDefault(x => x.Id == transactionId);
+                var transactionItems = _context.InventoryTransactionItems.Include(it => it.Product).Where(x => x.InventoryTransaction.Id == transactionId).ToList();
 
-                if (transaction == null)
+                if (transactionItems == null)
                 {
                     return BadRequest();
                 }
 
-                return new JsonResult(transaction.Products!.MapProductReadList());
+                var products = new List<Product>();
+                foreach (var i in transactionItems)
+                {
+                    products.Add(i.Product);
+                }
+
+
+                return new JsonResult(products.MapProductReadList());
             }
             catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status503ServiceUnavailable, ex.Message);
             }
         }
-
+        /*
 
         [HttpGet]
         [Route("Warehouses/{transactionId:int}")]
@@ -266,7 +273,7 @@ namespace InventoryManagementAPP.Controllers
                 return StatusCode(StatusCodes.Status503ServiceUnavailable, ex.Message);
             }
         }
-
+        */
 
         [HttpGet]
         [Route("Transactions/{transactionId:int}/Warehouses/{warehouseId:int}")]
@@ -280,8 +287,9 @@ namespace InventoryManagementAPP.Controllers
             try
             {
                 var productsInWarehouse = _context.InventoryTransactionItems
+               //     .Include(i=> i.Warehouse)
+                    .Include(i=>i.Product)
                     .Where(iti => iti.InventoryTransaction.Id == transactionId && iti.Warehouse.Id == warehouseId)
-                    .Select(iti => iti.Product)
                     .ToList();
 
                 if (productsInWarehouse == null)
@@ -289,7 +297,14 @@ namespace InventoryManagementAPP.Controllers
                     return BadRequest();
                 }
 
-                return new JsonResult(productsInWarehouse.MapProductReadList());
+                var products = new List<Product>();
+                foreach(var i in productsInWarehouse)
+                {
+                    products.Add(i.Product);
+                }
+
+
+                return new JsonResult(products.MapProductReadList());
             }
             catch (Exception ex)
             {
