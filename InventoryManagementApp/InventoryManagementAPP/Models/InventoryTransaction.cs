@@ -26,7 +26,7 @@ namespace InventoryManagementAPP.Models
         /// </summary>
         public string? AdditionalDetails { get; set; }
 
-        //public List<InventoryTransactionItem>? InventoryTransactionItems { get; set; }
+        public List<Product>? Products { get; set; }
 
     }
 }

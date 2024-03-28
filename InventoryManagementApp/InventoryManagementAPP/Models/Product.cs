@@ -22,5 +22,7 @@ namespace InventoryManagementAPP.Models
         /// Gets or sets the description of the product in the database
         /// </summary>
         public bool? IsUnitary { get; set; }
+
+        public ICollection<InventoryTransaction> InventoryTransactions { get; } = new List<InventoryTransaction>();
     }
 }
