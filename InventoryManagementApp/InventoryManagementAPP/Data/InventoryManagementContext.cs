@@ -61,24 +61,6 @@ namespace InventoryManagementAPP.Data
             modelBuilder.Entity<InventoryTransactionItem>().HasOne(iti => iti.InventoryTransaction);
             modelBuilder.Entity<InventoryTransactionItem>().HasOne(iti => iti.Product);
             modelBuilder.Entity<InventoryTransactionItem>().HasOne(iti => iti.Warehouse);
-
-            /*
-            modelBuilder.Entity<InventoryTransaction>()
-                .HasMany(it => it.Products)
-                .WithMany(p => p.InventoryTransactions)
-                .UsingEntity<Dictionary<string, object>>("inventorytransactionitems",
-                c => c.HasOne<Product>().WithMany().HasForeignKey("product"),
-                c => c.HasOne<InventoryTransaction>().WithMany().HasForeignKey("inventorytransaction"),
-                c => c.ToTable("inventorytransactionitems")); 
-
-            modelBuilder.Entity<InventoryTransaction>()
-                .HasMany(it => it.Warehouses)
-                .WithMany(w => w.InventoryTransactions)
-                .UsingEntity<Dictionary<string, object>>("inventorytransactionitems",
-                c => c.HasOne<Warehouse>().WithMany().HasForeignKey("warehouse"),
-                c => c.HasOne<InventoryTransaction>().WithMany().HasForeignKey("inventorytransaction"),
-                c => c.ToTable("inventorytransactionitems"));
-            */
         }
     }
 }

@@ -25,7 +25,7 @@ namespace InventoryManagementAPP.Controllers
         }
 
         /// <summary>
-        /// Retrieves all inventory transaction items from the database.
+        /// Retrieves all inventory transactionWarehouses items from the database.
         /// </summary>
         /// <returns>
         /// <response code="200">Success - Returns the list of inventory transactions.</response>
@@ -225,7 +225,10 @@ namespace InventoryManagementAPP.Controllers
             }
             try
             {
-                var transactionItems = _context.InventoryTransactionItems.Include(it => it.Product).Where(x => x.InventoryTransaction.Id == transactionId).ToList();
+                var transactionItems = _context.InventoryTransactionItems
+                    .Include(it => it.Product)
+                    .Where(x => x.InventoryTransaction.Id == transactionId)
+                    .ToList();
 
                 if (transactionItems == null)
                 {
@@ -246,7 +249,7 @@ namespace InventoryManagementAPP.Controllers
                 return StatusCode(StatusCodes.Status503ServiceUnavailable, ex.Message);
             }
         }
-        /*
+
 
         [HttpGet]
         [Route("Warehouses/{transactionId:int}")]
@@ -259,21 +262,27 @@ namespace InventoryManagementAPP.Controllers
 
             try
             {
-                var transaction = _context.InventoryTransactions.Include(it => it.Warehouses).FirstOrDefault(x => x.Id == transactionId);
+                var transactionWarehouses = _context.InventoryTransactionItems
+                    .Include(it => it.Warehouse)
+                    .Where(x => x.InventoryTransaction.Id == transactionId)
+                    .Select(x => x.Warehouse)  // Select only warehouses
+                    .Distinct()  // Filter out duplicates
+                    .ToList();
 
-                if (transaction == null)
+                if (transactionWarehouses == null)
                 {
                     return BadRequest();
                 }
 
-                return new JsonResult(transaction.Warehouses!.MapWarehouseReadList());
+                return new JsonResult(transactionWarehouses.MapWarehouseReadList());
             }
             catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status503ServiceUnavailable, ex.Message);
             }
         }
-        */
+
+
 
         [HttpGet]
         [Route("Transactions/{transactionId:int}/Warehouses/{warehouseId:int}")]
@@ -287,7 +296,6 @@ namespace InventoryManagementAPP.Controllers
             try
             {
                 var productsInWarehouse = _context.InventoryTransactionItems
-               //     .Include(i=> i.Warehouse)
                     .Include(i=>i.Product)
                     .Where(iti => iti.InventoryTransaction.Id == transactionId && iti.Warehouse.Id == warehouseId)
                     .ToList();
