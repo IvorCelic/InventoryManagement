@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { Button, Col, Container, Form, Nav, NavLink, Row, Tab, Table, Tabs } from "react-bootstrap";
+import React, { useEffect, useState } from "react";
+import { Button, Col, Container, Form, Nav, Row, Table } from "react-bootstrap";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import TransactionService from "../../services/TransactionService";
 import EmployeeService from "../../services/EmployeeService";
@@ -18,7 +18,13 @@ export default function TransactionsEdit() {
     const [warehouses, setWarehouses] = useState([]);
     const [products, setProducts] = useState([]);
     const [statusId, setStatusId] = useState(0);
-    const [activeTab, setActiveTab] = useState("all"); // State to manage active tab
+    const [activeTab, setActiveTab] = useState("all");
+    const [productsOnWarehouse, setProductsOnWarehouse] = useState([]);
+    const [selectedWarehouseId, setSelectedWarehouseId] = useState(null);
+
+    useEffect(() => {
+        fetchInitialData();
+    }, []);
 
     async function fetchInitialData() {
         await fetchEmployees();
@@ -26,10 +32,6 @@ export default function TransactionsEdit() {
         await fetchProducts();
         await fetchWarehouses();
     }
-
-    useEffect(() => {
-        fetchInitialData();
-    }, []);
 
     async function edit(entityName) {
         const response = await TransactionService.edit(routeParams.id, entityName);
@@ -53,49 +55,57 @@ export default function TransactionsEdit() {
     }
 
     async function fetchTransaction() {
-        await TransactionService.getById(routeParams.id)
-            .then((res) => {
-                let transaction = res.data;
-
-                setEmployeeId(transaction.employeeId);
-                setTransaction(transaction);
-                setStatusId(transaction.transactionStatusId);
-            })
-            .catch((error) => {
-                alert(error.message);
-            });
+        try {
+            const response = await TransactionService.getById(routeParams.id);
+            const transactionData = response.data;
+            setEmployeeId(transactionData.employeeId);
+            setTransaction(transactionData);
+            setStatusId(transactionData.transactionStatusId);
+        } catch (error) {
+            alert(error.message);
+        }
     }
 
     async function fetchEmployees() {
-        await EmployeeService.get()
-            .then((res) => {
-                setEmployees(res.data);
-                setEmployeeId(res.data[0].id);
-            })
-            .catch((error) => {
-                console.error("Error fetching warehouses:", error);
-                alert(error.message);
-            });
+        try {
+            const response = await EmployeeService.get();
+            const employeesData = response.data;
+            setEmployees(employeesData);
+            setEmployeeId(employeesData[0].id);
+        } catch (error) {
+            console.error("Error fetching employees:", error);
+            alert(error.message);
+        }
     }
 
     async function fetchProducts() {
-        await TransactionItemService.GetProducts(routeParams.id)
-            .then((res) => {
-                setProducts(res.data);
-            })
-            .catch((error) => {
-                alert(error.message);
-            });
+        try {
+            const response = await TransactionItemService.GetProducts(routeParams.id);
+            setProducts(response.data);
+        } catch (error) {
+            alert(error.message);
+        }
     }
 
     async function fetchWarehouses() {
-        await TransactionItemService.GetWarehouses(routeParams.id)
-            .then((res) => {
-                setWarehouses(res.data);
-            })
-            .catch((error) => {
-                alert(error.message);
-            });
+        try {
+            const response = await TransactionItemService.GetWarehouses(routeParams.id);
+            setWarehouses(response.data);
+        } catch (error) {
+            alert(error.message);
+        }
+    }
+
+    async function fetchProductsOnWarehouse(warehouseId) {
+        try {
+            const response = await TransactionItemService.GetProductsOnWarehouse(
+                routeParams.id,
+                warehouseId
+            );
+            setProductsOnWarehouse(response.data);
+        } catch (error) {
+            alert(error.message);
+        }
     }
 
     function formatDate(transactionDate) {
@@ -126,8 +136,17 @@ export default function TransactionsEdit() {
 
     function isUnitary(product) {
         if (product.isUnitary == null) return "Not defined";
-        if (product.isUnitary) return "Yes";
-        return "No";
+        return product.isUnitary ? "Yes" : "No";
+    }
+
+    function handleTabChange(warehouseId) {
+        setActiveTab(warehouseId);
+        setSelectedWarehouseId(warehouseId);
+        if (warehouseId === "all") {
+            fetchProducts();
+        } else {
+            fetchProductsOnWarehouse(warehouseId);
+        }
     }
 
     return (
@@ -141,16 +160,13 @@ export default function TransactionsEdit() {
                             <Form.Label>Employee</Form.Label>
                             <Form.Select
                                 value={employeeId}
-                                onChange={(entity) => {
-                                    setEmployeeId(entity.target.value);
-                                }}
+                                onChange={(e) => setEmployeeId(e.target.value)}
                             >
-                                {employees &&
-                                    employees.map((employee, index) => (
-                                        <option key={index} value={employee.id}>
-                                            {employee.firstName} {employee.lastName}
-                                        </option>
-                                    ))}
+                                {employees.map((employee) => (
+                                    <option key={employee.id} value={employee.id}>
+                                        {employee.firstName} {employee.lastName}
+                                    </option>
+                                ))}
                             </Form.Select>
                         </Form.Group>
                         <Form.Group controlId="additionaldetails" className="pt-2">
@@ -172,63 +188,74 @@ export default function TransactionsEdit() {
                             {transactionStatusName(statusId)}
                         </Button>
                     </Col>
-                    <Col lg={8} md={12} sm={12} className="mt-5 transactionEditContainer">
-                        <Row className="horizontal-tabs-container">
-                            <Nav className="horizontal-tabs">
-                                <Nav.Item>
-                                    <Nav.Link
-                                        eventKey="all"
-                                        active={activeTab === "all"}
-                                        onClick={() => setActiveTab("all")}
-                                    >
-                                        All
-                                    </Nav.Link>
-                                </Nav.Item>
-                                {warehouses &&
-                                    warehouses.map((warehouse, index) => (
-                                        <Nav.Item key={index}>
+                    {statusId === 2 ? (
+                        <Col lg={8} md={12} sm={12} className="mt-5 transactionEditContainer">
+                            <Row className="horizontal-tabs-container">
+                                <Nav className="horizontal-tabs">
+                                    <Nav.Item>
+                                        <Nav.Link
+                                            eventKey="all"
+                                            active={activeTab === "all"}
+                                            onClick={() => handleTabChange("all")}
+                                        >
+                                            All
+                                        </Nav.Link>
+                                    </Nav.Item>
+                                    {warehouses.map((warehouse) => (
+                                        <Nav.Item key={warehouse.id}>
                                             <Nav.Link
-                                                eventKey={index}
-                                                active={activeTab === index}
-                                                onClick={() => setActiveTab(index)}
+                                                eventKey={warehouse.id}
+                                                active={activeTab === warehouse.id}
+                                                onClick={() => handleTabChange(warehouse.id)}
                                             >
                                                 {warehouse.warehouseName}
                                             </Nav.Link>
                                         </Nav.Item>
                                     ))}
-                            </Nav>
-                        </Row>
-                        <Row className="mt-3">
-                            <Col>
-                                <h5 className="mt-3">Products</h5>
-                                <Table striped bordered hover size="sm" className="table-sm">
-                                    <thead>
-                                        <tr>
-                                            <th>Name</th>
-                                            <th>Is Unitary</th>
-                                            <th>Quantity</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {/* Product items */}
-                                        {activeTab === "all" ? (
-                                            products &&
-                                            products.map((product, index) => (
-                                                <tr key={index} className="table-body-row">
-                                                    <td>{product.productName}</td>
-                                                    <td>{isUnitary(product)}</td>
-                                                    <td>Quantity</td>
-                                                </tr>
-                                            ))
-                                        ) : (
-                                            <tr>Test</tr>
-                                        )}
-                                    </tbody>
-                                </Table>
-                            </Col>
-                            <Col></Col>
-                        </Row>
-                    </Col>
+                                </Nav>
+                            </Row>
+                            <Row className="mt-3">
+                                <Col>
+                                    <h5 className="mt-3">Products</h5>
+                                    <Table striped bordered hover size="sm" className="table-sm">
+                                        <thead>
+                                            <tr>
+                                                <th>Name</th>
+                                                <th>Is Unitary</th>
+                                                <th>Quantity</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {activeTab === "all"
+                                                ? products.map((product, index) => (
+                                                      <tr key={index}>
+                                                          <td>{product.productName}</td>
+                                                          <td>{isUnitary(product)}</td>
+                                                          <td>Quantity</td>
+                                                      </tr>
+                                                  ))
+                                                : productsOnWarehouse.map((product, index) => (
+                                                      <tr key={index}>
+                                                          <td>{product.productName}</td>
+                                                          <td>{isUnitary(product)}</td>
+                                                          <td>Quantity</td>
+                                                      </tr>
+                                                  ))}
+                                        </tbody>
+                                    </Table>
+                                </Col>
+                            </Row>
+                        </Col>
+                    ) : (
+                        <Col
+                            lg={8}
+                            md={12}
+                            sm={12}
+                            className="border mt-5 transactionEditContainer"
+                        >
+                            TEST
+                        </Col>
+                    )}
                 </Row>
                 <Row className="mb-0 flex-column flex-sm-row">
                     <Col>

@@ -96,6 +96,19 @@ async function GetWarehouses(id) {
         });
 }
 
+async function GetProductsOnWarehouse(transactionId, warehouseId) {
+    return await httpService
+        .get("/" + entityName + "/Transactions/" + transactionId + "/Warehouses/" + warehouseId)
+        .then((res) => {
+            if (App.DEV) console.table(res.data);
+
+            return res;
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+}
+
 export default {
     get,
     remove,
@@ -104,4 +117,5 @@ export default {
     getById,
     GetProducts,
     GetWarehouses,
+    GetProductsOnWarehouse,
 };
