@@ -38,9 +38,24 @@
 }
 
 .buttonStatus{
-  width:100%;
+    width:100%;
 }
 
 .transactionEditContainer {
-  padding: 1rem;
+    padding: 1rem;
+}
+
+.horizontal-tabs-container {
+    border-bottom: 1px solid #ccc; /* Border for the whole row */
+}
+
+.horizontal-tabs .nav-link {
+    color: #5c5c5c;
+    border-bottom: 2px solid transparent; /* Initial border for tabs */
+}
+
+.horizontal-tabs .nav-link.active {
+    color: 5c5c5c;
+    border-color: #ccc; /* Border color for the selected tab */
+    border-bottom-color: #9e9e9e; /* Border color for the selected tab */
 }

@@ -70,10 +70,24 @@ async function getById(id) {
         });
 }
 
+async function GetWarehouses(id) {
+    return await httpService
+        .get("/" + entityName + "/Warehouses/" + id)
+        .then((res) => {
+            if (App.DEV) console.table(res.data);
+
+            return res;
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+}
+
 export default {
     get,
     remove,
     add,
     edit,
     getById,
+    GetWarehouses,
 };

@@ -17,8 +17,6 @@ export const RoutesNames = {
     TRANSACTIONS_LIST: "/transactions",
     TRANSACTIONS_CREATE: "/transactions/add",
     TRANSACTIONS_EDIT: "/transactions/:id",
-
-    TRANSACTIONITEMS_LIST: "/transactionItems",
 };
 
 export const App = {

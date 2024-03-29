@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
-import { Button, Col, Container, Form, Row } from "react-bootstrap";
+import { Button, Col, Container, Form, Nav, NavLink, Row, Tab, Tabs } from "react-bootstrap";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import TransactionService from "../../services/TransactionService";
 import EmployeeService from "../../services/EmployeeService";
+import TransactionItemService from "../../services/TransactionItemService";
 import moment from "moment";
 import { RoutesNames } from "../../constants";
 
@@ -16,11 +17,14 @@ export default function TransactionsEdit() {
     const [employees, setEmployees] = useState([]);
     const [employeeId, setEmployeeId] = useState(0);
 
+    const [warehouses, setWarehouses] = useState([]);
+
     const [statusId, setStatusId] = useState(0);
 
     async function fetchInitialData() {
         await fetchEmployees();
         await fetchTransaction();
+        await fetchWarehouses();
     }
 
     useEffect(() => {
@@ -67,6 +71,17 @@ export default function TransactionsEdit() {
             .then((res) => {
                 setEmployees(res.data);
                 setEmployeeId(res.data[0].id);
+            })
+            .catch((error) => {
+                console.error("Error fetching warehouses:", error);
+                alert(error.message);
+            });
+    }
+
+    async function fetchWarehouses() {
+        await TransactionItemService.GetWarehouses(routeParams.id)
+            .then((res) => {
+                setWarehouses(res.data);
             })
             .catch((error) => {
                 alert(error.message);
@@ -150,7 +165,22 @@ export default function TransactionsEdit() {
                         >
                             TEST
                         </Col>
-                    ) : null}
+                    ) : (
+                        <Col lg={8} md={12} sm={12} className="mt-5 transactionEditContainer">
+                            <Row className="horizontal-tabs-container">
+                                <Nav className="horizontal-tabs">
+                                    {warehouses &&
+                                        warehouses.map((warehouse, index) => (
+                                            <Nav.Item key={index}>
+                                                <Nav.Link eventKey={index}>
+                                                    {warehouse.warehouseName}
+                                                </Nav.Link>
+                                            </Nav.Item>
+                                        ))}
+                                </Nav>
+                            </Row>
+                        </Col>
+                    )}
                 </Row>
                 <Row className="mb-0 flex-column flex-sm-row">
                     <Col>
