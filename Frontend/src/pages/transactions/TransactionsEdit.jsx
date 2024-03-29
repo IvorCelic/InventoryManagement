@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Button, Col, Container, Form, Nav, NavLink, Row, Tab, Tabs } from "react-bootstrap";
+import { Button, Col, Container, Form, Nav, NavLink, Row, Tab, Table, Tabs } from "react-bootstrap";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import TransactionService from "../../services/TransactionService";
 import EmployeeService from "../../services/EmployeeService";
@@ -178,6 +178,27 @@ export default function TransactionsEdit() {
                                             </Nav.Item>
                                         ))}
                                 </Nav>
+                            </Row>
+                            <Row className="mt-3">
+                                <Col>
+                                    <h5 className="mt-3">Products</h5>
+                                    <Table striped bordered hover responsive>
+                                        <thead>
+                                            <tr>
+                                                <th>Name</th>
+                                                <th>Price</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>Name</td>
+                                                <td>Price</td>
+                                            </tr>
+                                        </tbody>
+                                    </Table>
+                                    <table className="table"></table>
+                                </Col>
+                                <Col></Col>
                             </Row>
                         </Col>
                     )}
