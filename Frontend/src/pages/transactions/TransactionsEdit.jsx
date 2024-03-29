@@ -13,17 +13,17 @@ export default function TransactionsEdit() {
     const entityName = "transaction";
 
     const [transaction, setTransaction] = useState({});
-
     const [employees, setEmployees] = useState([]);
     const [employeeId, setEmployeeId] = useState(0);
-
     const [warehouses, setWarehouses] = useState([]);
-
+    const [products, setProducts] = useState([]);
     const [statusId, setStatusId] = useState(0);
+    const [activeTab, setActiveTab] = useState("all"); // State to manage active tab
 
     async function fetchInitialData() {
         await fetchEmployees();
         await fetchTransaction();
+        await fetchProducts();
         await fetchWarehouses();
     }
 
@@ -78,6 +78,16 @@ export default function TransactionsEdit() {
             });
     }
 
+    async function fetchProducts() {
+        await TransactionItemService.GetProducts(routeParams.id)
+            .then((res) => {
+                setProducts(res.data);
+            })
+            .catch((error) => {
+                alert(error.message);
+            });
+    }
+
     async function fetchWarehouses() {
         await TransactionItemService.GetWarehouses(routeParams.id)
             .then((res) => {
@@ -112,6 +122,12 @@ export default function TransactionsEdit() {
 
     function handleStatusToggle() {
         setStatusId((previous) => (previous === 1 ? 2 : 1));
+    }
+
+    function isUnitary(product) {
+        if (product.isUnitary == null) return "Not defined";
+        if (product.isUnitary) return "Yes";
+        return "No";
     }
 
     return (
@@ -156,52 +172,63 @@ export default function TransactionsEdit() {
                             {transactionStatusName(statusId)}
                         </Button>
                     </Col>
-                    {transaction.transactionStatusId === 1 ? (
-                        <Col
-                            lg={8}
-                            md={12}
-                            sm={12}
-                            className="square border mt-5 transactionEditContainer"
-                        >
-                            TEST
-                        </Col>
-                    ) : (
-                        <Col lg={8} md={12} sm={12} className="mt-5 transactionEditContainer">
-                            <Row className="horizontal-tabs-container">
-                                <Nav className="horizontal-tabs">
-                                    {warehouses &&
-                                        warehouses.map((warehouse, index) => (
-                                            <Nav.Item key={index}>
-                                                <Nav.Link eventKey={index}>
-                                                    {warehouse.warehouseName}
-                                                </Nav.Link>
-                                            </Nav.Item>
-                                        ))}
-                                </Nav>
-                            </Row>
-                            <Row className="mt-3">
-                                <Col>
-                                    <h5 className="mt-3">Products</h5>
-                                    <Table striped bordered hover responsive>
-                                        <thead>
-                                            <tr>
-                                                <th>Name</th>
-                                                <th>Price</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>Name</td>
-                                                <td>Price</td>
-                                            </tr>
-                                        </tbody>
-                                    </Table>
-                                    <table className="table"></table>
-                                </Col>
-                                <Col></Col>
-                            </Row>
-                        </Col>
-                    )}
+                    <Col lg={8} md={12} sm={12} className="mt-5 transactionEditContainer">
+                        <Row className="horizontal-tabs-container">
+                            <Nav className="horizontal-tabs">
+                                <Nav.Item>
+                                    <Nav.Link
+                                        eventKey="all"
+                                        active={activeTab === "all"}
+                                        onClick={() => setActiveTab("all")}
+                                    >
+                                        All
+                                    </Nav.Link>
+                                </Nav.Item>
+                                {warehouses &&
+                                    warehouses.map((warehouse, index) => (
+                                        <Nav.Item key={index}>
+                                            <Nav.Link
+                                                eventKey={index}
+                                                active={activeTab === index}
+                                                onClick={() => setActiveTab(index)}
+                                            >
+                                                {warehouse.warehouseName}
+                                            </Nav.Link>
+                                        </Nav.Item>
+                                    ))}
+                            </Nav>
+                        </Row>
+                        <Row className="mt-3">
+                            <Col>
+                                <h5 className="mt-3">Products</h5>
+                                <Table striped bordered hover size="sm" className="table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Is Unitary</th>
+                                            <th>Quantity</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {/* Product items */}
+                                        {activeTab === "all" ? (
+                                            products &&
+                                            products.map((product, index) => (
+                                                <tr key={index} className="table-body-row">
+                                                    <td>{product.productName}</td>
+                                                    <td>{isUnitary(product)}</td>
+                                                    <td>Quantity</td>
+                                                </tr>
+                                            ))
+                                        ) : (
+                                            <tr>Test</tr>
+                                        )}
+                                    </tbody>
+                                </Table>
+                            </Col>
+                            <Col></Col>
+                        </Row>
+                    </Col>
                 </Row>
                 <Row className="mb-0 flex-column flex-sm-row">
                     <Col>

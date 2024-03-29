@@ -70,6 +70,19 @@ async function getById(id) {
         });
 }
 
+async function GetProducts(id) {
+    return await httpService
+        .get("/" + entityName + "/Products/" + id)
+        .then((res) => {
+            if (App.DEV) console.table(res.data);
+
+            return res;
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+}
+
 async function GetWarehouses(id) {
     return await httpService
         .get("/" + entityName + "/Warehouses/" + id)
@@ -89,5 +102,6 @@ export default {
     add,
     edit,
     getById,
+    GetProducts,
     GetWarehouses,
 };
