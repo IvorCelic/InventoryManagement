@@ -17,15 +17,19 @@ export default function TransactionsEdit() {
     const routeParams = useParams();
 
     const [transaction, setTransaction] = useState({});
+
     const [employees, setEmployees] = useState([]);
     const [employeeId, setEmployeeId] = useState(0);
+
     const [warehouses, setWarehouses] = useState([]);
     const [associatedWarehouses, setAssociatedWarehouses] = useState([]);
+    const [activeTab, setActiveTab] = useState("all");
+
     const [products, setProducts] = useState([]);
     const [associatedProducts, setAssociatedProducts] = useState([]);
-    const [statusId, setStatusId] = useState(0);
-    const [activeTab, setActiveTab] = useState("all");
     const [productsOnWarehouse, setProductsOnWarehouse] = useState([]);
+
+    const [statusId, setStatusId] = useState(0);
     const [selectedWarehouseId, setSelectedWarehouseId] = useState(null);
 
     useEffect(() => {
@@ -159,7 +163,7 @@ export default function TransactionsEdit() {
         return product.isUnitary ? "Yes" : "No";
     }
 
-    function handleTabChange(associatedWarehouseId) {
+    function handleTabWarehouseChange(associatedWarehouseId) {
         setActiveTab(associatedWarehouseId);
         setSelectedWarehouseId(associatedWarehouseId);
         if (associatedWarehouseId === "all") {
@@ -167,6 +171,11 @@ export default function TransactionsEdit() {
         } else {
             fetchProductsOnWarehouse(associatedWarehouseId);
         }
+    }
+
+    function handleSelectWarehouseChange(warehouseId) {
+        setSelectedWarehouseId(warehouseId);
+        fetchProductsOnWarehouse(warehouseId);
     }
 
     return (
@@ -187,7 +196,7 @@ export default function TransactionsEdit() {
                     {statusId === 2 ? (
                         <TransactionClosed
                             activeTab={activeTab}
-                            handleTabChange={handleTabChange}
+                            handleTabChange={handleTabWarehouseChange}
                             associatedWarehouses={associatedWarehouses}
                             products={associatedProducts}
                             productsOnWarehouse={productsOnWarehouse}
@@ -198,8 +207,9 @@ export default function TransactionsEdit() {
                             warehouses={warehouses}
                             products={products}
                             warehouseId={selectedWarehouseId}
-                            setWarehouseId={setSelectedWarehouseId}
+                            setWarehouseId={handleSelectWarehouseChange}
                             productsOnWarehouse={productsOnWarehouse}
+                            associatedWarehouses={associatedWarehouses}
                         />
                     )}
                 </Row>
