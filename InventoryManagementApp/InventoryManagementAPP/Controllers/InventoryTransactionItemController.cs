@@ -288,7 +288,7 @@ namespace InventoryManagementAPP.Controllers
         [Route("Transactions/{transactionId:int}/Warehouses/{warehouseId:int}")]
         public IActionResult GetProductsOnWarehouse(int transactionId, int warehouseId)
         {
-            if (!ModelState.IsValid || transactionId <= 0 | warehouseId <= 0)
+            if (!ModelState.IsValid || transactionId <= 0 || warehouseId <= 0)
             {
                 return BadRequest();
             }
@@ -305,20 +305,17 @@ namespace InventoryManagementAPP.Controllers
                     return BadRequest();
                 }
 
-                var products = new List<Product>();
-                foreach (var i in productsInWarehouse)
-                {
-                    products.Add(i.Product);
-                }
+                // Map InventoryTransactionItems to ProductWithQuantityDTORead
+                var productsWithQuantities = productsInWarehouse.MapToProductWithQuantityDTOList();
 
-
-                return new JsonResult(products.MapProductReadList());
+                return new JsonResult(productsWithQuantities);
             }
             catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status503ServiceUnavailable, ex.Message);
             }
         }
+
 
 
         //[HttpPost]

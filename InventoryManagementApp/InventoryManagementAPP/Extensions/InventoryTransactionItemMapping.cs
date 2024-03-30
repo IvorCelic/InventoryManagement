@@ -38,6 +38,35 @@ namespace InventoryManagementAPP.Extensions
         }
 
         /// <summary>
+        /// Maps a list of InventoryTransactionItem entities to a list of ProductWithQuantityDTORead DTOs.
+        /// </summary>
+        /// <param name="list">The list of InventoryTransactionItem entities to map.</param>
+        /// <returns>A list of ProductWithQuantityDTORead DTOs.</returns>
+        public static List<ProductWithQuantityDTORead> MapToProductWithQuantityDTOList(this List<InventoryTransactionItem> list)
+        {
+            var mapper = InventoryTransactionItemMapper.InitializeReadToDTO();
+            var result = new List<ProductWithQuantityDTORead>();
+            list.ForEach(entity =>
+            {
+                result.Add(mapper.Map<ProductWithQuantityDTORead>(entity));
+            });
+
+            return result;
+        }
+
+        /// <summary>
+        /// Maps a single InventoryTransactionItem entity to a ProductWithQuantityDTORead DTO.
+        /// </summary>
+        /// <param name="entity">The InventoryTransactionItem entity to map.</param>
+        /// <returns>A ProductWithQuantityDTORead DTO.</returns>
+        public static ProductWithQuantityDTORead MapToProductWithQuantityDTO(this InventoryTransactionItem entity)
+        {
+            var mapper = InventoryTransactionItemMapper.InitializeReadToDTO();
+
+            return mapper.Map<ProductWithQuantityDTORead>(entity);
+        }
+
+        /// <summary>
         /// Maps a <see cref="InventoryTransactionItem"/> entity to a <see cref="InventoryTransactionItemDTOInsertUpdate"/> DTO.
         /// </summary>
         /// <param name="entity">The <see cref="InventoryTransactionItem"/> entity to map.</param>

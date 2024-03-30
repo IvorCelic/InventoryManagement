@@ -63,5 +63,7 @@ namespace InventoryManagementAPP.Extensions
 
             return entity;
         }
+
+
     }
 }

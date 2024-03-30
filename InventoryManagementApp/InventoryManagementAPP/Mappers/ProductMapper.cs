@@ -22,7 +22,7 @@ namespace InventoryManagementAPP.Mappers
                 );
         }
 
-        /// <summary>
+        /// <summary>s
         /// Initializes AutoMapper for mapping from ProductDTORead DTOs to Product entities.
         /// </summary>
         /// <returns>An instance of AutoMapper configured for reading from ProductDTORead to Product.</returns>

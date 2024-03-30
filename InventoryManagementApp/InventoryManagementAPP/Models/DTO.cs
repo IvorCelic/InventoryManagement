@@ -40,6 +40,9 @@
     /// </summary>
     public record InventoryTransactionDTOInsert(int? employeeId, int? transactionStatusId, DateTime? transactionDate, string? additionalDetails);
 
+    /// <summary>
+    /// Data Transfer Object (DTO) representing the data needed for updating a inventory transaction
+    /// </summary>
     public record InventoryTransactionDTOUpdate(int? transactionStatusId, int? employeeId, string? additionalDetails);
 
     /// <summary>
@@ -52,4 +55,8 @@
     /// </summary>
     public record InventoryTransactionItemDTOInsertUpdate(int? inventoryTransactionId, int? productId, int? warehouseId, int? quantity = 0);
 
+    /// <summary>
+    /// Data Transfer Object(DTO) representing a product with quantity.
+    /// </summary>
+    public record ProductWithQuantityDTORead(int productId, string? productName, int? quantity, bool? isUnitary);
 }
