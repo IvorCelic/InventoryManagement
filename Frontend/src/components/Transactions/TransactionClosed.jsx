@@ -4,7 +4,7 @@ import { Col, Nav, Row, Table } from "react-bootstrap";
 function TransactionClosed({
     activeTab,
     handleTabChange,
-    warehouses,
+    associatedWarehouses,
     products,
     productsOnWarehouse,
     isUnitary,
@@ -22,17 +22,18 @@ function TransactionClosed({
                             All
                         </Nav.Link>
                     </Nav.Item>
-                    {warehouses.map((warehouse) => (
-                        <Nav.Item key={warehouse.id}>
-                            <Nav.Link
-                                eventKey={warehouse.id}
-                                active={activeTab === warehouse.id}
-                                onClick={() => handleTabChange(warehouse.id)}
-                            >
-                                {warehouse.warehouseName}
-                            </Nav.Link>
-                        </Nav.Item>
-                    ))}
+                    {associatedWarehouses &&
+                        associatedWarehouses.map((warehouse) => (
+                            <Nav.Item key={warehouse.id}>
+                                <Nav.Link
+                                    eventKey={warehouse.id}
+                                    active={activeTab === warehouse.id}
+                                    onClick={() => handleTabChange(warehouse.id)}
+                                >
+                                    {warehouse.warehouseName}
+                                </Nav.Link>
+                            </Nav.Item>
+                        ))}
                 </Nav>
             </Row>
             <Row className="mt-3">

@@ -8,6 +8,7 @@ import moment from "moment";
 import { RoutesNames } from "../../constants";
 import TransactionOpen from "../../components/Transactions/TransactionOpen";
 import TransactionClosed from "../../components/Transactions/TransactionClosed";
+import WarehouseService from "../../services/WarehouseService";
 
 export default function TransactionsEdit() {
     const navigate = useNavigate();
@@ -18,6 +19,9 @@ export default function TransactionsEdit() {
     const [employees, setEmployees] = useState([]);
     const [employeeId, setEmployeeId] = useState(0);
     const [warehouses, setWarehouses] = useState([]);
+    const [warehouseId, setWarehouseId] = useState(0);
+    const [associatedWarehouses, setAssociatedWarehouses] = useState([]);
+    const [associatedWarehouseId, setAssociatedWarehouseId] = useState(0);
     const [products, setProducts] = useState([]);
     const [statusId, setStatusId] = useState(0);
     const [activeTab, setActiveTab] = useState("all");
@@ -33,6 +37,7 @@ export default function TransactionsEdit() {
         await fetchTransaction();
         await fetchProducts();
         await fetchWarehouses();
+        await fetchAssociatedWarehouses();
     }
 
     async function edit(entityName) {
@@ -75,7 +80,17 @@ export default function TransactionsEdit() {
             setEmployees(employeesData);
             setEmployeeId(employeesData[0].id);
         } catch (error) {
-            console.error("Error fetching employees:", error);
+            alert(error.message);
+        }
+    }
+
+    async function fetchWarehouses() {
+        try {
+            const response = await WarehouseService.get();
+            const warehousesData = response.data;
+            setWarehouses(warehousesData);
+            setWarehouseId(warehousesData[0].id);
+        } catch (error) {
             alert(error.message);
         }
     }
@@ -89,20 +104,20 @@ export default function TransactionsEdit() {
         }
     }
 
-    async function fetchWarehouses() {
+    async function fetchAssociatedWarehouses() {
         try {
             const response = await TransactionItemService.GetWarehouses(routeParams.id);
-            setWarehouses(response.data);
+            setAssociatedWarehouses(response.data);
         } catch (error) {
             alert(error.message);
         }
     }
 
-    async function fetchProductsOnWarehouse(warehouseId) {
+    async function fetchProductsOnWarehouse(associatedWarehouseId) {
         try {
             const response = await TransactionItemService.GetProductsOnWarehouse(
                 routeParams.id,
-                warehouseId
+                associatedWarehouseId
             );
             setProductsOnWarehouse(response.data);
         } catch (error) {
@@ -141,15 +156,13 @@ export default function TransactionsEdit() {
         return product.isUnitary ? "Yes" : "No";
     }
 
-    function handleTabChange(warehouseId) {
-        setActiveTab(warehouseId);
-        setSelectedWarehouseId(warehouseId);
-        if (warehouseId === "all") {
-            // Fetch all products
+    function handleTabChange(associatedWarehouseId) {
+        setActiveTab(associatedWarehouseId);
+        setSelectedWarehouseId(associatedWarehouseId);
+        if (associatedWarehouseId === "all") {
             fetchProducts();
         } else {
-            // Fetch products for the selected warehouse
-            fetchProductsOnWarehouse(warehouseId);
+            fetchProductsOnWarehouse(associatedWarehouseId);
         }
     }
 
@@ -196,13 +209,17 @@ export default function TransactionsEdit() {
                         <TransactionClosed
                             activeTab={activeTab}
                             handleTabChange={handleTabChange}
-                            warehouses={warehouses}
+                            associatedWarehouses={associatedWarehouses}
                             products={products}
                             productsOnWarehouse={productsOnWarehouse}
                             isUnitary={isUnitary}
                         />
                     ) : (
-                        <TransactionOpen />
+                        <TransactionOpen
+                            warehouses={warehouses}
+                            warehouseId={selectedWarehouseId}
+                            setWarehouseId={setSelectedWarehouseId}
+                        />
                     )}
                 </Row>
                 <Row className="mb-0 flex-column flex-sm-row">

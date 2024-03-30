@@ -80,7 +80,7 @@ namespace InventoryManagementAPP.Controllers
             }
 
             var inventoryTransaction = _context.InventoryTransactions
-                .Include(it=>it.TransactionStatus).FirstOrDefault(it=>it.Id== inventoryTransactionItemDTO.inventoryTransactionId);
+                .Include(it => it.TransactionStatus).FirstOrDefault(it => it.Id == inventoryTransactionItemDTO.inventoryTransactionId);
 
             if (inventoryTransaction == null)
             {
@@ -106,7 +106,7 @@ namespace InventoryManagementAPP.Controllers
             entity.InventoryTransaction = inventoryTransaction;
             entity.Warehouse = warehouse;
             entity.Product = product;
-            
+
 
             try
             {
@@ -296,7 +296,7 @@ namespace InventoryManagementAPP.Controllers
             try
             {
                 var productsInWarehouse = _context.InventoryTransactionItems
-                    .Include(i=>i.Product)
+                    .Include(i => i.Product)
                     .Where(iti => iti.InventoryTransaction.Id == transactionId && iti.Warehouse.Id == warehouseId)
                     .ToList();
 
@@ -306,13 +306,103 @@ namespace InventoryManagementAPP.Controllers
                 }
 
                 var products = new List<Product>();
-                foreach(var i in productsInWarehouse)
+                foreach (var i in productsInWarehouse)
                 {
                     products.Add(i.Product);
                 }
 
 
                 return new JsonResult(products.MapProductReadList());
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status503ServiceUnavailable, ex.Message);
+            }
+        }
+
+
+        //[HttpPost]
+        //[Route("Transactions/{transactionId:int}/Warehouses/{warehouseId:int}")]
+        //public IActionResult AddWarehouseToTransaction(int transactionId, int warehouseId)
+        //{
+        //    if (!ModelState.IsValid || transactionId <= 0 || warehouseId <= 0)
+        //    {
+        //        return BadRequest();
+        //    }
+
+        //    try
+        //    {
+        //        var inventoryTransaction = _context.InventoryTransactions.Find(transactionId);
+        //        if (inventoryTransaction == null)
+        //        {
+        //            return BadRequest();
+        //        }
+
+        //        var warehouse = _context.Warehouses.Find(warehouseId);
+        //        if (warehouse == null)
+        //        {
+        //            return BadRequest();
+        //        }
+
+        //        var inventoryTransactionItem = new InventoryTransactionItem
+        //        {
+        //            InventoryTransaction = inventoryTransaction,
+        //            Warehouse = warehouse,
+        //            Product = null
+        //        };
+
+        //        _context.InventoryTransactionItems.Add(inventoryTransactionItem);
+        //        _context.SaveChanges();
+
+        //        return Ok();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return StatusCode(StatusCodes.Status503ServiceUnavailable, ex.Message);
+        //    }
+        //}
+
+
+        [HttpPost]
+        [Route("Transactions/{transactionId:int}/Warehouses/{warehouseId:int}/Products/{productId:int}")]
+        public IActionResult AddProductInWarehouse(int transactionId, int warehouseId, int productId)
+        {
+            if (!ModelState.IsValid || transactionId <= 0 || warehouseId <= 0 || productId <= 0)
+            {
+                return BadRequest();
+            }
+
+            try
+            {
+                var inventoryTransaction = _context.InventoryTransactions.Find(transactionId);
+                if (inventoryTransaction == null)
+                {
+                    return BadRequest();
+                }
+
+                var warehouse = _context.Warehouses.Find(warehouseId);
+                if (warehouse == null)
+                {
+                    return BadRequest();
+                }
+
+                var product = _context.Products.Find(productId);
+                if (product == null)
+                {
+                    return BadRequest();
+                }
+
+                var inventoryTransactionItem = new InventoryTransactionItem
+                {
+                    InventoryTransaction = inventoryTransaction,
+                    Warehouse = warehouse,
+                    Product = product
+                };
+
+                _context.InventoryTransactionItems.Add(inventoryTransactionItem);
+                _context.SaveChanges();
+
+                return Ok();
             }
             catch (Exception ex)
             {
