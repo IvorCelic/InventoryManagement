@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Col, Container, Form, Nav, Row, Table } from "react-bootstrap";
+import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import TransactionService from "../../services/TransactionService";
 import EmployeeService from "../../services/EmployeeService";
@@ -9,19 +9,17 @@ import { RoutesNames } from "../../constants";
 import TransactionOpen from "../../components/Transactions/TransactionOpen";
 import TransactionClosed from "../../components/Transactions/TransactionClosed";
 import WarehouseService from "../../services/WarehouseService";
+import TransactionDetailsForm from "../../components/Transactions/TransactionDetailsForm";
 
 export default function TransactionsEdit() {
     const navigate = useNavigate();
     const routeParams = useParams();
-    const entityName = "transaction";
 
     const [transaction, setTransaction] = useState({});
     const [employees, setEmployees] = useState([]);
     const [employeeId, setEmployeeId] = useState(0);
     const [warehouses, setWarehouses] = useState([]);
-    const [warehouseId, setWarehouseId] = useState(0);
     const [associatedWarehouses, setAssociatedWarehouses] = useState([]);
-    const [associatedWarehouseId, setAssociatedWarehouseId] = useState(0);
     const [products, setProducts] = useState([]);
     const [statusId, setStatusId] = useState(0);
     const [activeTab, setActiveTab] = useState("all");
@@ -89,7 +87,7 @@ export default function TransactionsEdit() {
             const response = await WarehouseService.get();
             const warehousesData = response.data;
             setWarehouses(warehousesData);
-            setWarehouseId(warehousesData[0].id);
+            setSelectedWarehouseId(warehousesData[0].id);
         } catch (error) {
             alert(error.message);
         }
@@ -170,41 +168,17 @@ export default function TransactionsEdit() {
         <Container>
             <Form onSubmit={handleSubmit}>
                 <Row>
-                    <Col lg={4} md={12} sm={12} className="mt-5 transactionEditContainer">
-                        <h3>Transaction date</h3>
-                        <p>{formatDate(transaction.transactionDate)}</p>
-                        <Form.Group className="mb-3 pt-4" controlId="employee">
-                            <Form.Label>Employee</Form.Label>
-                            <Form.Select
-                                value={employeeId}
-                                onChange={(e) => setEmployeeId(e.target.value)}
-                            >
-                                {employees.map((employee) => (
-                                    <option key={employee.id} value={employee.id}>
-                                        {employee.firstName} {employee.lastName}
-                                    </option>
-                                ))}
-                            </Form.Select>
-                        </Form.Group>
-                        <Form.Group controlId="additionaldetails" className="pt-2">
-                            <Form.Label>Additional Details</Form.Label>
-                            <Form.Control
-                                type="text"
-                                name="additionaldetails"
-                                defaultValue={transaction.additionalDetails}
-                                maxLength={255}
-                                required
-                            />
-                        </Form.Group>
-                        <p className="pt-5">{transactionStatus(statusId)}</p>
-                        <Button
-                            variant="secondary"
-                            className="btn buttonStatus"
-                            onClick={handleStatusToggle}
-                        >
-                            {transactionStatusName(statusId)}
-                        </Button>
-                    </Col>
+                    <TransactionDetailsForm
+                        transaction={transaction}
+                        employees={employees}
+                        employeeId={employeeId}
+                        setEmployeeId={setEmployeeId}
+                        additionalDetails={transaction.additionalDetails}
+                        handleStatusToggle={handleStatusToggle}
+                        statusId={statusId}
+                        transactionStatus={transactionStatus}
+                        transactionStatusName={transactionStatusName}
+                    />
                     {statusId === 2 ? (
                         <TransactionClosed
                             activeTab={activeTab}
