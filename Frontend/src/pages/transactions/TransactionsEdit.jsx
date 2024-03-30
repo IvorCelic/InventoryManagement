@@ -9,6 +9,7 @@ import { RoutesNames } from "../../constants";
 import TransactionOpen from "../../components/Transactions/TransactionOpen";
 import TransactionClosed from "../../components/Transactions/TransactionClosed";
 import WarehouseService from "../../services/WarehouseService";
+import ProductService from "../../services/ProductService";
 import TransactionDetailsForm from "../../components/Transactions/TransactionDetailsForm";
 
 export default function TransactionsEdit() {
@@ -21,6 +22,7 @@ export default function TransactionsEdit() {
     const [warehouses, setWarehouses] = useState([]);
     const [associatedWarehouses, setAssociatedWarehouses] = useState([]);
     const [products, setProducts] = useState([]);
+    const [associatedProducts, setAssociatedProducts] = useState([]);
     const [statusId, setStatusId] = useState(0);
     const [activeTab, setActiveTab] = useState("all");
     const [productsOnWarehouse, setProductsOnWarehouse] = useState([]);
@@ -33,9 +35,10 @@ export default function TransactionsEdit() {
     async function fetchInitialData() {
         await fetchEmployees();
         await fetchTransaction();
-        await fetchProducts();
+        await fetchAssociatedProducts();
         await fetchWarehouses();
         await fetchAssociatedWarehouses();
+        await fetchProducts();
     }
 
     async function edit(entityName) {
@@ -95,8 +98,18 @@ export default function TransactionsEdit() {
 
     async function fetchProducts() {
         try {
+            const response = await ProductService.get();
+            const productsData = response.data;
+            setProducts(productsData);
+        } catch (error) {
+            alert(error.message);
+        }
+    }
+
+    async function fetchAssociatedProducts() {
+        try {
             const response = await TransactionItemService.GetProducts(routeParams.id);
-            setProducts(response.data);
+            setAssociatedProducts(response.data);
         } catch (error) {
             alert(error.message);
         }
@@ -121,14 +134,6 @@ export default function TransactionsEdit() {
         } catch (error) {
             alert(error.message);
         }
-    }
-
-    function formatDate(transactionDate) {
-        let mdp = moment.utc(transactionDate);
-        if (mdp.hour() == 0 && mdp.minutes() == 0) {
-            return mdp.format("DD. MM. YYYY.");
-        }
-        return mdp.format("DD. MM. YYYY. HH:mm");
     }
 
     function transactionStatus(transactionStatusId) {
@@ -158,7 +163,7 @@ export default function TransactionsEdit() {
         setActiveTab(associatedWarehouseId);
         setSelectedWarehouseId(associatedWarehouseId);
         if (associatedWarehouseId === "all") {
-            fetchProducts();
+            fetchAssociatedProducts();
         } else {
             fetchProductsOnWarehouse(associatedWarehouseId);
         }
@@ -184,15 +189,17 @@ export default function TransactionsEdit() {
                             activeTab={activeTab}
                             handleTabChange={handleTabChange}
                             associatedWarehouses={associatedWarehouses}
-                            products={products}
+                            products={associatedProducts}
                             productsOnWarehouse={productsOnWarehouse}
                             isUnitary={isUnitary}
                         />
                     ) : (
                         <TransactionOpen
                             warehouses={warehouses}
+                            products={products}
                             warehouseId={selectedWarehouseId}
                             setWarehouseId={setSelectedWarehouseId}
+                            productsOnWarehouse={productsOnWarehouse}
                         />
                     )}
                 </Row>
