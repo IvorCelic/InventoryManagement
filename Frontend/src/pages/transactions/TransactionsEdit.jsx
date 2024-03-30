@@ -94,7 +94,6 @@ export default function TransactionsEdit() {
             const response = await WarehouseService.get();
             const warehousesData = response.data;
             setWarehouses(warehousesData);
-            setSelectedWarehouseId(warehousesData[0].id);
         } catch (error) {
             alert(error.message);
         }
@@ -174,8 +173,12 @@ export default function TransactionsEdit() {
     }
 
     function handleSelectWarehouseChange(warehouseId) {
-        setSelectedWarehouseId(warehouseId);
-        fetchProductsOnWarehouse(warehouseId);
+        if (warehouseId === "") {
+            setSelectedWarehouseId(null);
+        } else {
+            setSelectedWarehouseId(warehouseId);
+            fetchProductsOnWarehouse(warehouseId);
+        }
     }
 
     return (
