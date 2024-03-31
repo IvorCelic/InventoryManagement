@@ -5,8 +5,7 @@ function TransactionClosed({
     activeTab,
     handleTabChange,
     associatedWarehouses,
-    products,
-    warehouses,
+    associatedProducts,
     productsOnWarehouse,
     isUnitary,
 }) {
@@ -95,18 +94,19 @@ function TransactionClosed({
                                 </thead>
                                 <tbody>
                                     {activeTab === "all"
-                                        ? products.map((product, index) => (
+                                        ? associatedProducts &&
+                                          associatedProducts.map((product, index) => (
                                               <tr key={index}>
                                                   <td>{product.productName}</td>
                                                   <td>{isUnitary(product)}</td>
-                                                  <td>Quantity</td>
+                                                  <td>{product.quantity}</td>
                                               </tr>
                                           ))
                                         : productsOnWarehouse.map((product, index) => (
                                               <tr key={index}>
                                                   <td>{product.productName}</td>
                                                   <td>{isUnitary(product)}</td>
-                                                  <td>Quantity</td>
+                                                  <td>{product.quantity}</td>
                                               </tr>
                                           ))}
                                 </tbody>
@@ -116,7 +116,7 @@ function TransactionClosed({
                 </Col>
             ) : (
                 <Col lg={8} md={12} sm={12} className="mt-5 transactionEditContainer">
-                    <p>nothing</p>
+                    <p>In this inventory transaction has not been added anything yet.</p>
                 </Col>
             )}
         </>

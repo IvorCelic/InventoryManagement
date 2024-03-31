@@ -4,13 +4,12 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import TransactionService from "../../services/TransactionService";
 import EmployeeService from "../../services/EmployeeService";
 import TransactionItemService from "../../services/TransactionItemService";
-import moment from "moment";
 import { RoutesNames } from "../../constants";
-import TransactionOpen from "../../components/Transactions/TransactionOpen";
-import TransactionClosed from "../../components/Transactions/TransactionClosed";
+import TransactionOpen from "./TransactionOpen";
+import TransactionClosed from "./TransactionClosed";
 import WarehouseService from "../../services/WarehouseService";
 import ProductService from "../../services/ProductService";
-import TransactionDetailsForm from "../../components/Transactions/TransactionDetailsForm";
+import TransactionDetailsForm from "./TransactionDetailsForm";
 
 export default function TransactionsEdit() {
     const navigate = useNavigate();
@@ -141,11 +140,17 @@ export default function TransactionsEdit() {
 
     function transactionStatus(transactionStatusId) {
         if (transactionStatusId === 1) {
-            return "Transaction currently opened";
-        } else if (transactionStatusId === 2) {
-            return "Transaction currently closed";
+            return (
+                <span style={{ color: "green" }}>
+                    Transaction currently <strong>opened</strong>
+                </span>
+            );
         } else {
-            return "Transaction invalid";
+            return (
+                <span style={{ color: "gray" }}>
+                    Transaction currently <strong>closed</strong>
+                </span>
+            );
         }
     }
 
@@ -201,7 +206,7 @@ export default function TransactionsEdit() {
                             activeTab={activeTab}
                             handleTabChange={handleTabWarehouseChange}
                             associatedWarehouses={associatedWarehouses}
-                            products={associatedProducts}
+                            associatedProducts={associatedProducts}
                             productsOnWarehouse={productsOnWarehouse}
                             isUnitary={isUnitary}
                         />

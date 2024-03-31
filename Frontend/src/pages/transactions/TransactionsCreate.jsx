@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Button, Col, Container, Form, Row, Table } from "react-bootstrap";
+import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import moment from "moment";
 import { RoutesNames } from "../../constants";
@@ -29,7 +29,7 @@ export default function TransactionsCreate() {
     }, []);
 
     async function add(entity) {
-        entity.transactionDate = moment().toISOString(); // sets the current date
+        entity.transactionDate = moment().toISOString();
 
         const response = await TransactionService.add(entity);
         if (response.ok) {

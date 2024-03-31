@@ -76,6 +76,7 @@ export default function TransactionOpen({
                                             <span className="product-name ms-2">
                                                 {product.productName}
                                             </span>
+                                            <span>{product.quantity}</span>
                                             <FaMinusCircle className="icon me-2 minus-icon" />
                                         </li>
                                     ))}

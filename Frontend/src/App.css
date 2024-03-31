@@ -60,6 +60,12 @@
     border-bottom-color: #9e9e9e;
 }  
 
+@media (min-width: 768px) {
+    .horizontal-tabs.d-none.d-md-flex .nav-link {
+      white-space: nowrap;
+    }
+  }
+
 .warehouse-name {
     margin-left: 10px;
 }

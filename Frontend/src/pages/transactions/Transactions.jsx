@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Button, Container, Table } from "react-bootstrap";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import TransactionService from "../../services/TransactionService";
 import moment from "moment";
 import { FaEdit, FaFilePdf, FaPrint, FaTrash } from "react-icons/fa";
