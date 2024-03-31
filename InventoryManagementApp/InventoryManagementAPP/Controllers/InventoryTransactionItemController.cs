@@ -225,24 +225,19 @@ namespace InventoryManagementAPP.Controllers
             }
             try
             {
-                var transactionItems = _context.InventoryTransactionItems
+                var inventoryTransactionItems = _context.InventoryTransactionItems
                     .Include(it => it.Product)
                     .Where(x => x.InventoryTransaction.Id == transactionId)
                     .ToList();
 
-                if (transactionItems == null)
+                if (inventoryTransactionItems == null)
                 {
                     return BadRequest();
                 }
 
-                var products = new List<Product>();
-                foreach (var i in transactionItems)
-                {
-                    products.Add(i.Product);
-                }
+                var productsOnTransaction = inventoryTransactionItems.MapToProductWithQuantityDTOList();
 
-
-                return new JsonResult(products.MapProductReadList());
+                return new JsonResult(productsOnTransaction);
             }
             catch (Exception ex)
             {
@@ -265,8 +260,8 @@ namespace InventoryManagementAPP.Controllers
                 var transactionWarehouses = _context.InventoryTransactionItems
                     .Include(it => it.Warehouse)
                     .Where(x => x.InventoryTransaction.Id == transactionId)
-                    .Select(x => x.Warehouse)  // Select only warehouses
-                    .Distinct()  // Filter out duplicates
+                    .Select(x => x.Warehouse)
+                    .Distinct()
                     .ToList();
 
                 if (transactionWarehouses == null)
@@ -281,7 +276,6 @@ namespace InventoryManagementAPP.Controllers
                 return StatusCode(StatusCodes.Status503ServiceUnavailable, ex.Message);
             }
         }
-
 
 
         [HttpGet]
@@ -305,7 +299,6 @@ namespace InventoryManagementAPP.Controllers
                     return BadRequest();
                 }
 
-                // Map InventoryTransactionItems to ProductWithQuantityDTORead
                 var productsWithQuantities = productsInWarehouse.MapToProductWithQuantityDTOList();
 
                 return new JsonResult(productsWithQuantities);
@@ -315,49 +308,6 @@ namespace InventoryManagementAPP.Controllers
                 return StatusCode(StatusCodes.Status503ServiceUnavailable, ex.Message);
             }
         }
-
-
-
-        //[HttpPost]
-        //[Route("Transactions/{transactionId:int}/Warehouses/{warehouseId:int}")]
-        //public IActionResult AddWarehouseToTransaction(int transactionId, int warehouseId)
-        //{
-        //    if (!ModelState.IsValid || transactionId <= 0 || warehouseId <= 0)
-        //    {
-        //        return BadRequest();
-        //    }
-
-        //    try
-        //    {
-        //        var inventoryTransaction = _context.InventoryTransactions.Find(transactionId);
-        //        if (inventoryTransaction == null)
-        //        {
-        //            return BadRequest();
-        //        }
-
-        //        var warehouse = _context.Warehouses.Find(warehouseId);
-        //        if (warehouse == null)
-        //        {
-        //            return BadRequest();
-        //        }
-
-        //        var inventoryTransactionItem = new InventoryTransactionItem
-        //        {
-        //            InventoryTransaction = inventoryTransaction,
-        //            Warehouse = warehouse,
-        //            Product = null
-        //        };
-
-        //        _context.InventoryTransactionItems.Add(inventoryTransactionItem);
-        //        _context.SaveChanges();
-
-        //        return Ok();
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return StatusCode(StatusCodes.Status503ServiceUnavailable, ex.Message);
-        //    }
-        //}
 
 
         [HttpPost]
