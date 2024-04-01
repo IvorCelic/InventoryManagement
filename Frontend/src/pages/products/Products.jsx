@@ -58,6 +58,13 @@ export default function Products() {
                             <tr key={index}>
                                 <td>{product.productName}</td>
                                 <td>{product.description}</td>
+                                <td>
+                                    <Button
+                                        onClick={() => {
+                                            navigate(`/products/details/${product.id}`);
+                                        }}
+                                    />
+                                </td>
                                 <td>{isUnitary(product)}</td>
                                 <td>
                                     <Container className="d-flex justify-content-center">
