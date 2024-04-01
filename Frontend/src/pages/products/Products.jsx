@@ -49,6 +49,7 @@ export default function Products() {
                         <th>Name</th>
                         <th>Description</th>
                         <th>Is Unitary</th>
+                        <th>Details</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -58,6 +59,7 @@ export default function Products() {
                             <tr key={index}>
                                 <td>{product.productName}</td>
                                 <td>{product.description}</td>
+                                <td>{isUnitary(product)}</td>
                                 <td>
                                     <Button
                                         onClick={() => {
@@ -65,7 +67,6 @@ export default function Products() {
                                         }}
                                     />
                                 </td>
-                                <td>{isUnitary(product)}</td>
                                 <td>
                                     <Container className="d-flex justify-content-center">
                                         <Button

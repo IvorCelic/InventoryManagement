@@ -12,6 +12,7 @@ export default function TransactionOpen({
     productsOnWarehouse,
     transactionId,
     handleAddProductToWarehouse,
+    isUnitary,
 }) {
     const [selectedWarehouse, setSelectedWarehouse] = useState(null);
 
@@ -30,16 +31,16 @@ export default function TransactionOpen({
         setWarehouseId(selectedWarehouseId);
     };
 
-    const handleAddProduct = async (productId) => {
+    const handleAddProduct = async (productId, quantity) => {
         try {
             const response = await TransactionItemService.AddProductOnWarehouse(
                 parseInt(transactionId),
                 parseInt(warehouseId),
                 productId,
-                1
+                quantity
             );
             console.log(response);
-            handleAddProductToWarehouse(productId);
+            handleAddProductToWarehouse();
         } catch (error) {
             console.log(error);
         }
@@ -81,7 +82,12 @@ export default function TransactionOpen({
                                         </span>
                                         <FaCirclePlus
                                             className="icon me-2 plus-icon"
-                                            onClick={() => handleAddProduct(product.id)}
+                                            onClick={() =>
+                                                handleAddProduct(
+                                                    product.id,
+                                                    isUnitary(product) ? 1 : 2
+                                                )
+                                            }
                                         />
                                     </li>
                                 ))}
