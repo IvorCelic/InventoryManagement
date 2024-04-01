@@ -18,7 +18,7 @@ namespace InventoryManagementAPP.Mappers
                         entity.InventoryTransaction == null ? null : entity.InventoryTransaction.Id,
                         entity.Product == null ? "" : entity.Product.ProductName.Trim(),
                         entity.Warehouse == null ? "" : entity.Warehouse.WarehouseName.Trim(),
-                        entity.Quantity == null ? null : entity.Quantity
+                        entity.Quantity == null ? 1 : entity.Quantity
                         ));
 
                     config.CreateMap<InventoryTransactionItem, ProductWithQuantityDTORead>()
@@ -44,7 +44,7 @@ namespace InventoryManagementAPP.Mappers
                         entity.InventoryTransaction == null ? null : entity.InventoryTransaction.Id,
                         entity.Product == null ? null : entity.Product.Id,
                         entity.Warehouse == null ? null : entity.Warehouse.Id,
-                        entity.Quantity));
+                        entity.Quantity == null ? 1 : entity.Quantity));
                 })
                 );
         }

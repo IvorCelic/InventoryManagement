@@ -312,7 +312,7 @@ namespace InventoryManagementAPP.Controllers
 
         [HttpPost]
         [Route("Transactions/{transactionId:int}/Warehouses/{warehouseId:int}/Products/{productId:int}")]
-        public IActionResult AddProductInWarehouse(int transactionId, int warehouseId, int productId)
+        public IActionResult AddProductOnWarehouse(int transactionId, int warehouseId, int productId, int quantity)
         {
             if (!ModelState.IsValid || transactionId <= 0 || warehouseId <= 0 || productId <= 0)
             {
@@ -343,7 +343,8 @@ namespace InventoryManagementAPP.Controllers
                 {
                     InventoryTransaction = inventoryTransaction,
                     Warehouse = warehouse,
-                    Product = product
+                    Product = product,
+                    Quantity = quantity
                 };
 
                 _context.InventoryTransactionItems.Add(inventoryTransactionItem);
