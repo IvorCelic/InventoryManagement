@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Col, Form, Row } from "react-bootstrap";
 import { FaCirclePlus } from "react-icons/fa6";
 import { FaMinusCircle } from "react-icons/fa";
@@ -11,8 +11,7 @@ export default function TransactionOpen({
     setWarehouseId,
     productsOnWarehouse,
     transactionId,
-    handleAddProductToWarehouse,
-    isUnitary,
+    handleProductOnoWarehouseChange,
 }) {
     const [selectedWarehouse, setSelectedWarehouse] = useState(null);
 
@@ -31,20 +30,29 @@ export default function TransactionOpen({
         setWarehouseId(selectedWarehouseId);
     };
 
-    const handleAddProduct = async (productId, quantity) => {
+    const handleAddProduct = async (productId) => {
         try {
             const response = await TransactionItemService.AddProductOnWarehouse(
                 parseInt(transactionId),
                 parseInt(warehouseId),
-                productId,
-                quantity
+                productId
             );
             console.log(response);
-            handleAddProductToWarehouse();
+            handleProductOnoWarehouseChange();
         } catch (error) {
             console.log(error);
         }
     };
+
+    async function removeProductOnWarehouse(id) {
+        const response = await TransactionItemService.remove(id);
+        if (response.ok) {
+            alert(response.message.data.message);
+            handleProductOnoWarehouseChange();
+        } else {
+            console.log(response.message);
+        }
+    }
 
     return (
         <Col lg={8} md={12} sm={12} className="border mt-5 transactionEditContainer">
@@ -82,12 +90,7 @@ export default function TransactionOpen({
                                         </span>
                                         <FaCirclePlus
                                             className="icon me-2 plus-icon"
-                                            onClick={() =>
-                                                handleAddProduct(
-                                                    product.id,
-                                                    isUnitary(product) ? 1 : 2
-                                                )
-                                            }
+                                            onClick={() => handleAddProduct(product.id)}
                                         />
                                     </li>
                                 ))}
@@ -98,13 +101,16 @@ export default function TransactionOpen({
                         {productsOnWarehouse.length > 0 ? (
                             <ul className="product-list ms-2 me-2">
                                 {productsOnWarehouse &&
-                                    productsOnWarehouse.map((product, index) => (
+                                    productsOnWarehouse.map((item, index) => (
                                         <li key={index}>
                                             <span className="product-name ms-2">
-                                                {product.productName}
+                                                {item.productName}
                                             </span>
-                                            <span>{product.quantity}</span>
-                                            <FaMinusCircle className="icon me-2 minus-icon" />
+                                            <span>{item.quantity}</span>
+                                            <FaMinusCircle
+                                                className="icon me-2 minus-icon"
+                                                onClick={() => removeProductOnWarehouse(item.id)}
+                                            />
                                         </li>
                                     ))}
                             </ul>

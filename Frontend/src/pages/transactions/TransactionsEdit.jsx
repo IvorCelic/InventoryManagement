@@ -188,7 +188,7 @@ export default function TransactionsEdit() {
         }
     }
 
-    function handleAddProductToWarehouse() {
+    function handleProductOnoWarehouseChange() {
         fetchProductsOnWarehouse(selectedWarehouseId);
     }
 
@@ -223,9 +223,10 @@ export default function TransactionsEdit() {
                             warehouseId={selectedWarehouseId}
                             setWarehouseId={handleSelectWarehouseChange}
                             productsOnWarehouse={productsOnWarehouse}
+                            setProductsOnWarehouse={setProductsOnWarehouse}
                             associatedWarehouses={associatedWarehouses}
                             transactionId={transactionId}
-                            handleAddProductToWarehouse={handleAddProductToWarehouse}
+                            handleProductOnoWarehouseChange={handleProductOnoWarehouseChange}
                             isUnitary={isUnitary}
                         />
                     )}
