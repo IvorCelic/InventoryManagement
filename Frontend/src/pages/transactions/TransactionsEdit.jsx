@@ -72,7 +72,7 @@ export default function TransactionsEdit() {
             const transactionData = response.data;
             setEmployeeId(transactionData.employeeId);
             setTransaction(transactionData);
-            setTransactionId(transactionData.id);
+            setTransactionId(routeParams.id);
             setStatusId(transactionData.transactionStatusId);
         } catch (error) {
             alert(error.message);
@@ -188,6 +188,10 @@ export default function TransactionsEdit() {
         }
     }
 
+    function handleAddProductToWarehouse(productId) {
+        fetchProductsOnWarehouse(selectedWarehouseId);
+    }
+
     return (
         <Container>
             <Form onSubmit={handleSubmit}>
@@ -221,6 +225,7 @@ export default function TransactionsEdit() {
                             productsOnWarehouse={productsOnWarehouse}
                             associatedWarehouses={associatedWarehouses}
                             transactionId={transactionId}
+                            handleAddProductToWarehouse={handleAddProductToWarehouse}
                         />
                     )}
                 </Row>

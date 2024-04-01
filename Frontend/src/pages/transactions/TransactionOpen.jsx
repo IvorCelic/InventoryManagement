@@ -11,6 +11,7 @@ export default function TransactionOpen({
     setWarehouseId,
     productsOnWarehouse,
     transactionId,
+    handleAddProductToWarehouse,
 }) {
     const [selectedWarehouse, setSelectedWarehouse] = useState(null);
 
@@ -32,12 +33,13 @@ export default function TransactionOpen({
     const handleAddProduct = async (productId) => {
         try {
             const response = await TransactionItemService.AddProductOnWarehouse(
-                transactionId,
-                warehouseId,
+                parseInt(transactionId),
+                parseInt(warehouseId),
                 productId,
                 1
             );
             console.log(response);
+            handleAddProductToWarehouse(productId);
         } catch (error) {
             console.log(error);
         }
