@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Col, Form, Row } from "react-bootstrap";
 import { FaCirclePlus } from "react-icons/fa6";
 import { FaMinusCircle } from "react-icons/fa";
+import TransactionItemService from "../../services/TransactionItemService";
 
 export default function TransactionOpen({
     warehouses,
@@ -9,6 +10,7 @@ export default function TransactionOpen({
     warehouseId,
     setWarehouseId,
     productsOnWarehouse,
+    transactionId,
 }) {
     const [selectedWarehouse, setSelectedWarehouse] = useState(null);
 
@@ -25,6 +27,20 @@ export default function TransactionOpen({
         const selectedWarehouseId = event.target.value;
         setSelectedWarehouse(selectedWarehouseId);
         setWarehouseId(selectedWarehouseId);
+    };
+
+    const handleAddProduct = async (productId) => {
+        try {
+            const response = await TransactionItemService.AddProductOnWarehouse(
+                transactionId,
+                warehouseId,
+                productId,
+                1
+            );
+            console.log(response);
+        } catch (error) {
+            console.log(error);
+        }
     };
 
     return (
@@ -61,7 +77,10 @@ export default function TransactionOpen({
                                         <span className="product-name ms-2">
                                             {product.productName}
                                         </span>
-                                        <FaCirclePlus className="icon me-2 plus-icon" />
+                                        <FaCirclePlus
+                                            className="icon me-2 plus-icon"
+                                            onClick={() => handleAddProduct(product.id)}
+                                        />
                                     </li>
                                 ))}
                         </ul>

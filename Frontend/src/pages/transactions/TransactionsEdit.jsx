@@ -16,6 +16,7 @@ export default function TransactionsEdit() {
     const routeParams = useParams();
 
     const [transaction, setTransaction] = useState({});
+    const [transactionId, setTransactionId] = useState(0);
 
     const [employees, setEmployees] = useState([]);
     const [employeeId, setEmployeeId] = useState(0);
@@ -71,6 +72,7 @@ export default function TransactionsEdit() {
             const transactionData = response.data;
             setEmployeeId(transactionData.employeeId);
             setTransaction(transactionData);
+            setTransactionId(transactionData.id);
             setStatusId(transactionData.transactionStatusId);
         } catch (error) {
             alert(error.message);
@@ -218,6 +220,7 @@ export default function TransactionsEdit() {
                             setWarehouseId={handleSelectWarehouseChange}
                             productsOnWarehouse={productsOnWarehouse}
                             associatedWarehouses={associatedWarehouses}
+                            transactionId={transactionId}
                         />
                     )}
                 </Row>
