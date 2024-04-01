@@ -359,5 +359,41 @@ namespace InventoryManagementAPP.Controllers
         }
 
 
+        //[HttpDelete]
+        //[Route("{id:int}")]
+        //[ProducesResponseType(StatusCodes.Status200OK)]
+        //[ProducesResponseType(StatusCodes.Status204NoContent)]
+        //[ProducesResponseType(StatusCodes.Status503ServiceUnavailable)]
+        //public IActionResult DeleteProductOnWarehouse(int transactionId, int warehouseId, int productId)
+        //{
+        //    if (!ModelState.IsValid || transactionId <= 0 || warehouseId <= 0 || productId <= 0)
+        //    {
+        //        return BadRequest();
+        //    }
+
+        //    try
+        //    {
+        //        var inventoryTransactionItem = _context.InventoryTransactionItems
+        //            .SingleOrDefault(iti => iti.InventoryTransaction.Id == transactionId
+        //            && iti.Warehouse.Id == warehouseId
+        //           && iti.Product.Id == productId);
+
+        //        if (inventoryTransactionItem == null)
+        //        {
+        //            return StatusCode(StatusCodes.Status204NoContent, id);
+        //        }
+
+        //        _context.InventoryTransactionItems.Remove(inventoryTransactionItem);
+        //        _context.SaveChanges();
+
+        //        return new JsonResult(new { message = "Item from transaction deleted successfully." });
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return StatusCode(StatusCodes.Status503ServiceUnavailable, ex.Message);
+        //    }
+        //}
+
+
     }
 }

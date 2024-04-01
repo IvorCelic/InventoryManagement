@@ -17,7 +17,7 @@ namespace InventoryManagementAPP.Mappers
                         entity.InventoryTransaction.TransactionStatus == null ? null : entity.InventoryTransaction.TransactionStatus.StatusName,
                         entity.InventoryTransaction == null ? null : entity.InventoryTransaction.Id,
                         entity.Product == null ? "" : entity.Product.ProductName.Trim(),
-                        entity.Warehouse == null ? "" : entity.Warehouse.WarehouseName.Trim(),
+                        entity.Warehouse == null ? null : entity.Warehouse.Id,
                         entity.Quantity == null ? 1 : entity.Quantity
                         ));
 
