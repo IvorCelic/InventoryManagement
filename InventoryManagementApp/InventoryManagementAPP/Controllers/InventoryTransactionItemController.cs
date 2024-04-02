@@ -72,7 +72,7 @@ namespace InventoryManagementAPP.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status503ServiceUnavailable)]
-        public IActionResult Post(InventoryTransactionItemDTOInsertUpdate inventoryTransactionItemDTO)
+        public IActionResult Post(InventoryTransactionItemDTOInsert inventoryTransactionItemDTO)
         {
             if (!ModelState.IsValid || inventoryTransactionItemDTO == null)
             {
@@ -101,7 +101,7 @@ namespace InventoryManagementAPP.Controllers
                 return BadRequest();
             }
 
-            var entity = inventoryTransactionItemDTO.MapInventoryTransactionItemInsertUpdateFromDTO(new InventoryTransactionItem());
+            var entity = inventoryTransactionItemDTO.MapInventoryTransactionItemInsertFromDTO(new InventoryTransactionItem());
 
             entity.InventoryTransaction = inventoryTransaction;
             entity.Warehouse = warehouse;
@@ -114,66 +114,6 @@ namespace InventoryManagementAPP.Controllers
                 _context.SaveChanges();
 
                 return StatusCode(StatusCodes.Status201Created, entity.MapInventoryTransactionItemReadToDTO());
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status503ServiceUnavailable, ex.Message);
-            }
-        }
-
-
-        [HttpPut]
-        [Route("{id:int}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status503ServiceUnavailable)]
-        public IActionResult Put(int id, InventoryTransactionItemDTOInsertUpdate inventoryTransactionItemDTO)
-        {
-            if (id <= 0 || !ModelState.IsValid || inventoryTransactionItemDTO == null)
-            {
-                return BadRequest();
-            }
-
-            try
-            {
-                var entity = _context.InventoryTransactionItems
-                    .Include(transaction => transaction.InventoryTransaction)
-                    .Include(transaction => transaction.Warehouse)
-                    .Include(transaction => transaction.Product)
-                    .FirstOrDefault(x => x.Id == id);
-
-                if (entity == null)
-                {
-                    return StatusCode(StatusCodes.Status204NoContent, id);
-                }
-
-                var inventoryTransaction = _context.InventoryTransactions.Find(inventoryTransactionItemDTO.inventoryTransactionId);
-                if (inventoryTransaction == null)
-                {
-                    return BadRequest();
-                }
-
-                var warehouse = _context.Warehouses.Find(inventoryTransactionItemDTO.warehouseId);
-                if (warehouse == null)
-                {
-                    return BadRequest();
-                }
-
-                var product = _context.Products.Find(inventoryTransactionItemDTO.productId);
-                if (product == null)
-                {
-                    return BadRequest();
-                }
-
-                entity = inventoryTransactionItemDTO.MapInventoryTransactionItemInsertUpdateFromDTO(entity);
-                entity.Warehouse = warehouse;
-                entity.Product = product;
-
-                _context.InventoryTransactionItems.Update(entity);
-                _context.SaveChanges();
-
-                return Ok();
             }
             catch (Exception ex)
             {
@@ -238,38 +178,6 @@ namespace InventoryManagementAPP.Controllers
                 var productsOnTransaction = inventoryTransactionItems.MapToProductWithQuantityDTOList();
 
                 return new JsonResult(productsOnTransaction);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status503ServiceUnavailable, ex.Message);
-            }
-        }
-
-
-        [HttpGet]
-        [Route("Warehouses/{transactionId:int}")]
-        public IActionResult GetWarehouses(int transactionId)
-        {
-            if (!ModelState.IsValid || transactionId <= 0)
-            {
-                BadRequest();
-            }
-
-            try
-            {
-                var transactionWarehouses = _context.InventoryTransactionItems
-                    .Include(it => it.Warehouse)
-                    .Where(x => x.InventoryTransaction.Id == transactionId)
-                    .Select(x => x.Warehouse)
-                    .Distinct()
-                    .ToList();
-
-                if (transactionWarehouses == null)
-                {
-                    return BadRequest();
-                }
-
-                return new JsonResult(transactionWarehouses.MapWarehouseReadList());
             }
             catch (Exception ex)
             {

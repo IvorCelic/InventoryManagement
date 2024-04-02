@@ -67,24 +67,24 @@ namespace InventoryManagementAPP.Extensions
         }
 
         /// <summary>
-        /// Maps a <see cref="InventoryTransactionItem"/> entity to a <see cref="InventoryTransactionItemDTOInsertUpdate"/> DTO.
+        /// Maps a <see cref="InventoryTransactionItem"/> entity to a <see cref="InventoryTransactionItemDTOInsert"/> DTO.
         /// </summary>
         /// <param name="entity">The <see cref="InventoryTransactionItem"/> entity to map.</param>
-        /// <returns>A <see cref="InventoryTransactionItemDTOInsertUpdate"/> DTO.</returns>
-        public static InventoryTransactionItemDTOInsertUpdate MapInventoryTransactionItemInsertUpdatedToDTO(this InventoryTransactionItem entity)
+        /// <returns>A <see cref="InventoryTransactionItemDTOInsert"/> DTO.</returns>
+        public static InventoryTransactionItemDTOInsert MapInventoryTransactionItemInsertToDTO(this InventoryTransactionItem entity)
         {
-            var mapper = InventoryTransactionItemMapper.InitializeInsertUpdateToDTO();
+            var mapper = InventoryTransactionItemMapper.InitializeInsertToDTO();
 
-            return mapper.Map<InventoryTransactionItemDTOInsertUpdate>(entity);
+            return mapper.Map<InventoryTransactionItemDTOInsert>(entity);
         }
 
         /// <summary>
-        /// Maps a <see cref="InventoryTransactionItemDTOInsertUpdate"/> DTO to a <see cref="InventoryTransactionItem"/> entity.
+        /// Maps a <see cref="InventoryTransactionItemDTOInsert"/> DTO to a <see cref="InventoryTransactionItem"/> entity.
         /// </summary>
-        /// <param name="dto">The <see cref="InventoryTransactionItemDTOInsertUpdate"/> DTO to map.</param>
+        /// <param name="dto">The <see cref="InventoryTransactionItemDTOInsert"/> DTO to map.</param>
         /// <param name="entity">The <see cref="InventoryTransactionItem"/> entity to update.</param>
         /// <returns>The updated <see cref="InventoryTransactionItem"/> entity.</returns>
-        public static InventoryTransactionItem MapInventoryTransactionItemInsertUpdateFromDTO(this InventoryTransactionItemDTOInsertUpdate dto, InventoryTransactionItem entity)
+        public static InventoryTransactionItem MapInventoryTransactionItemInsertFromDTO(this InventoryTransactionItemDTOInsert dto, InventoryTransactionItem entity)
         {
             entity.Quantity = dto.quantity;
 

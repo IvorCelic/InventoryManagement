@@ -24,6 +24,7 @@ namespace InventoryManagementAPP.Controllers
             _context = context;
         }
 
+<<<<<<< Updated upstream
         /// <summary>
         /// Retrieves all warehouses from the database.
         /// </summary>
@@ -200,6 +201,9 @@ namespace InventoryManagementAPP.Controllers
                 return StatusCode(StatusCodes.Status503ServiceUnavailable, ex.Message);
             }
         }
+=======
+       
+>>>>>>> Stashed changes
 
         /// <summary>
         /// Deletes the specified warehouse.
@@ -221,7 +225,18 @@ namespace InventoryManagementAPP.Controllers
             // Validate the model state and ID.
             if (id <= 0 || !ModelState.IsValid)
             {
+<<<<<<< Updated upstream
                 return BadRequest();
+=======
+                StringBuilder sb = new StringBuilder();
+                sb.Append("Warehouse can not be deleted because it is associated with transactions: ");
+                foreach (var e in list)
+                {
+                    sb.Append(e.InventoryTransaction).Append(", ");
+                }
+
+                throw new Exception(sb.ToString().Substring(0, sb.ToString().Length - 2));
+>>>>>>> Stashed changes
             }
 
             try

@@ -53,7 +53,7 @@
     /// <summary>
     /// Data Transfer Object (DTO) representing the data needed for inserting or updating a inventory transaction items
     /// </summary>
-    public record InventoryTransactionItemDTOInsertUpdate(int? inventoryTransactionId, int? productId, int? warehouseId, int? quantity);
+    public record InventoryTransactionItemDTOInsert(int? inventoryTransactionId, int? productId, int? warehouseId, int? quantity);
 
     /// <summary>
     /// Data Transfer Object(DTO) representing a product with quantity.
