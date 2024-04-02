@@ -1,4 +1,5 @@
-﻿using InventoryManagementAPP.Data;
+﻿using EdunovaAPP.Extensions;
+using InventoryManagementAPP.Data;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
@@ -11,41 +12,9 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddInventoryManagementSwaggerGen();
+builder.Services.AddInventoryManagementCORS();
 
-// Needed for documentation
-builder.Services.AddSwaggerGen(sgo =>
-{
-    var o = new Microsoft.OpenApi.Models.OpenApiInfo()
-    {
-        Title = "Inventory Management API",
-        Version = "v1",
-        Contact = new Microsoft.OpenApi.Models.OpenApiContact()
-        {
-            Email = "ivorcelic@gmail.com",
-            Name = "Ivor Ćelić"
-        },
-        Description = "This is documentation for Inventory Management API",
-        License = new Microsoft.OpenApi.Models.OpenApiLicense()
-        {
-            Name = "Education licence"
-        }
-
-    };
-    sgo.SwaggerDoc("v1", o);
-
-    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-    sgo.IncludeXmlComments(xmlPath, includeControllerXmlComments: true);
-});
-
-// Everyone from everywhere can connect on our API
-builder.Services.AddCors(opcije =>
-{
-    opcije.AddPolicy("CorsPolicy",
-        builder =>
-            builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()
-            );
-});
 
 // Adding database
 builder.Services.AddDbContext<InventoryManagementContext>(o => 

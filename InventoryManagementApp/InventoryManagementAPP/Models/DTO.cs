@@ -1,4 +1,6 @@
-﻿namespace InventoryManagementAPP.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace InventoryManagementAPP.Models
 {
     /// <summary>
     /// Data Transfer Object (DTO) representing a read-only view of a location.
@@ -8,7 +10,12 @@
     /// <summary>
     /// Data Transfer Object (DTO) representing the data needed for inserting or updating a location.
     /// </summary>
-    public record WarehouseDTOInsertUpdate(string warehouseName, string description);
+    public record WarehouseDTOInsertUpdate(
+        [Required(ErrorMessage = "Warehouse name required")]
+        string? warehouseName,
+
+        string description
+        );
 
     /// <summary>
     /// Data Transfer Object (DTO) representing a read-only view of a person
@@ -18,7 +25,17 @@
     /// <summary>
     /// Data Transfer Object (DTO) representing the data needed for inserting or updating a person
     /// </summary>
-    public record EmployeeDTOInsertUpdate(string firstName, string lastName, string email, string password);
+    public record EmployeeDTOInsertUpdate(
+        [Required(ErrorMessage = "First name required")]
+        string firstName,
+
+        [Required(ErrorMessage = "Last name required")]
+        string lastName,
+
+        [Required(ErrorMessage = "Email name required")]
+        string email, 
+
+        string password);
 
     /// <summary>
     /// Data Transfer Object (DTO) representing a read-only view of a product
@@ -28,22 +45,44 @@
     /// <summary>
     /// Data Transfer Object (DTO) representing the data needed for inserting or updating a product
     /// </summary>
-    public record ProductDTOInsertUpdate(string productName, string description, bool isUnitary);
+    public record ProductDTOInsertUpdate(
+        [Required(ErrorMessage = "Warehouse name required")] 
+        string productName, 
+
+        string description,
+
+        bool isUnitary);
 
     /// <summary>
     /// Data Transfer Object (DTO) representing a read-only view of a inventory transaction
     /// </summary>
-    public record InventoryTransactionDTORead(int id, string? employeeFirstLastName, string? transactionStatusName, DateTime? transactionDate, string? additionalDetails );
+    public record InventoryTransactionDTORead(int id, string? employeeFirstLastName, string? transactionStatusName, DateTime? transactionDate, string? additionalDetails);
 
     /// <summary>
     /// Data Transfer Object (DTO) representing the data needed for inserting or updating a inventory transaction
     /// </summary>
-    public record InventoryTransactionDTOInsert(int? employeeId, int? transactionStatusId, DateTime? transactionDate, string? additionalDetails);
+    public record InventoryTransactionDTOInsert(
+        [Required(ErrorMessage = "Employee required")]
+        int? employeeId,
+
+        [Required(ErrorMessage = "Transaction status required")]
+        int? transactionStatusId, 
+
+        DateTime? transactionDate, 
+
+        string? additionalDetails);
 
     /// <summary>
     /// Data Transfer Object (DTO) representing the data needed for updating a inventory transaction
     /// </summary>
-    public record InventoryTransactionDTOUpdate(int? transactionStatusId, int? employeeId, string? additionalDetails);
+    public record InventoryTransactionDTOUpdate(
+        [Required(ErrorMessage = "Transaction status required")]
+        int? transactionStatusId,
+
+        [Required(ErrorMessage = "Employee required")] 
+        int? employeeId,
+
+        string? additionalDetails);
 
     /// <summary>
     /// Data Transfer Object (DTO) representing a read-only view of a inventory transaction items
@@ -53,7 +92,18 @@
     /// <summary>
     /// Data Transfer Object (DTO) representing the data needed for inserting or updating a inventory transaction items
     /// </summary>
-    public record InventoryTransactionItemDTOInsert(int? inventoryTransactionId, int? productId, int? warehouseId, int? quantity);
+    public record InventoryTransactionItemDTOInsert(
+        [Required(ErrorMessage = "Inventory Transaction required")]
+        int? inventoryTransactionId,
+
+        [Required(ErrorMessage = "Product required")]
+        int? productId,
+
+        [Required(ErrorMessage = "Warehouse required")]
+        int? warehouseId,
+
+        [Required(ErrorMessage = "Quantity required")]
+        int? quantity);
 
     /// <summary>
     /// Data Transfer Object(DTO) representing a product with quantity.
