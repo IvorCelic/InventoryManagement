@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Col, Form, Row } from "react-bootstrap";
 import { FaCirclePlus } from "react-icons/fa6";
 import { FaMinusCircle } from "react-icons/fa";
 import TransactionItemService from "../../services/TransactionItemService";
+import QuantityModal from "../../components/QuantityModal";
 
 export default function TransactionOpen({
     warehouses,
@@ -12,10 +13,10 @@ export default function TransactionOpen({
     productsOnWarehouse,
     transactionId,
     handleProductOnoWarehouseChange,
-    isUnitary,
 }) {
     const [selectedWarehouse, setSelectedWarehouse] = useState(null);
-    const [quantity, setQuantity] = useState(1);
+    const [selectedProductId, setSelectedProductId] = useState(null);
+    const [showModal, setShowModal] = useState(false);
 
     function nameWarehouse() {
         for (let i = 0; i < warehouses.length; i++) {
@@ -32,26 +33,56 @@ export default function TransactionOpen({
         setWarehouseId(selectedWarehouseId);
     };
 
-    useEffect(() => {
-        return isUnitary === true ? setQuantity(1) : setQuantity(2);
-    });
+    // useEffect(() => {
+    //     return isUnitary === true ? setQuantity(1) : setQuantity(2);
+    // });
 
-    const handleAddProduct = async (transactionId, warehouseId, productId, quantity) => {
-        try {
-            const response = await TransactionItemService.AddProductOnWarehouse(
-                parseInt(transactionId),
-                parseInt(warehouseId),
-                productId,
-                quantity
-            );
+    // const handleAddProduct = async (transactionId, warehouseId, productId, quantity) => {
+    //     try {
+    //         const response = await TransactionItemService.AddProductOnWarehouse(
+    //             parseInt(transactionId),
+    //             parseInt(warehouseId),
+    //             productId,
+    //             quantity
+    //         );
 
-            console.log("quantity:", quantity);
-            console.log(response);
+    //         console.log("quantity:", quantity);
+    //         console.log(response);
+    //         handleProductOnoWarehouseChange();
+    //     } catch (error) {
+    //         console.log(error);
+    //     }
+    // };
+
+    async function add(productId, quantity) {
+        const entity = {
+            inventoryTransactionId: parseInt(transactionId),
+            warehouseId: parseInt(warehouseId),
+            productId: productId,
+            quantity: quantity,
+        };
+
+        const response = await TransactionItemService.add(entity);
+        if (response.ok) {
             handleProductOnoWarehouseChange();
-        } catch (error) {
-            console.log(error);
+        } else {
+            alert(response.message.errors);
         }
-    };
+    }
+
+    function handleAddProduct(productId, isUnitary) {
+        if (isUnitary) {
+            setSelectedProductId(productId);
+            setShowModal(true);
+        } else {
+            add(productId, 1);
+        }
+    }
+
+    async function handleAddWithQuantity(customQuantity) {
+        add(selectedProductId, customQuantity);
+        setShowModal(false);
+    }
 
     async function removeProductOnWarehouse(id) {
         const response = await TransactionItemService.remove(id);
@@ -100,12 +131,7 @@ export default function TransactionOpen({
                                         <FaCirclePlus
                                             className="icon me-2 plus-icon"
                                             onClick={() =>
-                                                handleAddProduct(
-                                                    transactionId,
-                                                    warehouseId,
-                                                    product.id,
-                                                    quantity
-                                                )
+                                                handleAddProduct(product.id, product.isUnitary)
                                             }
                                         />
                                     </li>
@@ -136,6 +162,11 @@ export default function TransactionOpen({
                     </Col>
                 </Row>
             )}
+            <QuantityModal
+                show={showModal}
+                handleClose={() => setShowModal(false)}
+                handleAdd={handleAddWithQuantity}
+            />
         </Col>
     );
 }

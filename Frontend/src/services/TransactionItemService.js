@@ -109,35 +109,35 @@ async function GetProductsOnWarehouse(transactionId, warehouseId) {
         });
 }
 
-async function AddProductOnWarehouse(transactionId, warehouseId, productId, quantity) {
-    const entity = {
-        transactionId: transactionId,
-        warehouseId: warehouseId,
-        productId: productId,
-        quantity: quantity,
-    };
+// async function AddProductOnWarehouse(transactionId, warehouseId, productId, quantity) {
+//     const entity = {
+//         transactionId: transactionId,
+//         warehouseId: warehouseId,
+//         productId: productId,
+//         quantity: quantity,
+//     };
 
-    return await httpService
-        .post(
-            "/" +
-                entityName +
-                "/Transactions/" +
-                transactionId +
-                "/Warehouses/" +
-                warehouseId +
-                "/Products/" +
-                productId,
-            entity
-        )
-        .then((res) => {
-            if (App.DEV) console.table(res.data);
+//     return await httpService
+//         .post(
+//             "/" +
+//                 entityName +
+//                 "/Transactions/" +
+//                 transactionId +
+//                 "/Warehouses/" +
+//                 warehouseId +
+//                 "/Products/" +
+//                 productId,
+//             entity
+//         )
+//         .then((res) => {
+//             if (App.DEV) console.table(res.data);
 
-            return res;
-        })
-        .catch((error) => {
-            console.log(error);
-        });
-}
+//             return res;
+//         })
+//         .catch((error) => {
+//             console.log(error);
+//         });
+// }
 
 export default {
     get,
@@ -148,5 +148,5 @@ export default {
     GetProducts,
     GetWarehouses,
     GetProductsOnWarehouse,
-    AddProductOnWarehouse,
+    // AddProductOnWarehouse,
 };
