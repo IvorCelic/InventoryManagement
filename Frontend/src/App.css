@@ -115,3 +115,8 @@
     color: red;
     font-size: 1.3rem;
 }
+
+.custom-modal-dialog {
+    width: 400px;
+  }
+  
