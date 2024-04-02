@@ -12,8 +12,10 @@ export default function TransactionOpen({
     productsOnWarehouse,
     transactionId,
     handleProductOnoWarehouseChange,
+    isUnitary,
 }) {
     const [selectedWarehouse, setSelectedWarehouse] = useState(null);
+    const [quantity, setQuantity] = useState(1);
 
     function nameWarehouse() {
         for (let i = 0; i < warehouses.length; i++) {
@@ -30,13 +32,20 @@ export default function TransactionOpen({
         setWarehouseId(selectedWarehouseId);
     };
 
-    const handleAddProduct = async (productId) => {
+    useEffect(() => {
+        return isUnitary === true ? setQuantity(1) : setQuantity(2);
+    });
+
+    const handleAddProduct = async (transactionId, warehouseId, productId, quantity) => {
         try {
             const response = await TransactionItemService.AddProductOnWarehouse(
                 parseInt(transactionId),
                 parseInt(warehouseId),
-                productId
+                productId,
+                quantity
             );
+
+            console.log("quantity:", quantity);
             console.log(response);
             handleProductOnoWarehouseChange();
         } catch (error) {
@@ -90,7 +99,14 @@ export default function TransactionOpen({
                                         </span>
                                         <FaCirclePlus
                                             className="icon me-2 plus-icon"
-                                            onClick={() => handleAddProduct(product.id)}
+                                            onClick={() =>
+                                                handleAddProduct(
+                                                    transactionId,
+                                                    warehouseId,
+                                                    product.id,
+                                                    quantity
+                                                )
+                                            }
                                         />
                                     </li>
                                 ))}

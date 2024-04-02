@@ -164,9 +164,13 @@ export default function TransactionsEdit() {
         setStatusId((previous) => (previous === 1 ? 2 : 1));
     }
 
-    function isUnitary(product) {
+    function ReadisUnitary(product) {
         if (product.isUnitary == null) return "Not defined";
         return product.isUnitary ? "Yes" : "No";
+    }
+
+    function isUnitary(product) {
+        return product.isUnitary === 1 ? true : false;
     }
 
     function handleTabWarehouseChange(associatedWarehouseId) {
@@ -214,7 +218,7 @@ export default function TransactionsEdit() {
                             associatedWarehouses={associatedWarehouses}
                             associatedProducts={associatedProducts}
                             productsOnWarehouse={productsOnWarehouse}
-                            isUnitary={isUnitary}
+                            isUnitary={ReadisUnitary}
                         />
                     ) : (
                         <TransactionOpen
