@@ -1,12 +1,12 @@
 import { Route, Routes } from "react-router-dom";
-import { RoutesNames } from "./constants";
-
 import Login from "./pages/Login";
-import Home from "./pages/Home";
-import NavBar from "./components/NavBar";
+import { RoutesNames } from "./constants";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
+
+import NavBar from "./components/NavBar";
+import Home from "./pages/Home";
 
 import Warehouses from "./pages/warehouses/Warehouses";
 import WarehousesCreate from "./pages/warehouses/WarehousesCreate";

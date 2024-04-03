@@ -8,11 +8,11 @@ export default function ErrorModal({ show, onHide, errors }) {
                 <Modal.Title>Ups!</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-            <ul>
-          {errors && errors.map((error, index) => (
-            <li key={index}>{error.message}</li>
-          ))}
-        </ul>
+                <ul>
+                    {errors && errors.map((error, index) => (
+                        <li key={index}>{error.message}</li>
+                        ))}
+                </ul>
             </Modal.Body>
             <Modal.Footer>
                 <Button variant="secondary" onClick={onHide}>
