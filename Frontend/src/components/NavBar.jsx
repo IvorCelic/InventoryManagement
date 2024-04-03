@@ -1,7 +1,7 @@
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
-import { RoutesNames } from "../constants";
+import { App, RoutesNames } from "../constants";
 import { useNavigate } from "react-router-dom";
 import "./NavBar.css";
 
@@ -32,10 +32,7 @@ function NavBar() {
                             </Nav.Link>
                         </Nav>
                         <Nav>
-                            <Nav.Link
-                                target="_blank"
-                                href="https://ivorcelic-001-site1.htempurl.com/swagger/index.html"
-                            >
+                            <Nav.Link target="_blank" href={App.URL + "/swagger/index.html"}>
                                 API Documentation
                             </Nav.Link>
                         </Nav>

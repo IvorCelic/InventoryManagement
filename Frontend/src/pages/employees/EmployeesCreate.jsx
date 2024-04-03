@@ -1,5 +1,5 @@
-import { Button, Col, Container, Form, Row } from "react-bootstrap";
-import { Link, useNavigate } from "react-router-dom";
+import { Container, Form } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 import { RoutesNames } from "../../constants";
 import EmployeeService from "../../services/EmployeeService";
 import useError from "../../hooks/useError";
@@ -14,6 +14,7 @@ export default function EmployeesCreate() {
         const response = await EmployeeService.add(entityName);
         if (response.ok) {
             navigate(RoutesNames.EMPLOYEES_LIST);
+            return;
         }
         showError(response.data);
     }

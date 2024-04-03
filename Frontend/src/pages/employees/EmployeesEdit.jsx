@@ -1,37 +1,38 @@
-import { Button, Col, Container, Form, Row } from "react-bootstrap";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Container, Form } from "react-bootstrap";
+import { useNavigate, useParams } from "react-router-dom";
 import { RoutesNames } from "../../constants";
 import EmployeeService from "../../services/EmployeeService";
 import { useEffect, useState } from "react";
+import useError from "../../hooks/useError";
+import ActionButtons from "../../components/ActionButtons";
 
 export default function EmployeesEdit() {
     const navigate = useNavigate();
     const routeParams = useParams();
-    const [employee, setEmployee] = useState({});
     const entityName = "employee";
 
+    const [employee, setEmployee] = useState({});
+    const [showError, setShowError] = useError();
+    const [showModal, setShowModal] = useState(false);
+
     async function fetchEmployee() {
-        await EmployeeService.getById(routeParams.id)
-            .then((res) => {
-                setEmployee(res.data);
-            })
-            .catch((error) => {
-                alert(error.message);
-            });
+        const response = await EmployeeService.getById("Employee", routeParams.id);
+        if (!response.ok) {
+            showError(response.data);
+            navigate(RoutesNames.EMPLOYEES_LIST);
+            return;
+        }
+        setEmployee(response.data);
+        setShowModal(false);
     }
 
-    useEffect(() => {
-        fetchEmployee();
-    }, []);
-
     async function editEmployee(entityName) {
-        const response = await EmployeeService.edit(routeParams.id, entityName);
+        const response = await EmployeeService.edit("Employee", routeParams.id, entityName);
         if (response.ok) {
             navigate(RoutesNames.EMPLOYEES_LIST);
-        } else {
-            console.log(response);
-            alert(response.message);
+            return;
         }
+        showError(response.ok);
     }
 
     function handleSubmit(event) {
@@ -47,6 +48,10 @@ export default function EmployeesEdit() {
 
         editEmployee(entityName);
     }
+
+    useEffect(() => {
+        fetchEmployee();
+    }, []);
 
     return (
         <Container>
@@ -90,21 +95,7 @@ export default function EmployeesEdit() {
                             required
                         />
                     </Form.Group>
-                    <Row className="mb-0 flex-column flex-sm-row">
-                        <Col className="d-flex align-items-center mb-2 mb-sm-0">
-                            <Link
-                                className="btn btn-danger myButton"
-                                to={RoutesNames.EMPLOYEES_LIST}
-                            >
-                                Cancel
-                            </Link>
-                        </Col>
-                        <Col className="d-flex align-items-center">
-                            <Button className="myButton" variant="primary" type="submit">
-                                Save changes
-                            </Button>
-                        </Col>
-                    </Row>
+                    <ActionButtons cancel={RoutesNames.EMPLOYEES_LIST} action="Save changes" />
                 </Form>
             </Container>
         </Container>

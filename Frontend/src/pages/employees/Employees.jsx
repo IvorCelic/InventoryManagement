@@ -5,35 +5,33 @@ import { FaEdit, FaTrash } from "react-icons/fa";
 import SearchAndAdd from "../../components/SearchAndAdd";
 import { useEffect, useState } from "react";
 import EmployeeService from "../../services/EmployeeService";
+import useError from "../../hooks/useError";
 
 export default function Employees() {
     const [employees, setEmployees] = useState();
     let navigate = useNavigate();
+    const { showError } = useError();
 
     async function fetchEmployees() {
-        await EmployeeService.get()
-            .then((res) => {
-                setEmployees(res.data);
-            })
-            .catch((error) => {
-                alert(error);
-            });
+        const response = await EmployeeService.get(`Employee`);
+        if (!response.ok) {
+            showError(response.data);
+            return;
+        }
+        setEmployees(response.data);
+    }
+
+    async function removeEmployee(id) {
+        const response = await EmployeeService.remove(`Employee`, id);
+        showError(response.data);
+        if (response.ok) {
+            fetchEmployees();
+        }
     }
 
     useEffect(() => {
         fetchEmployees();
     }, []);
-
-    async function removeEmployee(id) {
-        const response = await EmployeeService.remove(id);
-
-        if (response.ok) {
-            alert(response.message.data.message);
-            fetchEmployees();
-        } else {
-            alert(response.message);
-        }
-    }
 
     return (
         <Container>
