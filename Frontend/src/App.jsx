@@ -1,11 +1,12 @@
 import { Route, Routes } from "react-router-dom";
 import { RoutesNames } from "./constants";
-import "bootstrap/dist/css/bootstrap.min.css";
-import "./App.css";
 
-import NavBar from "./components/NavBar";
 import Login from "./pages/Login";
 import Home from "./pages/Home";
+import NavBar from "./components/NavBar";
+
+import "bootstrap/dist/css/bootstrap.min.css";
+import "./App.css";
 
 import Warehouses from "./pages/warehouses/Warehouses";
 import WarehousesCreate from "./pages/warehouses/WarehousesCreate";
@@ -24,9 +25,15 @@ import Transactions from "./pages/transactions/Transactions";
 import TransactionsCreate from "./pages/transactions/TransactionsCreate";
 import TransactionsEdit from "./pages/transactions/TransactionsEdit";
 
+import ErrorModal from "./components/ErrorModal";
+import useError from "./hooks/useError";
+
 function App() {
+    const { showErrorModal, errors, hideError } = useError();
+
     return (
         <>
+            <ErrorModal show={showErrorModal} errors={errors} onHide={hideError} />
             <NavBar />
             <Routes>
                 <>

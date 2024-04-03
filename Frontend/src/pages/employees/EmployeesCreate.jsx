@@ -2,23 +2,24 @@ import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { RoutesNames } from "../../constants";
 import EmployeeService from "../../services/EmployeeService";
+import useError from "../../hooks/useError";
+import ActionButtons from "../../components/ActionButtons";
 
 export default function EmployeesCreate() {
     const navigate = useNavigate();
     const entityName = "employee";
+    const { showError } = useError();
 
     async function addEmployee(entityName) {
         const response = await EmployeeService.add(entityName);
         if (response.ok) {
             navigate(RoutesNames.EMPLOYEES_LIST);
-        } else {
-            console.log(response);
-            alert(response.message);
         }
+        showError(response.data);
     }
 
-    function handleSubmit(error) {
-        error.preventDefault();
+    function handleSubmit(entity) {
+        entity.preventDefault();
         const data = new FormData(error.target);
 
         const entityName = {
@@ -73,18 +74,7 @@ export default function EmployeesCreate() {
                             required
                         />
                     </Form.Group>
-                    <Row className="mb-0 flex-column flex-sm-row">
-                        <Col className="d-flex align-items-center mb-2 mb-sm-0">
-                            <Link className="btn btn-danger myButton" to={RoutesNames.EMPLOYEES_LIST}>
-                                Cancel
-                            </Link>
-                        </Col>
-                        <Col className="d-flex align-items-center">
-                            <Button className="myButton" variant="primary" type="submit">
-                                Add {entityName}
-                            </Button>
-                        </Col>
-                    </Row>
+                    <ActionButtons cancel={RoutesNames.EMPLOYEES_LIST} action="Add employee" />
                 </Form>
             </Container>
         </Container>

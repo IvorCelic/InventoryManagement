@@ -147,7 +147,7 @@ namespace InventoryManagementAPP.Controllers
             var entityFromDB = DbSet.Find(id);
             if (entityFromDB == null)
             {
-                throw new Exception("There is no entity with ID" + id + " in database.");
+                throw new Exception("There is no entity with ID: " + id + " in database.");
             }
 
             return entityFromDB;
