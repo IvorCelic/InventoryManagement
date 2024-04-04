@@ -1,25 +1,25 @@
-import { useEffect, useState } from "react";
 import { Button, Container, Table } from "react-bootstrap";
+import { RoutesNames } from "../../constants";
+import SearchAndAdd from "../../components/SearchAndAdd";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import TransactionService from "../../services/TransactionService";
-import moment from "moment";
 import { FaEdit, FaFilePdf, FaPrint, FaTrash } from "react-icons/fa";
-import SearchAndAdd from "../../components/SearchAndAdd";
-import { RoutesNames } from "../../constants";
+import moment from "moment";
+import useError from "../../hooks/useError";
 
 export default function Transactions() {
     const [transactions, setTransactions] = useState();
-    const navigate = useNavigate();
+    let navigate = useNavigate();
+    const { showError } = useError();
 
     async function fetchTransactions() {
-        await TransactionService.get()
-            .then((res) => {
-                console.log(res.data);
-                setTransactions(res.data);
-            })
-            .catch((error) => {
-                alert(error);
-            });
+        const response = await TransactionService.get("InventoryTransaction");
+        if (!response.ok) {
+            showError(response.data);
+            return;
+        }
+        setTransactions(response.data);
     }
 
     useEffect(() => {
@@ -27,9 +27,9 @@ export default function Transactions() {
     }, []);
 
     async function removeTransaction(id) {
-        const response = await TransactionService.remove(id);
+        const response = await TransactionService.remove("InventoryTransaction", id);
+        showError(response.data);
         if (response.ok) {
-            alert(response.message.data.message);
             fetchTransactions();
         }
     }
