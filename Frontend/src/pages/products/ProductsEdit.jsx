@@ -35,7 +35,6 @@ export default function ProductsEdit() {
             navigate(RoutesNames.PRODUCTS_LIST);
             return;
         } else {
-            console.log(response);
             showError(response.data);
         }
     }

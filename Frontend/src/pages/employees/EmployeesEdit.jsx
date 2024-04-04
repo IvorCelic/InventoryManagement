@@ -9,11 +9,10 @@ import ActionButtons from "../../components/ActionButtons";
 export default function EmployeesEdit() {
     const navigate = useNavigate();
     const routeParams = useParams();
-    const entityName = "employee";
-
     const [employee, setEmployee] = useState({});
+    const entityName = "employee";
     const { showError } = useError();
-    const [showModal, setShowModal] = useState(false);
+    const [showModal, setShowModal] = useState();
 
     async function fetchEmployee() {
         const response = await EmployeeService.getById("Employee", routeParams.id);
@@ -26,6 +25,10 @@ export default function EmployeesEdit() {
         setShowModal(false);
     }
 
+    useEffect(() => {
+        fetchEmployee();
+    }, []);
+
     async function editEmployee(entityName) {
         const response = await EmployeeService.edit("Employee", routeParams.id, entityName);
         if (response.ok) {
@@ -33,8 +36,7 @@ export default function EmployeesEdit() {
             navigate(RoutesNames.EMPLOYEES_LIST);
             return;
         }
-        console.log(response.data);
-        showError(response.ok);
+        showError(response.data);
     }
 
     function handleSubmit(event) {
@@ -48,10 +50,6 @@ export default function EmployeesEdit() {
             password: data.get("password"),
         });
     }
-
-    useEffect(() => {
-        fetchEmployee();
-    }, []);
 
     return (
         <Container>

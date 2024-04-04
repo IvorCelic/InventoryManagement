@@ -48,7 +48,7 @@ namespace InventoryManagementAPP.Models
     /// Data Transfer Object (DTO) representing the data needed for inserting or updating a product
     /// </summary>
     public record ProductDTOInsertUpdate(
-        [Required(ErrorMessage = "Warehouse name required")] 
+        [Required(ErrorMessage = "Product name required")] 
         string productName, 
 
         string description,

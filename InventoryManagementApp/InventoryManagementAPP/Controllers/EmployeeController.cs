@@ -41,7 +41,7 @@ namespace InventoryManagementAPP.Controllers
 
             if (list != null && list.Count > 0)
             {
-                throw new Exception("Employee can not be deleted because it is associated with transactions.");
+                throw new Exception("Employee can not be deleted because it is associated with transactions: ");
             }
         }
     }

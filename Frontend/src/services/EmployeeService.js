@@ -1,9 +1,9 @@
-import { get, getById, add, edit, remove } from "./httpService";
+import { get, remove, add, edit, getById } from "./httpService";
 
 export default {
     get,
-    getById,
+    remove,
     add,
     edit,
-    remove,
+    getById,
 };

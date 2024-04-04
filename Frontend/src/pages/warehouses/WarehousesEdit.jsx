@@ -1,5 +1,5 @@
-import { Button, Col, Container, Form, Row } from "react-bootstrap";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Container, Form } from "react-bootstrap";
+import { useNavigate, useParams } from "react-router-dom";
 import { RoutesNames } from "../../constants";
 import WarehouseService from "../../services/WarehouseService";
 import { useEffect, useState } from "react";
@@ -35,7 +35,7 @@ export default function WarehousesEdit() {
             navigate(RoutesNames.WAREHOUSES_LIST);
             return;
         }
-        showError();
+        showError(response.ok);
     }
 
     function handleSubmit(event) {
@@ -44,17 +44,17 @@ export default function WarehousesEdit() {
 
         editWarehouse({
             warehouseName: data.get("warehousename"),
-            description: data.get("description"),
+            desmall word big ERRORscription: data.get("description"),
         });
     }
 
     return (
         <Container>
             <Container className="square border mt-5">
-                <h2 className="mt-5 ms-5">Edit warehouse</h2>
+                <h2 className="mt-5 ms-5">Edit {entityName}</h2>
                 <Form className="m-5" onSubmit={handleSubmit}>
                     <Form.Group controlId="warehouseName">
-                        <Form.Label>Name</Form.Label>
+                        <Form.Label>Warehouse Name</Form.Label>
                         <Form.Control
                             type="text"
                             defaultValue={warehouse.warehouseName}
