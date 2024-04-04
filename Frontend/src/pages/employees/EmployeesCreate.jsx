@@ -11,7 +11,7 @@ export default function EmployeesCreate() {
     const { showError } = useError();
 
     async function addEmployee(entityName) {
-        const response = await EmployeeService.add(entityName);
+        const response = await EmployeeService.add('Employee', entityName);
         if (response.ok) {
             navigate(RoutesNames.EMPLOYEES_LIST);
             return;
@@ -19,9 +19,9 @@ export default function EmployeesCreate() {
         showError(response.data);
     }
 
-    function handleSubmit(entity) {
-        entity.preventDefault();
-        const data = new FormData(error.target);
+    function handleSubmit(event) {
+        event.preventDefault();
+        const data = new FormData(event.target);
 
         const entityName = {
             firstName: data.get("firstName"),
@@ -44,7 +44,6 @@ export default function EmployeesCreate() {
                             placeholder="Employee's first name"
                             type="text"
                             name="firstName"
-                            required
                         />
                     </Form.Group>
                     <Form.Group controlId="lastName">
@@ -53,7 +52,6 @@ export default function EmployeesCreate() {
                             placeholder="Employee's last name"
                             type="text"
                             name="lastName"
-                            required
                         />
                     </Form.Group>
                     <Form.Group controlId="email">
@@ -62,7 +60,6 @@ export default function EmployeesCreate() {
                             placeholder="Employee's email"
                             type="text"
                             name="email"
-                            required
                         />
                     </Form.Group>
                     <Form.Group controlId="password">
@@ -70,9 +67,7 @@ export default function EmployeesCreate() {
                         <Form.Control
                             placeholder="Employee's password"
                             type="password"
-                            minLength={8}
                             name="password"
-                            required
                         />
                     </Form.Group>
                     <ActionButtons cancel={RoutesNames.EMPLOYEES_LIST} action="Add employee" />

@@ -1,8 +1,8 @@
+import { useEffect, useState } from "react";
 import { Container, Form } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 import { RoutesNames } from "../../constants";
 import EmployeeService from "../../services/EmployeeService";
-import { useEffect, useState } from "react";
 import useError from "../../hooks/useError";
 import ActionButtons from "../../components/ActionButtons";
 
@@ -12,7 +12,7 @@ export default function EmployeesEdit() {
     const entityName = "employee";
 
     const [employee, setEmployee] = useState({});
-    const [showError, setShowError] = useError();
+    const { showError } = useError();
     const [showModal, setShowModal] = useState(false);
 
     async function fetchEmployee() {
@@ -29,9 +29,11 @@ export default function EmployeesEdit() {
     async function editEmployee(entityName) {
         const response = await EmployeeService.edit("Employee", routeParams.id, entityName);
         if (response.ok) {
+            // console.log(response.data);
             navigate(RoutesNames.EMPLOYEES_LIST);
             return;
         }
+        console.log(response.data);
         showError(response.ok);
     }
 
@@ -39,14 +41,12 @@ export default function EmployeesEdit() {
         event.preventDefault();
         const data = new FormData(event.target);
 
-        const entityName = {
+        editEmployee({
             firstName: data.get("firstName"),
             lastName: data.get("lastName"),
             email: data.get("email"),
             password: data.get("password"),
-        };
-
-        editEmployee(entityName);
+        });
     }
 
     useEffect(() => {
@@ -64,7 +64,6 @@ export default function EmployeesEdit() {
                             type="text"
                             defaultValue={employee.firstName}
                             name="firstName"
-                            required
                         />
                     </Form.Group>
                     <Form.Group controlId="lastName">
@@ -73,26 +72,18 @@ export default function EmployeesEdit() {
                             type="text"
                             defaultValue={employee.lastName}
                             name="lastName"
-                            required
                         />
                     </Form.Group>
                     <Form.Group controlId="email">
                         <Form.Label className="pt-4">Email</Form.Label>
-                        <Form.Control
-                            type="text"
-                            defaultValue={employee.email}
-                            name="email"
-                            required
-                        />
+                        <Form.Control type="text" defaultValue={employee.email} name="email" />
                     </Form.Group>
                     <Form.Group controlId="password">
                         <Form.Label className="pt-4">Password</Form.Label>
                         <Form.Control
                             type="password"
-                            minLength={8}
                             defaultValue={employee.password}
                             name="password"
-                            required
                         />
                     </Form.Group>
                     <ActionButtons cancel={RoutesNames.EMPLOYEES_LIST} action="Save changes" />

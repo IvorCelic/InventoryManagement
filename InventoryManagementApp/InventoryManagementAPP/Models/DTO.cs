@@ -33,8 +33,10 @@ namespace InventoryManagementAPP.Models
         string lastName,
 
         [Required(ErrorMessage = "Email name required")]
-        string email, 
+        string email,
 
+        [MinLength(8, ErrorMessage = "{0} must be at least {1} characters long")]
+        [Required(ErrorMessage = "Password required")]
         string password);
 
     /// <summary>

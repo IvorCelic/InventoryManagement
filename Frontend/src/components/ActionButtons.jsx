@@ -1,9 +1,8 @@
-import { Col, Row } from "react-bootstrap";
+import { Button, Col, Row } from "react-bootstrap";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
-import { Button } from "bootstrap";
 
-export default function ActionButtons({ cancel, action, entityName }) {
+export default function ActionButtons({ cancel, action }) {
     return (
         <Row className="mb-0 flex-column flex-sm-row">
             <Col className="d-flex align-items-center mb-2 mb-sm-0">
@@ -13,7 +12,7 @@ export default function ActionButtons({ cancel, action, entityName }) {
             </Col>
             <Col className="d-flex align-items-center">
                 <Button className="myButton" variant="primary" type="submit">
-                    {action} {entityName}
+                    {action}
                 </Button>
             </Col>
         </Row>

@@ -1,10 +1,10 @@
+import { useEffect, useState } from "react";
 import { Button, Container, Table } from "react-bootstrap";
+import EmployeeService from "../../services/EmployeeService";
 import { RoutesNames } from "../../constants";
 import { useNavigate } from "react-router-dom";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import SearchAndAdd from "../../components/SearchAndAdd";
-import { useEffect, useState } from "react";
-import EmployeeService from "../../services/EmployeeService";
 import useError from "../../hooks/useError";
 
 export default function Employees() {

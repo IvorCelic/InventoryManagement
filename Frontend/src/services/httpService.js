@@ -30,9 +30,9 @@ export async function getById(name, id) {
             return handleError(error);
         });
 }
-export async function add(name, entitet) {
+export async function add(name, entity) {
     return await httpService
-        .post("/" + name, entitet)
+        .post("/" + name, entity)
         .then((res) => {
             return handleSuccess(res);
         })
@@ -40,11 +40,11 @@ export async function add(name, entitet) {
             return handleError(error);
         });
 }
-export async function edit(name, id, entitet) {
+export async function edit(name, id, entity) {
     return await httpService
-        .put("/" + name + "/" + id, entitet)
+        .put("/" + name + "/" + id, entity)
         .then((res) => {
-            return handleSuccess(res);
+            return handleDeleteSuccess(res);
         })
         .catch((error) => {
             return handleError(error);
@@ -54,7 +54,7 @@ export async function remove(name, id) {
     return await httpService
         .delete("/" + name + "/" + id)
         .then((res) => {
-            return handleSuccess(res);
+            return handleDeleteSuccess(res);
         })
         .catch((error) => {
             return handleError(error);
