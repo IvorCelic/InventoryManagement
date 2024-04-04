@@ -12,7 +12,7 @@ export default function WarehousesEdit() {
     const [warehouse, setWarehouse] = useState({});
     const entityName = "warehouse";
     const { showError } = useError();
-    const [showModal, setShowModal] = useState(false);
+    const [showModal, setShowModal] = useState();
 
     async function fetchWarehouse() {
         const response = await WarehouseService.getById("Warehouse", routeParams.id);
@@ -35,7 +35,7 @@ export default function WarehousesEdit() {
             navigate(RoutesNames.WAREHOUSES_LIST);
             return;
         }
-        showError(response.ok);
+        showError(response.data);
     }
 
     function handleSubmit(event) {
@@ -44,7 +44,7 @@ export default function WarehousesEdit() {
 
         editWarehouse({
             warehouseName: data.get("warehousename"),
-            desmall word big ERRORscription: data.get("description"),
+            description: data.get("description"),
         });
     }
 
