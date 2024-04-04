@@ -29,7 +29,7 @@ import ErrorModal from "./components/ErrorModal";
 import useError from "./hooks/useError";
 
 function App() {
-    const { showErrorModal, errors, hideError } = useError();
+    const { errors, showErrorModal, hideError } = useError();
 
     return (
         <>
