@@ -44,7 +44,7 @@ export async function edit(name, id, entity) {
     return await httpService
         .put("/" + name + "/" + id, entity)
         .then((res) => {
-            return handleDeleteSuccess(res);
+            return handleSuccess(res);
         })
         .catch((error) => {
             return handleError(error);

@@ -15,7 +15,7 @@ import WarehousesEdit from "./pages/warehouses/WarehousesEdit";
 import Products from "./pages/products/Products";
 import ProductsCreate from "./pages/products/ProductsCreate";
 import ProductsEdit from "./pages/products/ProductsEdit";
-import ProductDetails from "./pages/products/ProductDetails";
+// import ProductDetails from "./pages/products/ProductDetails";
 
 import Employees from "./pages/employees/Employees";
 import EmployeesCreate from "./pages/employees/EmployeesCreate";
@@ -51,7 +51,7 @@ function App() {
                     <Route path={RoutesNames.PRODUCTS_LIST} element={<Products />} />
                     <Route path={RoutesNames.PRODUCTS_CREATE} element={<ProductsCreate />} />
                     <Route path={RoutesNames.PRODUCTS_EDIT} element={<ProductsEdit />} />
-                    <Route path={RoutesNames.PRODUCTS_DETAILS} element={<ProductDetails />} />
+                    {/* <Route path={RoutesNames.PRODUCTS_DETAILS} element={<ProductDetails />} /> */}
 
                     <Route path={RoutesNames.TRANSACTIONS_LIST} element={<Transactions />} />
                     <Route

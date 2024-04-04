@@ -1,23 +1,28 @@
-import { Button, Col, Container, Form, Row } from "react-bootstrap";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Container, Form } from "react-bootstrap";
+import { useNavigate, useParams } from "react-router-dom";
 import { RoutesNames } from "../../constants";
 import ProductService from "../../services/ProductService";
 import { useEffect, useState } from "react";
+import useError from "../../hooks/useError";
+import ActionButtons from "../../components/ActionButtons";
 
 export default function ProductsEdit() {
     const navigate = useNavigate();
     const routeParams = useParams();
     const [product, setProduct] = useState({});
     const entityName = "product";
+    const { showError } = useError();
+    const [showModal, setShowModal] = useState();
 
     async function fetchProduct() {
-        await ProductService.getById(routeParams.id)
-            .then((res) => {
-                setProduct(res.data);
-            })
-            .catch((error) => {
-                alert(error.message);
-            });
+        const response = await ProductService.getById("Product", routeParams.id);
+        if (!response.ok) {
+            showError(response.data);
+            navigate(RoutesNames.PRODUCTS_LIST);
+            return;
+        }
+        setProduct(response.data);
+        setShowModal(false);
     }
 
     useEffect(() => {
@@ -25,12 +30,13 @@ export default function ProductsEdit() {
     }, []);
 
     async function editProduct(entityName) {
-        const response = await ProductService.edit(routeParams.id, entityName);
+        const response = await ProductService.edit("Product", routeParams.id, entityName);
         if (response.ok) {
             navigate(RoutesNames.PRODUCTS_LIST);
+            return;
         } else {
             console.log(response);
-            alert(response.message);
+            showError(response.data);
         }
     }
 
@@ -38,13 +44,11 @@ export default function ProductsEdit() {
         event.preventDefault();
         const data = new FormData(event.target);
 
-        const entityName = {
+        editProduct({
             productName: data.get("productname"),
             description: data.get("description"),
             isUnitary: data.get("isunitary") == "on" ? true : false,
-        };
-
-        editProduct(entityName);
+        });
     }
 
     return (
@@ -58,7 +62,6 @@ export default function ProductsEdit() {
                             type="text"
                             defaultValue={product.productName}
                             name="productname"
-                            required
                         />
                     </Form.Group>
                     <Form.Group controlId="description">
@@ -76,21 +79,7 @@ export default function ProductsEdit() {
                             name="isunitary"
                         />
                     </Form.Group>
-                    <Row className="mb-0 flex-column flex-sm-row">
-                        <Col className="d-flex align-items-center mb-2 mb-sm-0">
-                            <Link
-                                className="btn btn-danger myButton"
-                                to={RoutesNames.PRODUCTS_LIST}
-                            >
-                                Cancel
-                            </Link>
-                        </Col>
-                        <Col className="d-flex align-items-center">
-                            <Button className="myButton" variant="primary" type="submit">
-                                Save changes
-                            </Button>
-                        </Col>
-                    </Row>
+                    <ActionButtons cancel={RoutesNames.PRODUCTS_LIST} action="Edit product" />
                 </Form>
             </Container>
         </Container>

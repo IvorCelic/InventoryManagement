@@ -5,20 +5,20 @@ import { FaEdit, FaTrash } from "react-icons/fa";
 import WarehouseService from "../../services/WarehouseService";
 import { RoutesNames } from "../../constants";
 import SearchAndAdd from "../../components/SearchAndAdd";
+import useError from "../../hooks/useError";
 
 export default function Warehouses() {
     const [warehouses, setWarehouses] = useState();
     const navigate = useNavigate();
+    const { showError } = useError();
 
     async function fetchWarehouses() {
-        await WarehouseService.get()
-            .then((res) => {
-                console.log(res.data);
-                setWarehouses(res.data);
-            })
-            .catch((error) => {
-                alert(error);
-            });
+        const response = await WarehouseService.get("Warehouse");
+        if (!response.ok) {
+            showError(response.data);
+            return;
+        }
+        setWarehouses(response.data);
     }
 
     useEffect(() => {
@@ -26,9 +26,9 @@ export default function Warehouses() {
     }, []);
 
     async function removeWarehouse(id) {
-        const response = await WarehouseService.remove(id);
+        const response = await WarehouseService.remove("Warehouse", id);
+        showError(response.data);
         if (response.ok) {
-            alert(response.message.data.message);
             fetchWarehouses();
         }
     }

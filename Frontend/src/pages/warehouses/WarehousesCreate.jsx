@@ -2,31 +2,30 @@ import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { RoutesNames } from "../../constants";
 import WarehouseService from "../../services/WarehouseService";
+import useError from "../../hooks/useError";
 
 export default function WarehousesCreate() {
     const navigate = useNavigate();
     const entityName = "warehouse";
+    const { showError } = useError();
 
     async function addWarehouse(entityName) {
-        const response = await WarehouseService.add(entityName);
+        const response = await WarehouseService.add("Warehouse", entityName);
         if (response.ok) {
             navigate(RoutesNames.WAREHOUSES_LIST);
-        } else {
-            console.log(response);
-            alert(response.message);
+            return;
         }
+        showError(response.data);
     }
 
-    function handleSubmit(error) {
-        error.preventDefault();
-        const data = new FormData(error.target);
+    function handleSubmit(event) {
+        event.preventDefault();
+        const data = new FormData(event.target);
 
-        const entityName = {
+        addWarehouse({
             warehouseName: data.get("warehousename"),
             description: data.get("description"),
-        };
-
-        addWarehouse(entityName);
+        });
     }
 
     return (

@@ -13,7 +13,7 @@ export const RoutesNames = {
     PRODUCTS_LIST: "/products",
     PRODUCTS_CREATE: "/products/add",
     PRODUCTS_EDIT: "/products/:id",
-    PRODUCTS_DETAILS: "/products/details/:id",
+    // PRODUCTS_DETAILS: "/products/details/:id",
 
     TRANSACTIONS_LIST: "/transactions",
     TRANSACTIONS_CREATE: "/transactions/add",

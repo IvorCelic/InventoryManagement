@@ -3,21 +3,26 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { RoutesNames } from "../../constants";
 import WarehouseService from "../../services/WarehouseService";
 import { useEffect, useState } from "react";
+import useError from "../../hooks/useError";
+import ActionButtons from "../../components/ActionButtons";
 
 export default function WarehousesEdit() {
     const navigate = useNavigate();
     const routeParams = useParams();
     const [warehouse, setWarehouse] = useState({});
     const entityName = "warehouse";
+    const { showError } = useError();
+    const [showModal, setShowModal] = useState(false);
 
     async function fetchWarehouse() {
-        await WarehouseService.getById(routeParams.id)
-            .then((res) => {
-                setWarehouse(res.data);
-            })
-            .catch((error) => {
-                alert(error.message);
-            });
+        const response = await WarehouseService.getById("Warehouse", routeParams.id);
+        if (!response.ok) {
+            showError(response.data);
+            navigate(RoutesNames.WAREHOUSES_LIST);
+            return;
+        }
+        setWarehouse(response.data);
+        setShowModal(false);
     }
 
     useEffect(() => {
@@ -25,25 +30,22 @@ export default function WarehousesEdit() {
     }, []);
 
     async function editWarehouse(entityName) {
-        const response = await WarehouseService.edit(routeParams.id, entityName);
+        const response = await WarehouseService.edit("Warehouse", routeParams.id, entityName);
         if (response.ok) {
             navigate(RoutesNames.WAREHOUSES_LIST);
-        } else {
-            console.log(response);
-            alert(response.message);
+            return;
         }
+        showError();
     }
 
-    function handleSubmit(entity) {
-        entity.preventDefault();
-        const data = new FormData(entity.target);
+    function handleSubmit(event) {
+        event.preventDefault();
+        const data = new FormData(event.target);
 
-        const entityName = {
+        editWarehouse({
             warehouseName: data.get("warehousename"),
             description: data.get("description"),
-        };
-
-        editWarehouse(entityName);
+        });
     }
 
     return (
@@ -67,21 +69,7 @@ export default function WarehousesEdit() {
                             name="description"
                         />
                     </Form.Group>
-                    <Row>
-                        <Col>
-                            <Link
-                                className="btn btn-danger myButton"
-                                to={RoutesNames.WAREHOUSES_LIST}
-                            >
-                                Cancel
-                            </Link>
-                        </Col>
-                        <Col>
-                            <Button className="myButton" variant="primary" type="submit">
-                                Save changes
-                            </Button>
-                        </Col>
-                    </Row>
+                    <ActionButtons cancel={RoutesNames.WAREHOUSES_LIST} action="Edit warehouse" />
                 </Form>
             </Container>
         </Container>

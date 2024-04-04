@@ -5,19 +5,20 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ProductService from "../../services/ProductService";
 import { FaEdit, FaTrash } from "react-icons/fa";
+import useError from "../../hooks/useError";
 
 export default function Products() {
     const [products, setProducts] = useState();
     const navigate = useNavigate();
+    const { showError } = useError();
 
     async function fetchProducts() {
-        await ProductService.get()
-            .then((res) => {
-                setProducts(res.data);
-            })
-            .catch((error) => {
-                alert(error);
-            });
+        const response = await ProductService.get("Product");
+        if (!response.ok) {
+            showError(response.data);
+            return;
+        }
+        setProducts(response.data);
     }
 
     useEffect(() => {
@@ -25,9 +26,9 @@ export default function Products() {
     });
 
     async function removeProduct(id) {
-        const response = await ProductService.remove(id);
+        const response = await ProductService.remove("Product", id);
+        showError(response.data);
         if (response.ok) {
-            alert(response.message.data.message);
             fetchProducts();
         }
     }
@@ -49,7 +50,7 @@ export default function Products() {
                         <th>Name</th>
                         <th>Description</th>
                         <th>Is Unitary</th>
-                        <th>Details</th>
+                        {/* <th>Details</th> */}
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -60,13 +61,13 @@ export default function Products() {
                                 <td>{product.productName}</td>
                                 <td>{product.description}</td>
                                 <td>{isUnitary(product)}</td>
-                                <td>
+                                {/* <td>
                                     <Button
                                         onClick={() => {
                                             navigate(`/products/details/${product.id}`);
                                         }}
                                     />
-                                </td>
+                                </td> */}
                                 <td>
                                     <Container className="d-flex justify-content-center">
                                         <Button
