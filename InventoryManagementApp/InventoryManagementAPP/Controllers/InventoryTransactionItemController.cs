@@ -80,7 +80,8 @@ namespace InventoryManagementAPP.Controllers
             }
 
             var inventoryTransaction = _context.InventoryTransactions
-                .Include(it => it.TransactionStatus).FirstOrDefault(it => it.Id == inventoryTransactionItemDTO.inventoryTransactionId);
+                .Include(it => it.TransactionStatus)
+                .FirstOrDefault(it => it.Id == inventoryTransactionItemDTO.inventoryTransactionId);
 
             if (inventoryTransaction == null)
             {

@@ -12,7 +12,7 @@ namespace InventoryManagementAPP.Mappers
         /// Initializes AutoMapper for mapping from InventoryTransaction entities to InventoryTransactionDTORead DTOs.
         /// </summary>
         /// <returns>An instance of AutoMapper configured for reading from InventoryTransaction to InventoryTransactionDTORead.</returns>
-        public static Mapper InitializeReadToDTO()
+        public static Mapper InitializeReadToDTO() 
         {
             return new Mapper(
                 new MapperConfiguration(config =>

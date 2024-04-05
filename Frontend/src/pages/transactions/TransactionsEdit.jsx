@@ -9,7 +9,9 @@ import TransactionOpen from "./TransactionOpen";
 import TransactionClosed from "./TransactionClosed";
 import WarehouseService from "../../services/WarehouseService";
 import ProductService from "../../services/ProductService";
-import TransactionDetailsForm from "./TransactionDetailsForm";
+import TransactionDetailsForm from "./TransactionEditForm";
+import useError from "../../hooks/useError";
+import ActionButtons from "../../components/ActionButtons";
 
 export default function TransactionsEdit() {
     const navigate = useNavigate();
@@ -32,6 +34,8 @@ export default function TransactionsEdit() {
     const [statusId, setStatusId] = useState(0);
     const [selectedWarehouseId, setSelectedWarehouseId] = useState(null);
 
+    const { showError } = useError();
+
     useEffect(() => {
         fetchInitialData();
     }, []);
@@ -46,7 +50,10 @@ export default function TransactionsEdit() {
     }
 
     async function edit(entityName) {
-        const response = await TransactionService.edit(routeParams.id, entityName);
+        const response = await TransactionService.edit(
+            routeParams.id,
+            entityName
+        );
         if (response.ok) {
             navigate(RoutesNames.TRANSACTIONS_LIST);
         } else {
@@ -67,52 +74,55 @@ export default function TransactionsEdit() {
     }
 
     async function fetchTransaction() {
-        try {
-            const response = await TransactionService.getById(routeParams.id);
-            const transactionData = response.data;
-            setEmployeeId(transactionData.employeeId);
-            setTransaction(transactionData);
-            setTransactionId(routeParams.id);
-            setStatusId(transactionData.transactionStatusId);
-        } catch (error) {
-            alert(error.message);
+        const response = await TransactionService.getById(
+            "InventoryTransaction",
+            routeParams.id
+        );
+        if (!response.ok) {
+            showError(response.data);
+            return;
         }
+        let transactionData = response.data;
+
+        setTransaction(transactionData);
+        setEmployeeId(transactionData.employeeId);
+        setTransactionId(routeParams.id);
+        setStatusId(transactionData.transactionStatusId);
     }
 
     async function fetchEmployees() {
-        try {
-            const response = await EmployeeService.get();
-            const employeesData = response.data;
-            setEmployees(employeesData);
-            setEmployeeId(employeesData[0].id);
-        } catch (error) {
-            alert(error.message);
+        const response = await EmployeeService.get("Employee");
+        if (!response.ok) {
+            showError(response.data);
+            return;
         }
+        setEmployees(response.data);
+        setEmployeeId(response.data[0].id);
     }
 
     async function fetchWarehouses() {
-        try {
-            const response = await WarehouseService.get();
-            const warehousesData = response.data;
-            setWarehouses(warehousesData);
-        } catch (error) {
-            alert(error.message);
+        const response = await WarehouseService.get("Warehouse");
+        if (!response.ok) {
+            showError(response.data);
+            return;
         }
+        setWarehouses(response.data);
     }
 
     async function fetchProducts() {
-        try {
-            const response = await ProductService.get();
-            const productsData = response.data;
-            setProducts(productsData);
-        } catch (error) {
-            alert(error.message);
+        const response = await ProductService.get("Product");
+        if (!response.ok) {
+            showError(response.data);
+            return;
         }
+        setProducts(response.data);
     }
 
     async function fetchAssociatedProducts() {
         try {
-            const response = await TransactionItemService.GetProducts(routeParams.id);
+            const response = await TransactionItemService.GetProducts(
+                routeParams.id
+            );
             setAssociatedProducts(response.data);
         } catch (error) {
             alert(error.message);
@@ -121,7 +131,9 @@ export default function TransactionsEdit() {
 
     async function fetchAssociatedWarehouses() {
         try {
-            const response = await TransactionItemService.GetWarehouses(routeParams.id);
+            const response = await TransactionItemService.GetWarehouses(
+                routeParams.id
+            );
             setAssociatedWarehouses(response.data);
         } catch (error) {
             alert(error.message);
@@ -130,10 +142,11 @@ export default function TransactionsEdit() {
 
     async function fetchProductsOnWarehouse(associatedWarehouseId) {
         try {
-            const response = await TransactionItemService.GetProductsOnWarehouse(
-                routeParams.id,
-                associatedWarehouseId
-            );
+            const response =
+                await TransactionItemService.GetProductsOnWarehouse(
+                    routeParams.id,
+                    associatedWarehouseId
+                );
             setProductsOnWarehouse(response.data);
         } catch (error) {
             alert(error.message);
@@ -157,7 +170,9 @@ export default function TransactionsEdit() {
     }
 
     function transactionStatusName(transactionStatusId) {
-        return transactionStatusId === 1 ? "Close transaction" : "Open transaction";
+        return transactionStatusId === 1
+            ? "Close transaction"
+            : "Open transaction";
     }
 
     function handleStatusToggle() {
@@ -230,26 +245,17 @@ export default function TransactionsEdit() {
                             setProductsOnWarehouse={setProductsOnWarehouse}
                             associatedWarehouses={associatedWarehouses}
                             transactionId={transactionId}
-                            handleProductOnoWarehouseChange={handleProductOnoWarehouseChange}
+                            handleProductOnoWarehouseChange={
+                                handleProductOnoWarehouseChange
+                            }
                             isUnitary={isUnitary}
                         />
                     )}
                 </Row>
-                <Row className="mb-0 flex-column flex-sm-row">
-                    <Col>
-                        <Link
-                            className="btn btn-danger myButton"
-                            to={RoutesNames.TRANSACTIONS_LIST}
-                        >
-                            Cancel
-                        </Link>
-                    </Col>
-                    <Col>
-                        <Button className="myButton" variant="primary" type="submit">
-                            Save changes
-                        </Button>
-                    </Col>
-                </Row>
+                <ActionButtons
+                    cancel={RoutesNames.TRANSACTIONS_LIST}
+                    action="Edit transaction"
+                />
             </Form>
         </Container>
     );
