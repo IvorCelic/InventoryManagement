@@ -3,6 +3,8 @@ using InventoryManagementAPP.Extensions;
 using InventoryManagementAPP.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Text.RegularExpressions;
+using System.Text;
 
 namespace InventoryManagementAPP.Controllers
 {
@@ -11,148 +13,16 @@ namespace InventoryManagementAPP.Controllers
     /// </summary>
     [ApiController]
     [Route("api/v1/[controller]")]
-    public class InventoryTransactionItemController : ControllerBase
+    public class InventoryTransactionItemController : InventoryManagementController<InventoryTransactionItem, InventoryTransactionItemDTORead, InventoryTransactionItemDTOInsertUpdate>
     {
-        private readonly InventoryManagementContext _context;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EmployeeController"/> class.
         /// </summary>
         /// <param name="context">The database context.</param>
-        public InventoryTransactionItemController(InventoryManagementContext context)
+        public InventoryTransactionItemController(InventoryManagementContext context) : base(context)
         {
-            _context = context;
-        }
-
-        /// <summary>
-        /// Retrieves all inventory transactionWarehouses items from the database.
-        /// </summary>
-        /// <returns>
-        /// <response code="200">Success - Returns the list of inventory transactions.</response>
-        /// <response code="204">No Content - If no inventory transactions found.</response>
-        /// <response code="400">Bad Request - If the request is invalid.</response>
-        /// <response code="503">Service Unavailable - If the database is not accessible.</response>
-        /// </returns>
-        [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status503ServiceUnavailable)]
-        public IActionResult Get()
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            try
-            {
-                var list = _context.InventoryTransactionItems
-                    .Include(iti => iti.InventoryTransaction) // InventoryTransactionItem -> ITI
-                        .ThenInclude(ts => ts.TransactionStatus) // TransactionStatus -> TS
-                    .Include(iti => iti.Product)
-                    .Include(iti => iti.Warehouse)
-                    .ToList();
-
-                if (list == null || list.Count == 0)
-                {
-                    return new EmptyResult();
-                }
-
-                return new JsonResult(list.MapInventoryTransactionItemReadList());
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-            }
-        }
-
-
-        [HttpPost]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status503ServiceUnavailable)]
-        public IActionResult Post(InventoryTransactionItemDTOInsert inventoryTransactionItemDTO)
-        {
-            if (!ModelState.IsValid || inventoryTransactionItemDTO == null)
-            {
-                return BadRequest();
-            }
-
-            var inventoryTransaction = _context.InventoryTransactions
-                .Include(it => it.TransactionStatus)
-                .FirstOrDefault(it => it.Id == inventoryTransactionItemDTO.inventoryTransactionId);
-
-            if (inventoryTransaction == null)
-            {
-                return BadRequest();
-            }
-
-            var warehouse = _context.Warehouses.Find(inventoryTransactionItemDTO.warehouseId);
-
-            if (warehouse == null)
-            {
-                return BadRequest();
-            }
-
-            var product = _context.Products.Find(inventoryTransactionItemDTO.productId);
-
-            if (product == null)
-            {
-                return BadRequest();
-            }
-
-            var entity = inventoryTransactionItemDTO.MapInventoryTransactionItemInsertFromDTO(new InventoryTransactionItem());
-
-            entity.InventoryTransaction = inventoryTransaction;
-            entity.Warehouse = warehouse;
-            entity.Product = product;
-
-
-            try
-            {
-                _context.InventoryTransactionItems.Add(entity);
-                _context.SaveChanges();
-
-                return StatusCode(StatusCodes.Status201Created, entity.MapInventoryTransactionItemReadToDTO());
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status503ServiceUnavailable, ex.Message);
-            }
-        }
-
-
-        [HttpDelete]
-        [Route("{id:int}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status503ServiceUnavailable)]
-        public IActionResult Delete(int id)
-        {
-            if (!ModelState.IsValid || id <= 0)
-            {
-                return BadRequest();
-            }
-
-            try
-            {
-                var inventoryTransactionItemFromDB = _context.InventoryTransactionItems.Find(id);
-
-                if (inventoryTransactionItemFromDB == null)
-                {
-                    return StatusCode(StatusCodes.Status204NoContent, id);
-                }
-
-                _context.InventoryTransactionItems.Remove(inventoryTransactionItemFromDB);
-                _context.SaveChanges();
-
-                return new JsonResult(new { message = "Item from transaction deleted successfully." });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status503ServiceUnavailable, ex.Message);
-            }
+            DbSet = _context.InventoryTransactionItems;
         }
 
 
@@ -268,40 +138,9 @@ namespace InventoryManagementAPP.Controllers
         }
 
 
-        //[HttpDelete]
-        //[Route("{id:int}")]
-        //[ProducesResponseType(StatusCodes.Status200OK)]
-        //[ProducesResponseType(StatusCodes.Status204NoContent)]
-        //[ProducesResponseType(StatusCodes.Status503ServiceUnavailable)]
-        //public IActionResult DeleteProductOnWarehouse(int transactionId, int warehouseId, int productId)
-        //{
-        //    if (!ModelState.IsValid || transactionId <= 0 || warehouseId <= 0 || productId <= 0)
-        //    {
-        //        return BadRequest();
-        //    }
-
-        //    try
-        //    {
-        //        var inventoryTransactionItem = _context.InventoryTransactionItems
-        //            .SingleOrDefault(iti => iti.InventoryTransaction.Id == transactionId
-        //            && iti.Warehouse.Id == warehouseId
-        //           && iti.Product.Id == productId);
-
-        //        if (inventoryTransactionItem == null)
-        //        {
-        //            return StatusCode(StatusCodes.Status204NoContent, id);
-        //        }
-
-        //        _context.InventoryTransactionItems.Remove(inventoryTransactionItem);
-        //        _context.SaveChanges();
-
-        //        return new JsonResult(new { message = "Item from transaction deleted successfully." });
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return StatusCode(StatusCodes.Status503ServiceUnavailable, ex.Message);
-        //    }
-        //}
+        protected override void ControlDelete(InventoryTransactionItem entity)
+        {
+        }
 
 
     }

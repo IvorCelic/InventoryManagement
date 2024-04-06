@@ -63,7 +63,7 @@ namespace InventoryManagementAPP.Models
     /// <summary>
     /// Data Transfer Object (DTO) representing the data needed for inserting or updating a inventory transaction
     /// </summary>
-    public record InventoryTransactionDTOInsert(
+    public record InventoryTransactionDTOInsertUpdate(
         [Required(ErrorMessage = "Employee required")]
         int? employeeId,
 
@@ -75,18 +75,6 @@ namespace InventoryManagementAPP.Models
         string? additionalDetails);
 
     /// <summary>
-    /// Data Transfer Object (DTO) representing the data needed for updating a inventory transaction
-    /// </summary>
-    public record InventoryTransactionDTOUpdate(
-        [Required(ErrorMessage = "Transaction status required")]
-        int? transactionStatusId,
-
-        [Required(ErrorMessage = "Employee required")] 
-        int? employeeId,
-
-        string? additionalDetails);
-
-    /// <summary>
     /// Data Transfer Object (DTO) representing a read-only view of a inventory transaction items
     /// </summary>
     public record InventoryTransactionItemDTORead(int id, string? transactionStatus, int? inventoryTransactionId, string? productName, int? warehouseId, int? quantity);
@@ -94,7 +82,7 @@ namespace InventoryManagementAPP.Models
     /// <summary>
     /// Data Transfer Object (DTO) representing the data needed for inserting or updating a inventory transaction items
     /// </summary>
-    public record InventoryTransactionItemDTOInsert(
+    public record InventoryTransactionItemDTOInsertUpdate(
         [Required(ErrorMessage = "Inventory Transaction required")]
         int? inventoryTransactionId,
 

@@ -38,9 +38,9 @@ namespace InventoryManagementAPP.Mappers
             return new Mapper(
                 new MapperConfiguration(config =>
                 {
-                    config.CreateMap<InventoryTransactionItem, InventoryTransactionItemDTOInsert>()
+                    config.CreateMap<InventoryTransactionItem, InventoryTransactionItemDTOInsertUpdate>()
                     .ConstructUsing(entity =>
-                    new InventoryTransactionItemDTOInsert(
+                    new InventoryTransactionItemDTOInsertUpdate(
                         entity.InventoryTransaction == null ? null : entity.InventoryTransaction.Id,
                         entity.Product == null ? null : entity.Product.Id,
                         entity.Warehouse == null ? null : entity.Warehouse.Id,

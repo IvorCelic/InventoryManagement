@@ -41,7 +41,6 @@ export default function TransactionDetailsForm({
                     name="additionaldetails"
                     defaultValue={transaction.additionalDetails}
                     maxLength={255}
-                    required
                 />
             </Form.Group>
             <p className="pt-5">{transactionStatus(statusId)}</p>
