@@ -1,11 +1,13 @@
 ﻿using InventoryManagementAPP.Data;
 using InventoryManagementAPP.Mappers;
 using InventoryManagementAPP.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace InventoryManagementAPP.Controllers
 {
+    [Authorize]
     public abstract class InventoryManagementController<T, TDR, TDI> : ControllerBase where T : Entity
     {
         protected DbSet<T> DbSet;

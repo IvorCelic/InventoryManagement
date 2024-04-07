@@ -14,10 +14,9 @@ namespace InventoryManagementAPP.Mappers
                     .ConstructUsing(entity =>
                     new InventoryTransactionItemDTORead(
                         entity.Id,
-                        entity.InventoryTransaction.TransactionStatus == null ? null : entity.InventoryTransaction.TransactionStatus.StatusName,
                         entity.InventoryTransaction == null ? null : entity.InventoryTransaction.Id,
-                        entity.Product == null ? "" : entity.Product.ProductName,
                         entity.Warehouse == null ? null : entity.Warehouse.Id,
+                        entity.Product == null ? "" : entity.Product.ProductName,
                         entity.Quantity == null ? 1 : entity.Quantity
                         ));
                 })
@@ -39,8 +38,8 @@ namespace InventoryManagementAPP.Mappers
                     .ConstructUsing(entity =>
                     new InventoryTransactionItemDTOInsertUpdate(
                         entity.InventoryTransaction == null ? null : entity.InventoryTransaction.Id,
-                        entity.Product == null ? null : entity.Product.Id,
                         entity.Warehouse == null ? null : entity.Warehouse.Id,
+                        entity.Product == null ? null : entity.Product.Id,
                         entity.Quantity == null ? 1 : entity.Quantity));
                 })
                 );

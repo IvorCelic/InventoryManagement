@@ -60,8 +60,8 @@ namespace InventoryManagementAPP.Models
     /// Data Transfer Object (DTO) representing the data needed for inserting or updating a product
     /// </summary>
     public record ProductDTOInsertUpdate(
-        [Required(ErrorMessage = "Product name required")] 
-        string productName, 
+        [Required(ErrorMessage = "Product name required")]
+        string productName,
 
         string description,
 
@@ -71,10 +71,10 @@ namespace InventoryManagementAPP.Models
     /// Data Transfer Object (DTO) representing a read-only view of a inventory transaction
     /// </summary>
     public record InventoryTransactionDTORead(
-        int id, 
-        string? employee, 
-        string? transactionStatus, 
-        DateTime? transactionDate, 
+        int id,
+        string? employee,
+        string? transactionStatus,
+        DateTime? transactionDate,
         string? additionalDetails);
 
     /// <summary>
@@ -85,9 +85,9 @@ namespace InventoryManagementAPP.Models
         int? employeeId,
 
         [Required(ErrorMessage = "Transaction status required")]
-        int? transactionStatusId, 
+        int? transactionStatusId,
 
-        DateTime? transactionDate, 
+        DateTime? transactionDate,
 
         string? additionalDetails);
 
@@ -96,10 +96,9 @@ namespace InventoryManagementAPP.Models
     /// </summary>
     public record InventoryTransactionItemDTORead(
         int id,
-        string? transactionStatus,
         int? transactionId,
-        string? product,
         int? warehouseId,
+        string? product,
         int? quantity);
 
     /// <summary>
@@ -109,12 +108,22 @@ namespace InventoryManagementAPP.Models
         [Required(ErrorMessage = "Inventory Transaction required")]
         int? transactionId,
 
-        [Required(ErrorMessage = "Product required")]
-        int? productId,
-
         [Required(ErrorMessage = "Warehouse required")]
         int? warehouseId,
 
+        [Required(ErrorMessage = "Product required")]
+        int? productId,
+
         [Required(ErrorMessage = "Quantity required")]
         int? quantity);
+
+    /// <summary>
+    /// Data Transfer Object (DTO) representing the data needed for operator
+    /// </summary>
+    public record EmployeeAuthDTO(
+        [Required(ErrorMessage = "Email required")]
+        string? email,
+
+        [Required(ErrorMessage = "Password required")]
+        string? password);
 }

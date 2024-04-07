@@ -1,7 +1,9 @@
 ﻿using EdunovaAPP.Extensions;
 using InventoryManagementAPP.Data;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using System.Reflection;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,7 +12,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 
 builder.Services.AddInventoryManagementSwaggerGen();
 builder.Services.AddInventoryManagementCORS();
@@ -21,6 +22,28 @@ builder.Services.AddDbContext<InventoryManagementContext>(o =>
     o.UseSqlServer(builder.Configuration.GetConnectionString(name: "InventoryManagementContext"))
 );
 
+
+// Security
+builder.Services.AddAuthentication(x => {
+    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(x =>
+{
+    x.TokenValidationParameters = new TokenValidationParameters
+    {
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("I can't do frontend becauseThisDoesntWork and that is RealLYFruSTrAtiNG")),
+        ValidateIssuer = false,
+        ValidateAudience = false,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = false
+    };
+});
+
+builder.Services.AddAuthorization();
+// End Security
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -30,13 +53,18 @@ var app = builder.Build();
     // Possibility generating call of route in CMD and Powershell
     app.UseSwaggerUI(options =>
     {
-        options.ConfigObject.AdditionalItems.Add("requestSnippetsEnabled", true);
+        options.DocExpansion(Swashbuckle.AspNetCore.SwaggerUI.DocExpansion.None);
+        options.ConfigObject.
+        AdditionalItems.Add("requestSnippetsEnabled", true);
     });
 //}
 
 app.UseHttpsRedirection();
 
+// Security
+app.UseAuthentication();
 app.UseAuthorization();
+// End Security
 
 app.MapControllers();
 

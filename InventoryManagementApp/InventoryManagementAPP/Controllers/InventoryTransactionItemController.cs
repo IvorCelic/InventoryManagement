@@ -127,7 +127,7 @@ namespace InventoryManagementAPP.Controllers
                     return BadRequest();
                 }
 
-                var mapping = new InventoryTransactionMapper();
+                //var mapping = new InventoryTransactionMapper();
 
                 return new JsonResult(_mapper.MapReadList(products));
             }
