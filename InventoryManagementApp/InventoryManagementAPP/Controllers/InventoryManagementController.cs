@@ -53,7 +53,7 @@ namespace InventoryManagementAPP.Controllers
 
             try
             {
-                var entity = FindEntity(id);
+                var entity = LoadEntity(id);
 
                 return new JsonResult(_mapper.MapInsertUpdateToDTO(entity));
             }
@@ -99,7 +99,7 @@ namespace InventoryManagementAPP.Controllers
 
             try
             {
-                var entityFromDB = FindEntity(id);
+                var entityFromDB = LoadEntity(id);
                 _context.Entry(entityFromDB).State = EntityState.Detached;
                 
                 var entity = EditEntity(entityDTO, entityFromDB);
@@ -128,7 +128,7 @@ namespace InventoryManagementAPP.Controllers
 
             try
             {
-                var entityFromDB = FindEntity(id);
+                var entityFromDB = LoadEntity(id);
                 ControlDelete(entityFromDB);
 
                 _context.Remove(entityFromDB);
@@ -142,7 +142,7 @@ namespace InventoryManagementAPP.Controllers
         }
 
 
-        protected virtual T FindEntity(int id)
+        protected virtual T LoadEntity(int id)
         {
             var entityFromDB = DbSet.Find(id);
             if (entityFromDB == null)
@@ -151,12 +151,6 @@ namespace InventoryManagementAPP.Controllers
             }
 
             return entityFromDB;
-        }
-
-
-        protected virtual TDR LoadEntity(int id)
-        {
-            return _mapper.MapReadToDTO(DbSet.Find(id));
         }
 
 
