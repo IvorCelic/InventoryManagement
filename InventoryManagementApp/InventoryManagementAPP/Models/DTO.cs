@@ -5,7 +5,10 @@ namespace InventoryManagementAPP.Models
     /// <summary>
     /// Data Transfer Object (DTO) representing a read-only view of a location.
     /// </summary>
-    public record WarehouseDTORead(int id, string warehouseName, string description);
+    public record WarehouseDTORead(
+        int id,
+        string warehouseName,
+        string description);
 
     /// <summary>
     /// Data Transfer Object (DTO) representing the data needed for inserting or updating a location.
@@ -20,7 +23,12 @@ namespace InventoryManagementAPP.Models
     /// <summary>
     /// Data Transfer Object (DTO) representing a read-only view of a person
     /// </summary>
-    public record EmployeeDTORead(int id, string firstName, string lastName, string email, string password);
+    public record EmployeeDTORead(
+        int id,
+        string firstName,
+        string lastName,
+        string email,
+        string password);
 
     /// <summary>
     /// Data Transfer Object (DTO) representing the data needed for inserting or updating a person
@@ -42,7 +50,11 @@ namespace InventoryManagementAPP.Models
     /// <summary>
     /// Data Transfer Object (DTO) representing a read-only view of a product
     /// </summary>
-    public record ProductDTORead(int id, string productName, string description, bool isUnitary);
+    public record ProductDTORead(
+        int id,
+        string productName,
+        string description,
+        bool isUnitary);
 
     /// <summary>
     /// Data Transfer Object (DTO) representing the data needed for inserting or updating a product
@@ -58,7 +70,12 @@ namespace InventoryManagementAPP.Models
     /// <summary>
     /// Data Transfer Object (DTO) representing a read-only view of a inventory transaction
     /// </summary>
-    public record InventoryTransactionDTORead(int id, string? employeeFirstLastName, string? transactionStatusName, DateTime? transactionDate, string? additionalDetails);
+    public record InventoryTransactionDTORead(
+        int id, 
+        string? employee, 
+        string? transactionStatus, 
+        DateTime? transactionDate, 
+        string? additionalDetails);
 
     /// <summary>
     /// Data Transfer Object (DTO) representing the data needed for inserting or updating a inventory transaction
@@ -77,14 +94,20 @@ namespace InventoryManagementAPP.Models
     /// <summary>
     /// Data Transfer Object (DTO) representing a read-only view of a inventory transaction items
     /// </summary>
-    public record InventoryTransactionItemDTORead(int id, string? transactionStatus, int? inventoryTransactionId, string? productName, int? warehouseId, int? quantity);
+    public record InventoryTransactionItemDTORead(
+        int id,
+        string? transactionStatus,
+        int? transactionId,
+        string? product,
+        int? warehouseId,
+        int? quantity);
 
     /// <summary>
     /// Data Transfer Object (DTO) representing the data needed for inserting or updating a inventory transaction items
     /// </summary>
     public record InventoryTransactionItemDTOInsertUpdate(
         [Required(ErrorMessage = "Inventory Transaction required")]
-        int? inventoryTransactionId,
+        int? transactionId,
 
         [Required(ErrorMessage = "Product required")]
         int? productId,
@@ -94,9 +117,4 @@ namespace InventoryManagementAPP.Models
 
         [Required(ErrorMessage = "Quantity required")]
         int? quantity);
-
-    /// <summary>
-    /// Data Transfer Object(DTO) representing a product with quantity.
-    /// </summary>
-    public record ProductWithQuantityDTORead(int id, string? productName, int? quantity, bool? isUnitary);
 }

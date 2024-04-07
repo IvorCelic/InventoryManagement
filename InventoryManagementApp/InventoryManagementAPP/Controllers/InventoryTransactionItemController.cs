@@ -1,10 +1,8 @@
 ﻿using InventoryManagementAPP.Data;
-using InventoryManagementAPP.Extensions;
+using InventoryManagementAPP.Mappers;
 using InventoryManagementAPP.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Text.RegularExpressions;
-using System.Text;
 
 namespace InventoryManagementAPP.Controllers
 {
@@ -26,6 +24,89 @@ namespace InventoryManagementAPP.Controllers
         }
 
 
+        protected override InventoryTransactionItem EditEntity(InventoryTransactionItemDTOInsertUpdate entityDTO, InventoryTransactionItem entity)
+        {
+            var transaction = _context.InventoryTransactions.Find(entityDTO.transactionId) ?? throw new Exception("There is no Inventory Transaction with ID: " + entityDTO.transactionId + " in database.");
+            var warehouse = _context.Warehouses.Find(entityDTO.warehouseId) ?? throw new Exception("There is no Warehouse with ID: " + entityDTO.warehouseId + " in database.");
+            var product = _context.Products.Find(entityDTO.productId) ?? throw new Exception("There is no Product with ID: " + entityDTO.productId + " in database.");
+
+            entity.InventoryTransaction = transaction;
+            entity.Warehouse = warehouse;
+            entity.Product = product;
+            entity.Quantity = entityDTO.quantity;
+
+            return entity;
+        }
+
+
+        protected override InventoryTransactionItem LoadEntity(int id)
+        {
+            var entity = _context.InventoryTransactionItems
+                .Include(it => it.InventoryTransaction)
+                .Include(it => it.Warehouse)
+                .Include(it => it.Product)
+                .FirstOrDefault(x => x.Id == id);
+
+            if (entity == null)
+            {
+                throw new Exception("There is no Transaction Item with ID: " + id + " in database.");
+            }
+
+            return entity;
+        }
+
+
+        protected override List<InventoryTransactionItemDTORead> LoadEntites()
+        {
+            var list = _context.InventoryTransactionItems
+                .Include(it => it.InventoryTransaction)
+                .Include(it => it.Warehouse)
+                .Include(it => it.Product)
+                .ToList();
+
+            if (list == null || list.Count == 0)
+            {
+                throw new Exception("No data in database.");
+            }
+
+            return _mapper.MapReadList(list);
+        }
+
+
+        protected override InventoryTransactionItem CreateEntity(InventoryTransactionItemDTOInsertUpdate entityDTO)
+        {
+            var transaction = _context.InventoryTransactions.Find(entityDTO.transactionId);
+            if (transaction == null)
+            {
+                throw new Exception("There is no Inventory Transaction with ID: " + transaction.Id + " in database.");
+            }
+
+            var warehouse = _context.Warehouses.Find(entityDTO.warehouseId);
+            if (warehouse == null)
+            {
+                throw new Exception("There is no Warehouse with ID: " + warehouse.Id + " in database.");
+            }
+
+            var product = _context.Products.Find(entityDTO.productId);
+            if (product == null)
+            {
+                throw new Exception("There is no Product with ID: " + product.Id + " in database.");
+            }
+
+            var entity = _mapper.MapInsertUpdatedFromDTO(entityDTO);
+            entity.InventoryTransaction = transaction;
+            entity.Product = product;
+            entity.Warehouse = warehouse;
+
+            return entity;
+        }
+
+
+        protected override void ControlDelete(InventoryTransactionItem entity)
+        {
+        }
+
+
         [HttpGet]
         [Route("Products/{transactionId:int}")]
         public IActionResult GetProducts(int transactionId)
@@ -36,19 +117,19 @@ namespace InventoryManagementAPP.Controllers
             }
             try
             {
-                var inventoryTransactionItems = _context.InventoryTransactionItems
+                var products = _context.InventoryTransactionItems
                     .Include(it => it.Product)
                     .Where(x => x.InventoryTransaction.Id == transactionId)
                     .ToList();
 
-                if (inventoryTransactionItems == null)
+                if (products == null)
                 {
                     return BadRequest();
                 }
 
-                var productsOnTransaction = inventoryTransactionItems.MapToProductWithQuantityDTOList();
+                var mapping = new InventoryTransactionMapper();
 
-                return new JsonResult(productsOnTransaction);
+                return new JsonResult(_mapper.MapReadList(products));
             }
             catch (Exception ex)
             {
@@ -78,9 +159,9 @@ namespace InventoryManagementAPP.Controllers
                     return BadRequest();
                 }
 
-                var productsWithQuantities = productsInWarehouse.MapToProductWithQuantityDTOList();
+                var mapping = new InventoryTransactionMapper();
 
-                return new JsonResult(productsWithQuantities);
+                return new JsonResult(_mapper.MapReadList(productsInWarehouse));
             }
             catch (Exception ex)
             {
@@ -135,11 +216,6 @@ namespace InventoryManagementAPP.Controllers
             {
                 return StatusCode(StatusCodes.Status503ServiceUnavailable, ex.Message);
             }
-        }
-
-
-        protected override void ControlDelete(InventoryTransactionItem entity)
-        {
         }
 
 

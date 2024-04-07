@@ -3,11 +3,11 @@ using InventoryManagementAPP.Models;
 
 namespace InventoryManagementAPP.Mappers
 {
-    public class InventoryTransactionItemMapper
+    public class InventoryTransactionItemMapper : Mapping<InventoryTransactionItem, InventoryTransactionItemDTORead, InventoryTransactionDTOInsertUpdate>
     {
-        public static Mapper InitializeReadToDTO()
+        public InventoryTransactionItemMapper()
         {
-            return new Mapper(
+            MapperMapReadToDTO = new Mapper(
                 new MapperConfiguration(config =>
                 {
                     config.CreateMap<InventoryTransactionItem, InventoryTransactionItemDTORead>()
@@ -16,26 +16,23 @@ namespace InventoryManagementAPP.Mappers
                         entity.Id,
                         entity.InventoryTransaction.TransactionStatus == null ? null : entity.InventoryTransaction.TransactionStatus.StatusName,
                         entity.InventoryTransaction == null ? null : entity.InventoryTransaction.Id,
-                        entity.Product == null ? "" : entity.Product.ProductName.Trim(),
+                        entity.Product == null ? "" : entity.Product.ProductName,
                         entity.Warehouse == null ? null : entity.Warehouse.Id,
                         entity.Quantity == null ? 1 : entity.Quantity
                         ));
-
-                    config.CreateMap<InventoryTransactionItem, ProductWithQuantityDTORead>()
-                    .ConstructUsing(entity =>
-                    new ProductWithQuantityDTORead(
-                        entity.Id,
-                        entity.Product.ProductName == null ? "" : entity.Product.ProductName.Trim(),
-                        entity.Quantity == null ? 1 : entity.Quantity,
-                        entity.Product.IsUnitary == null ? null : entity.Product.IsUnitary
-                        ));
                 })
                 );
-        }
 
-        public static Mapper InitializeInsertToDTO()
-        {
-            return new Mapper(
+
+            MapperMapInsertUpdatedFromDTO = new Mapper(
+                new MapperConfiguration(config =>
+                {
+                    config.CreateMap<InventoryTransactionItemDTOInsertUpdate, InventoryTransactionItem>();
+                })
+                );
+
+
+            MapperMapInsertUpdateToDTO = new Mapper(
                 new MapperConfiguration(config =>
                 {
                     config.CreateMap<InventoryTransactionItem, InventoryTransactionItemDTOInsertUpdate>()

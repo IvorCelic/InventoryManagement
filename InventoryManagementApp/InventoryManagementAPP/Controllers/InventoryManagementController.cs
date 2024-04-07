@@ -1,5 +1,4 @@
 ﻿using InventoryManagementAPP.Data;
-using InventoryManagementAPP.Extensions;
 using InventoryManagementAPP.Mappers;
 using InventoryManagementAPP.Models;
 using Microsoft.AspNetCore.Mvc;

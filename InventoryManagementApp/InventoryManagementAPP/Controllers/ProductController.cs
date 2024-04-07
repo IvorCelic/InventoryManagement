@@ -1,10 +1,7 @@
 ﻿using InventoryManagementAPP.Data;
-using InventoryManagementAPP.Extensions;
 using InventoryManagementAPP.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using System.Text;
 
 namespace InventoryManagementAPP.Controllers
 {
