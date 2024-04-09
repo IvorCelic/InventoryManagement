@@ -2,6 +2,7 @@
 using InventoryManagementAPP.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using InventoryManagementAPP.Mappers;
 
 namespace InventoryManagementAPP.Controllers
 {
@@ -13,6 +14,7 @@ namespace InventoryManagementAPP.Controllers
         public InventoryTransactionController(InventoryManagementContext context) : base(context)
         {
             DbSet = _context.InventoryTransactions;
+            _mapper = new InventoryTransactionMapper();
         }
 
 

@@ -72,8 +72,8 @@ namespace InventoryManagementAPP.Models
     /// </summary>
     public record InventoryTransactionDTORead(
         int id,
-        string? employee,
-        string? transactionStatus,
+        string? employeeName,
+        string? transactionStatusId,
         DateTime? transactionDate,
         string? additionalDetails);
 
@@ -98,7 +98,7 @@ namespace InventoryManagementAPP.Models
         int id,
         int? transactionId,
         int? warehouseId,
-        string? product,
+        string? productName ,
         int? quantity);
 
     /// <summary>

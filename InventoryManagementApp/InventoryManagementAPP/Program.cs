@@ -32,7 +32,7 @@ builder.Services.AddAuthentication(x => {
 {
     x.TokenValidationParameters = new TokenValidationParameters
     {
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("I can't do frontend becauseThisDoesntWork and that is RealLYFruSTrAtiNG")),
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("I cant do frontend becauseThisDoesntWork and that is RealLYFruSTrAtiNG")),
         ValidateIssuer = false,
         ValidateAudience = false,
         ValidateLifetime = true,

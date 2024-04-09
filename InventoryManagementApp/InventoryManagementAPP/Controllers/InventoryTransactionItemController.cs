@@ -6,21 +6,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace InventoryManagementAPP.Controllers
 {
-    /// <summary>
-    /// Inventory Management API controllers for InventoryTransactionItems entity CRUD operations.
-    /// </summary>
     [ApiController]
     [Route("api/v1/[controller]")]
     public class InventoryTransactionItemController : InventoryManagementController<InventoryTransactionItem, InventoryTransactionItemDTORead, InventoryTransactionItemDTOInsertUpdate>
     {
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="EmployeeController"/> class.
-        /// </summary>
-        /// <param name="context">The database context.</param>
         public InventoryTransactionItemController(InventoryManagementContext context) : base(context)
         {
             DbSet = _context.InventoryTransactionItems;
+            _mapper = new InventoryTransactionItemMapper();
         }
 
 
@@ -104,6 +97,15 @@ namespace InventoryManagementAPP.Controllers
 
         protected override void ControlDelete(InventoryTransactionItem entity)
         {
+                        var list = _context.InventoryTransactionItems
+                .Include(x => x.InventoryTransaction)
+                .Where(x => x.InventoryTransaction.Id == entity.Id)
+                .ToList();
+
+            if (list != null && list.Count() > 0)
+            {
+                throw new Exception("Transaction can not be deleted because it contains InventoryTransactionItems on it. ");
+            }
         }
 
 
