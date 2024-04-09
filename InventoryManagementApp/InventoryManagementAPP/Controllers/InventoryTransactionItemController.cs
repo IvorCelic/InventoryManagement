@@ -97,15 +97,6 @@ namespace InventoryManagementAPP.Controllers
 
         protected override void ControlDelete(InventoryTransactionItem entity)
         {
-                        var list = _context.InventoryTransactionItems
-                .Include(x => x.InventoryTransaction)
-                .Where(x => x.InventoryTransaction.Id == entity.Id)
-                .ToList();
-
-            if (list != null && list.Count() > 0)
-            {
-                throw new Exception("Transaction can not be deleted because it contains InventoryTransactionItems on it. ");
-            }
         }
 
 

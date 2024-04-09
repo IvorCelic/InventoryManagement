@@ -3,7 +3,7 @@ using InventoryManagementAPP.Models;
 
 namespace InventoryManagementAPP.Mappers
 {
-    public class InventoryTransactionItemMapper : Mapping<InventoryTransactionItem, InventoryTransactionItemDTORead, InventoryTransactionDTOInsertUpdate>
+    public class InventoryTransactionItemMapper : Mapping<InventoryTransactionItem, InventoryTransactionItemDTORead, InventoryTransactionItemDTOInsertUpdate>
     {
         public InventoryTransactionItemMapper()
         {
