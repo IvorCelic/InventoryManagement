@@ -5,6 +5,7 @@ import moment from "moment";
 import { RoutesNames } from "../../constants";
 import EmployeeService from "../../services/EmployeeService";
 import TransactionService from "../../services/TransactionService";
+import useError from "../../hooks/useError";
 
 export default function TransactionsCreate() {
     const navigate = useNavigate();
@@ -13,11 +14,16 @@ export default function TransactionsCreate() {
     const [employees, setEmployees] = useState([]);
     const [employeeId, setEmployeeId] = useState(0);
 
+    const { showError } = useError();
+
     async function fetchEmployees() {
-        await EmployeeService.get().then((res) => {
-            setEmployees(res.data);
-            setEmployeeId(res.data[0].id);
-        });
+        const response = await EmployeeService.get("Employee");
+        if (!response.ok) {
+            showError(response.data);
+            return;
+        }
+        setEmployees(response.data);
+        setEmployeeId(response.data[0].id);
     }
 
     async function load() {
@@ -31,18 +37,18 @@ export default function TransactionsCreate() {
     async function add(entity) {
         entity.transactionDate = moment().toISOString();
 
-        const response = await TransactionService.add(entity);
+        const response = await TransactionService.add("InventoryTransaction", entity);
         if (response.ok) {
             navigate(RoutesNames.TRANSACTIONS_LIST);
-        } else {
-            alert(response.message.errors);
+            return;
         }
+        showError(response.data);
     }
 
-    function handleSubmit(entity) {
-        entity.preventDefault();
+    function handleSubmit(event) {
+        event.preventDefault();
 
-        const data = new FormData(entity.target);
+        const data = new FormData(event.target);
 
         add({
             employeeId: parseInt(employeeId),
@@ -62,11 +68,12 @@ export default function TransactionsCreate() {
                             setEmployeeId(entity.target.value);
                         }}
                     >
-                        {employees.map((employee, index) => (
-                            <option key={index} value={employee.id}>
-                                {employee.firstName} {employee.lastName}
-                            </option>
-                        ))}
+                        {employees &&
+                            employees.map((employee, index) => (
+                                <option key={index} value={employee.id}>
+                                    {employee.firstName} {employee.lastName}
+                                </option>
+                            ))}
                     </Form.Select>
                 </Form.Group>
 

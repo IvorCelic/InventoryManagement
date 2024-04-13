@@ -36,10 +36,8 @@ export default function Transactions() {
 
     function formatDate(transactionDate) {
         let mdp = moment.utc(transactionDate);
-        if (mdp.hour() == 0 && mdp.minutes() == 0) {
-            return mdp.format("DD. MM. YYYY.");
-        }
-        return mdp.format("DD. MM. YYYY. HH:mm");
+
+        return mdp.format("DD. MM. YYYY.");
     }
 
     return (
@@ -67,7 +65,7 @@ export default function Transactions() {
                                         : formatDate(inventoryTransaction.transactionDate)}
                                 </td>
                                 <td>{inventoryTransaction.additionalDetails}</td>
-                                <td>{inventoryTransaction.employeeFirstLastName}</td>
+                                <td>{inventoryTransaction.employeeName}</td>
                                 <td>{inventoryTransaction.transactionStatusName}</td>
                                 <td>
                                     <Container className="d-flex justify-content-center">

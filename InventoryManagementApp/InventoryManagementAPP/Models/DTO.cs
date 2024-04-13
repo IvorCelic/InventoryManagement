@@ -73,7 +73,7 @@ namespace InventoryManagementAPP.Models
     public record InventoryTransactionDTORead(
         int id,
         string? employeeName,
-        string? transactionStatusId,
+        string? transactionStatusName,
         DateTime? transactionDate,
         string? additionalDetails);
 
