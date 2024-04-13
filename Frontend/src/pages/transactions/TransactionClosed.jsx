@@ -1,20 +1,74 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Col, Nav, NavDropdown, Row, Table } from "react-bootstrap";
+import { useParams } from "react-router-dom";
+import TransactionItemService from "../../services/TransactionItemService";
+import useError from "../../hooks/useError";
 
-function TransactionClosed({
-    activeTab,
-    handleTabChange,
-    associatedWarehouses,
-    associatedProducts,
-    productsOnWarehouse,
-    isUnitary,
-}) {
+function TransactionClosed({ activeTab, handleTabChange, isUnitary }) {
+    // const navigate = useNavigate();
+    const routeParams = useParams();
+
+    const [associatedWarehouses, setAssociatedWarehouses] = useState([]);
+    const [associatedProducts, setAssociatedProducts] = useState([]);
+    const [productsOnWarehouse, setProductsOnWarehouse] = useState([]);
+
+    const { showError } = useError();
+
     const [selectedWarehouseName, setSelectedWarehouseName] = useState("Select warehouse");
 
     const handleWarehouseSelect = (warehouseId, warehouseName) => {
         setSelectedWarehouseName(warehouseName);
         handleTabChange(warehouseId);
     };
+
+    useEffect(() => {
+        fetchInitialData();
+    }, []);
+
+    async function fetchInitialData() {
+        await fetchAssociatedProducts();
+        await fetchAssociatedWarehouses();
+        await fetchProductsOnWarehouse();
+    }
+
+    async function fetchAssociatedProducts() {
+        const response = await TransactionItemService.GetProducts(
+            "InventoryTransactionItem",
+            routeParams.id
+        );
+        if (!response.ok) {
+            showError(response.data);
+            return;
+        }
+        setAssociatedProducts(response.data);
+        // console.table(response.data);
+    }
+
+    async function fetchAssociatedWarehouses() {
+        const response = await TransactionItemService.GetWarehouses(
+            "InventoryTransactionItem",
+            routeParams.id
+        );
+        if (!response.ok) {
+            showError(response.data);
+            return;
+        }
+        setAssociatedWarehouses(response.data);
+        console.log("warehouses ", response.data);
+    }
+
+    async function fetchProductsOnWarehouse(warehouseId, productId) {
+        const response = await TransactionItemService.GetProductsOnWarehouse(
+            routeParams.id,
+            warehouseId,
+            productId
+        );
+        if (!response.ok) {
+            showError(response.data);
+            return;
+        }
+        setProductsOnWarehouse(response.data);
+    }
 
     return (
         <>
@@ -32,8 +86,8 @@ function TransactionClosed({
                                 </Nav.Link>
                             </Nav.Item>
                             {associatedWarehouses &&
-                                associatedWarehouses.map((warehouse) => (
-                                    <Nav.Item key={warehouse.id}>
+                                associatedWarehouses.map((warehouse, index) => (
+                                    <Nav.Item key={index}>
                                         <Nav.Link
                                             eventKey={warehouse.id}
                                             active={activeTab === warehouse.id}
@@ -62,9 +116,9 @@ function TransactionClosed({
                                         All warehouses
                                     </NavDropdown.Item>
                                     {associatedWarehouses &&
-                                        associatedWarehouses.map((warehouse) => (
+                                        associatedWarehouses.map((warehouse, index) => (
                                             <NavDropdown.Item
-                                                key={warehouse.id}
+                                                key={index}
                                                 eventKey={warehouse.id}
                                                 active={activeTab === warehouse.id}
                                                 onClick={() =>

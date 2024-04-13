@@ -1,111 +1,44 @@
-import { App } from "../constants";
-import { httpService } from "./httpService";
+import {
+    httpService,
+    handleError,
+    handleSuccess,
+    get,
+    remove,
+    add,
+    getById,
+    edit,
+} from "./httpService";
 
-const entityName = "InventoryTransactionItem";
-
-async function get() {
+async function GetProducts(name, id) {
     return await httpService
-        .get("/" + entityName)
-        .then((res) => {
-            if (App.DEV) console.table(res.data);
-
-            return res;
+        .get("/" + name + "/Products/" + id)
+        .then((response) => {
+            return handleSuccess(response);
         })
         .catch((error) => {
-            console.log(error);
+            return handleError(error);
         });
 }
 
-async function remove(id) {
+async function GetWarehouses(name, id) {
     return await httpService
-        .delete("/" + entityName + "/" + id)
-        .then((res) => {
-            return { ok: true, message: res };
+        .get("/" + name + "/Warehouses/" + id)
+        .then((response) => {
+            return handleSuccess(response);
         })
         .catch((error) => {
-            console.log(error);
+            return handleError(error);
         });
 }
 
-async function add(entity) {
-    const response = await httpService
-        .post("/" + entityName, entity)
-        .then(() => {
-            console.log("Added" + entityName);
-            return { ok: true, message: entityName + " added successfully." };
-        })
-        .catch((error) => {
-            console.log(error);
-            return { ok: false, message: error.response.data };
-        });
-
-    return response;
-}
-
-async function edit(id, entity) {
-    const response = await httpService
-        .put("/" + entityName + "/" + id, entity)
-        .then(() => {
-            return { ok: true, message: entityName + " edited successfully." };
-        })
-        .catch((error) => {
-            console.log(error.response.data.errors);
-            return { ok: false, message: "Error" };
-        });
-
-    return response;
-}
-
-async function getById(id) {
+async function GetProductsOnWarehouse(name, transactionId, warehouseId) {
     return await httpService
-        .get("/" + entityName + "/" + id)
-        .then((res) => {
-            if (App.DEV) console.table(res.data);
-
-            return res;
+        .get("/" + name + "/Transactions/" + transactionId + "/Warehouses/" + warehouseId)
+        .then((response) => {
+            return handleSuccess(response);
         })
         .catch((error) => {
-            console.log(error);
-            return { message: error };
-        });
-}
-
-async function GetProducts(id) {
-    return await httpService
-        .get("/" + entityName + "/Products/" + id)
-        .then((res) => {
-            if (App.DEV) console.table(res.data);
-
-            return res;
-        })
-        .catch((error) => {
-            console.log(error);
-        });
-}
-
-async function GetWarehouses(id) {
-    return await httpService
-        .get("/" + entityName + "/Warehouses/" + id)
-        .then((res) => {
-            if (App.DEV) console.table(res.data);
-
-            return res;
-        })
-        .catch((error) => {
-            console.log(error);
-        });
-}
-
-async function GetProductsOnWarehouse(transactionId, warehouseId) {
-    return await httpService
-        .get("/" + entityName + "/Transactions/" + transactionId + "/Warehouses/" + warehouseId)
-        .then((res) => {
-            if (App.DEV) console.table(res.data);
-
-            return res;
-        })
-        .catch((error) => {
-            console.log(error);
+            return handleError(error);
         });
 }
 

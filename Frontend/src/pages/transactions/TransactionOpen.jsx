@@ -33,27 +33,6 @@ export default function TransactionOpen({
         setWarehouseId(selectedWarehouseId);
     };
 
-    // useEffect(() => {
-    //     return isUnitary === true ? setQuantity(1) : setQuantity(2);
-    // });
-
-    // const handleAddProduct = async (transactionId, warehouseId, productId, quantity) => {
-    //     try {
-    //         const response = await TransactionItemService.AddProductOnWarehouse(
-    //             parseInt(transactionId),
-    //             parseInt(warehouseId),
-    //             productId,
-    //             quantity
-    //         );
-
-    //         console.log("quantity:", quantity);
-    //         console.log(response);
-    //         handleProductOnoWarehouseChange();
-    //     } catch (error) {
-    //         console.log(error);
-    //     }
-    // };
-
     async function add(productId, quantity) {
         const entity = {
             inventoryTransactionId: parseInt(transactionId),
