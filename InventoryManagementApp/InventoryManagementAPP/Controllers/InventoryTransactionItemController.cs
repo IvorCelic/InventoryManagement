@@ -101,6 +101,38 @@ namespace InventoryManagementAPP.Controllers
 
 
         [HttpGet]
+        [Route("Warehouses/{transactionId:int}")]
+        public IActionResult GetWarehouses(int transactionId)
+        {
+            if (!ModelState.IsValid || transactionId <= 0)
+            {
+                BadRequest();
+            }
+
+            try
+            {
+                var warehouses = _context.InventoryTransactionItems
+                    .Include(it => it.Warehouse)
+                    .Where(x => x.InventoryTransaction.Id == transactionId)
+                    .Select(x => x.Warehouse)
+                    .Distinct()
+                    .ToList();
+
+                if (warehouses == null)
+                {
+                    return BadRequest();
+                }
+
+                return new JsonResult(warehouses);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status503ServiceUnavailable, ex.Message);
+            }
+        }
+
+
+        [HttpGet]
         [Route("Products/{transactionId:int}")]
         public IActionResult GetProducts(int transactionId)
         {
@@ -111,7 +143,9 @@ namespace InventoryManagementAPP.Controllers
             try
             {
                 var products = _context.InventoryTransactionItems
-                    .Include(it => it.Product)
+                    .Include(i => i.Product)
+                    .Include(i => i.Warehouse)
+                    .Include(i => i.InventoryTransaction)
                     .Where(x => x.InventoryTransaction.Id == transactionId)
                     .ToList();
 
@@ -119,8 +153,6 @@ namespace InventoryManagementAPP.Controllers
                 {
                     return BadRequest();
                 }
-
-                //var mapping = new InventoryTransactionMapper();
 
                 return new JsonResult(_mapper.MapReadList(products));
             }
@@ -144,6 +176,8 @@ namespace InventoryManagementAPP.Controllers
             {
                 var productsInWarehouse = _context.InventoryTransactionItems
                     .Include(i => i.Product)
+                    .Include(i => i.Warehouse)
+                    .Include(i => i.InventoryTransaction)
                     .Where(iti => iti.InventoryTransaction.Id == transactionId && iti.Warehouse.Id == warehouseId)
                     .ToList();
 
@@ -151,8 +185,6 @@ namespace InventoryManagementAPP.Controllers
                 {
                     return BadRequest();
                 }
-
-                var mapping = new InventoryTransactionMapper();
 
                 return new JsonResult(_mapper.MapReadList(productsInWarehouse));
             }

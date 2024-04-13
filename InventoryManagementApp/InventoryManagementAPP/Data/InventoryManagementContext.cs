@@ -1,5 +1,4 @@
-﻿using EdunovaAPP.Models;
-using InventoryManagementAPP.Models;
+﻿using InventoryManagementAPP.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace InventoryManagementAPP.Data

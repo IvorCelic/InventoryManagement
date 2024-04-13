@@ -15,10 +15,17 @@ namespace InventoryManagementAPP.Mappers
                     new InventoryTransactionItemDTORead(
                         entity.Id,
                         entity.InventoryTransaction == null ? null : entity.InventoryTransaction.Id,
-                        entity.Warehouse == null ? null : entity.Warehouse.Id,
+                        entity.Warehouse == null ? "" : entity.Warehouse.WarehouseName,
                         entity.Product == null ? "" : entity.Product.ProductName,
                         entity.Quantity == null ? 1 : entity.Quantity
                         ));
+
+                    //config.CreateMap<InventoryTransactionItem, TransactionWarehouseDTORead>()
+                    //.ConstructUsing(entity =>
+                    //new TransactionWarehouseDTORead(
+                    //    entity.Id,
+                    //    entity.Warehouse == null ? "" : entity.Warehouse.WarehouseName
+                    //    ));
                 })
                 );
 
@@ -40,7 +47,8 @@ namespace InventoryManagementAPP.Mappers
                         entity.InventoryTransaction == null ? null : entity.InventoryTransaction.Id,
                         entity.Warehouse == null ? null : entity.Warehouse.Id,
                         entity.Product == null ? null : entity.Product.Id,
-                        entity.Quantity == null ? 1 : entity.Quantity));
+                        entity.Quantity == null ? 1 : entity.Quantity
+                        ));
                 })
                 );
         }

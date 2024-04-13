@@ -35,7 +35,7 @@ namespace EdunovaAPP.Extensions
                 {
                     Description = @"JWT Authorization: first on route '/api/b1/Authorization/token' authorize.
                                     Write 'Bearer' [space] and paste token. 
-                                    Example: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYmYiOjE2OTc3MTc2MjksImV4cCI6MTY5Nzc0NjQyOSwiaWF0IjoxNjk3NzE3NjI5fQ.PN7YPayllTrWESc6mdyp3XCQ1wp3FfDLZmka6_dAJsY'",
+                                    Example: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYmYiOjE3MTMwMjEwMTAsImV4cCI6MTcxMzA0OTgxMCwiaWF0IjoxNzEzMDIxMDEwfQ.4ZMyTBQhQTfUR6E4tFAhbq4t0yVXeXRIkRtdUjSHJd8",
                     Name = "Authorization",
                     In = ParameterLocation.Header,
                     Type = SecuritySchemeType.ApiKey,
