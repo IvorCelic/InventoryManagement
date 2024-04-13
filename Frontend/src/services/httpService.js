@@ -9,6 +9,25 @@ export const httpService = axios.create({
     },
 });
 
+httpService.interceptors.request.use((config) => {
+    config.headers.Authorization = "Bearer " + localStorage.getItem("Bearer");
+
+    return config;
+});
+
+httpService.interceptors.response.use(
+    (response) => response,
+    (error) => {
+        if (error.response.status === 401) {
+            localStorage.setItem("Bearer", "");
+            window.location.href = "/";
+        }
+        //Bez ovoga "Promise.reject..." -> "catch" u ni jednom servisu neće hvatati nikakav error,
+        //uvijek će se trigerati samo "then" jer se ovdje uhvati error koji dođe s api-a
+        return Promise.reject(error);
+    }
+);
+
 export async function get(name) {
     return await httpService
         .get("/" + name)

@@ -27,68 +27,36 @@ import TransactionsEdit from "./pages/transactions/TransactionsEdit";
 
 import ErrorModal from "./components/ErrorModal";
 import useError from "./hooks/useError";
-import useAuth from "./hooks/useAuth";
+import useAuthorization from "./hooks/useAuthorization";
+import WelcomePage from "./pages/WelcomePage";
 
 function App() {
     const { errors, showErrorModal, hideError } = useError();
-    const { isLoggedIn } = useAuth();
+    const { isLoggedIn } = useAuthorization();
 
     return (
         <>
-            <ErrorModal
-                show={showErrorModal}
-                errors={errors}
-                onHide={hideError}
-            />
+            <ErrorModal show={showErrorModal} errors={errors} onHide={hideError} />
             <NavBar />
             <Routes>
                 <Route path={RoutesNames.HOME} element={<Home />} />
                 {isLoggedIn ? (
                     <>
-                        <Route
-                            path={RoutesNames.WAREHOUSES_LIST}
-                            element={<Warehouses />}
-                        />
+                        <Route path={RoutesNames.WELCOME_PAGE} element={<WelcomePage />} />s
+                        <Route path={RoutesNames.WAREHOUSES_LIST} element={<Warehouses />} />
                         <Route
                             path={RoutesNames.WAREHOUSES_CREATE}
                             element={<WarehousesCreate />}
                         />
-                        <Route
-                            path={RoutesNames.WAREHOUSES_EDIT}
-                            element={<WarehousesEdit />}
-                        />
-
-                        <Route
-                            path={RoutesNames.EMPLOYEES_LIST}
-                            element={<Employees />}
-                        />
-                        <Route
-                            path={RoutesNames.EMPLOYEES_CREATE}
-                            element={<EmployeesCreate />}
-                        />
-                        <Route
-                            path={RoutesNames.EMPLOYEES_EDIT}
-                            element={<EmployeesEdit />}
-                        />
-
-                        <Route
-                            path={RoutesNames.PRODUCTS_LIST}
-                            element={<Products />}
-                        />
-                        <Route
-                            path={RoutesNames.PRODUCTS_CREATE}
-                            element={<ProductsCreate />}
-                        />
-                        <Route
-                            path={RoutesNames.PRODUCTS_EDIT}
-                            element={<ProductsEdit />}
-                        />
+                        <Route path={RoutesNames.WAREHOUSES_EDIT} element={<WarehousesEdit />} />
+                        <Route path={RoutesNames.EMPLOYEES_LIST} element={<Employees />} />
+                        <Route path={RoutesNames.EMPLOYEES_CREATE} element={<EmployeesCreate />} />
+                        <Route path={RoutesNames.EMPLOYEES_EDIT} element={<EmployeesEdit />} />
+                        <Route path={RoutesNames.PRODUCTS_LIST} element={<Products />} />
+                        <Route path={RoutesNames.PRODUCTS_CREATE} element={<ProductsCreate />} />
+                        <Route path={RoutesNames.PRODUCTS_EDIT} element={<ProductsEdit />} />
                         {/* <Route path={RoutesNames.PRODUCTS_DETAILS} element={<ProductDetails />} /> */}
-
-                        <Route
-                            path={RoutesNames.TRANSACTIONS_LIST}
-                            element={<Transactions />}
-                        />
+                        <Route path={RoutesNames.TRANSACTIONS_LIST} element={<Transactions />} />
                         <Route
                             path={RoutesNames.TRANSACTIONS_CREATE}
                             element={<TransactionsCreate />}

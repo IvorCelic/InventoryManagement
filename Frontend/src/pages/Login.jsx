@@ -1,9 +1,9 @@
-import { Col, Container, Row } from 'react-bootstrap';
-import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
-import { useNavigate } from 'react-router-dom';
+import { Col, Container, Row } from "react-bootstrap";
+import Button from "react-bootstrap/Button";
+import Form from "react-bootstrap/Form";
+import useAuthorization from "../hooks/useAuthorization";
 
-function Login() {
+export default function Login() {
     const { login } = useAuthorization();
 
     function handleSubmit(event) {
@@ -11,8 +11,8 @@ function Login() {
 
         const data = new FormData(event.target);
         login({
-            email: data.get('email'),
-            password: data.get('password'),
+            email: data.get("email"),
+            password: data.get("password"),
         });
     }
 
@@ -24,18 +24,25 @@ function Login() {
                     <Form onSubmit={handleSubmit}>
                         <Form.Group className="mb-3" controlId="email">
                             <Form.Label>Email address</Form.Label>
-                            <Form.Control type="email" placeholder="Enter email" />
+                            <Form.Control
+                                type="text"
+                                name="email"
+                                placeholder="Enter email"
+                                maxLength={255}
+                                required
+                            />
                         </Form.Group>
 
                         <Form.Group className="mb-3" controlId="password">
                             <Form.Label>Password</Form.Label>
-                            <Form.Control type="password" placeholder="Password" />
+                            <Form.Control
+                                type="password"
+                                name="password"
+                                placeholder="Password"
+                                required
+                            />
                         </Form.Group>
-                        <Button
-                            className="myButton"
-                            variant="primary"
-                            type="submit"
-                        >
+                        <Button className="myButton" variant="primary" type="submit">
                             Submit
                         </Button>
                     </Form>
@@ -44,5 +51,3 @@ function Login() {
         </Container>
     );
 }
-
-export default Login;

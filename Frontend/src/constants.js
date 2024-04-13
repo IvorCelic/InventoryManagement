@@ -1,7 +1,7 @@
 export const RoutesNames = {
     HOME: "/",
 
-    LOGIN: "/login",
+    WELCOME_PAGE: "/welcomepage",
 
     WAREHOUSES_LIST: "/warehouses",
     WAREHOUSES_CREATE: "/warehouses/add",
@@ -19,10 +19,12 @@ export const RoutesNames = {
     TRANSACTIONS_LIST: "/transactions",
     TRANSACTIONS_CREATE: "/transactions/add",
     TRANSACTIONS_EDIT: "/transactions/:id",
+
+    LOGIN: "/login",
 };
 
 export const App = {
-    URL: "https://ivorcelic-001-site1.htempurl.com",
-    // URL: "https://localhost:7183",
+    // URL: "https://ivorcelic-001-site1.htempurl.com",
+    URL: "https://localhost:7183",
     DEV: false,
 };

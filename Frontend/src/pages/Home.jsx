@@ -1,12 +1,9 @@
-import Container from 'react-bootstrap/Container';
+import { Container } from "react-bootstrap";
 
 export default function Home() {
-
     return (
         <>
-            <Container>
-                Welcome to the Inventory Management application!
-            </Container>
+            <Container>This is home page of Inventory Management application!</Container>
         </>
-    )
+    );
 }
