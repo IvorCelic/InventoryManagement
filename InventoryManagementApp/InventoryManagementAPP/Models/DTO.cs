@@ -101,9 +101,11 @@ namespace InventoryManagementAPP.Models
         string? productName ,
         int? quantity);
 
-    //public record TransactionWarehouseDTORead(
-    //    int id,
-    //    string? warehouseName);
+    public record ProductsOnTransactionDTORead(
+        int id,
+        string? productName,
+        bool? isUnitary,
+        int? quantity);
 
     /// <summary>
     /// Data Transfer Object (DTO) representing the data needed for inserting or updating a inventory transaction items

@@ -20,11 +20,12 @@ namespace InventoryManagementAPP.Mappers
                         entity.Quantity == null ? 1 : entity.Quantity
                         ));
 
-                    //config.CreateMap<InventoryTransactionItem, TransactionWarehouseDTORead>()
+                    //config.CreateMap<InventoryTransactionItem, ProductsOnTransactionDTORead>()
                     //.ConstructUsing(entity =>
-                    //new TransactionWarehouseDTORead(
+                    //new ProductsOnTransactionDTORead(
                     //    entity.Id,
-                    //    entity.Warehouse == null ? "" : entity.Warehouse.WarehouseName
+                    //    entity.Product == null ? "" : entity.Product.ProductName,
+                    //    entity.Is
                     //    ));
                 })
                 );

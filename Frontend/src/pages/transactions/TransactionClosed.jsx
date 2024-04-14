@@ -156,7 +156,8 @@ function TransactionClosed({ activeTab, handleTabChange, isUnitary }) {
                                                   <td>{product.quantity}</td>
                                               </tr>
                                           ))
-                                        : productsOnWarehouse.map((product, index) => (
+                                        : productsOnWarehouse &&
+                                          productsOnWarehouse.map((product, index) => (
                                               <tr key={index}>
                                                   <td>{product.productName}</td>
                                                   <td>{isUnitary(product)}</td>

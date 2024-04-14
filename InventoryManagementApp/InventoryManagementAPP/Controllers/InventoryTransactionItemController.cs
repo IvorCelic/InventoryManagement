@@ -123,7 +123,9 @@ namespace InventoryManagementAPP.Controllers
                     return BadRequest();
                 }
 
-                return new JsonResult(warehouses);
+                var mapping = new Mapping<Warehouse, WarehouseDTORead, WarehouseDTOInsertUpdate>();
+
+                return new JsonResult(mapping.MapReadList(warehouses));
             }
             catch (Exception ex)
             {
@@ -144,7 +146,6 @@ namespace InventoryManagementAPP.Controllers
             {
                 var products = _context.InventoryTransactionItems
                     .Include(i => i.Product)
-                    .Include(i => i.Warehouse)
                     .Include(i => i.InventoryTransaction)
                     .Where(x => x.InventoryTransaction.Id == transactionId)
                     .ToList();
@@ -154,7 +155,18 @@ namespace InventoryManagementAPP.Controllers
                     return BadRequest();
                 }
 
-                return new JsonResult(_mapper.MapReadList(products));
+                var list = new List<ProductsOnTransactionDTORead>();
+                products.ForEach(product =>
+                {
+                    list.Add(new ProductsOnTransactionDTORead(
+                        product.Product.Id,
+                        product.Product.ProductName,
+                        product.Product.IsUnitary,
+                        product.Quantity
+                        ));
+                });
+
+                return new JsonResult(list);
             }
             catch (Exception ex)
             {
@@ -186,7 +198,18 @@ namespace InventoryManagementAPP.Controllers
                     return BadRequest();
                 }
 
-                return new JsonResult(_mapper.MapReadList(productsInWarehouse));
+                var list = new List<ProductsOnTransactionDTORead>();
+                productsInWarehouse.ForEach(product =>
+                {
+                    list.Add(new ProductsOnTransactionDTORead(
+                        product.Product.Id,
+                        product.Product.ProductName,
+                        product.Product.IsUnitary,
+                        product.Quantity
+                        ));
+                });
+
+                return new JsonResult(list);
             }
             catch (Exception ex)
             {
