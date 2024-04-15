@@ -53,8 +53,8 @@ namespace InventoryManagementAPP.Models
     public record ProductDTORead(
         int id,
         string productName,
-        string description,
-        bool isUnitary);
+        string? description,
+        bool? isUnitary);
 
     /// <summary>
     /// Data Transfer Object (DTO) representing the data needed for inserting or updating a product
