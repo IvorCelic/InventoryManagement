@@ -5,7 +5,7 @@ import TransactionService from "../../services/TransactionService";
 import EmployeeService from "../../services/EmployeeService";
 import TransactionItemService from "../../services/TransactionItemService";
 import { RoutesNames } from "../../constants";
-import TransactionOpen from "./TransactionOpen";
+
 import TransactionClosed from "./TransactionClosed";
 import WarehouseService from "../../services/WarehouseService";
 import ProductService from "../../services/ProductService";
@@ -185,29 +185,7 @@ export default function TransactionsEdit() {
                         transactionStatus={transactionStatus}
                         transactionStatusName={transactionStatusName}
                     />
-                    {statusId === 2 ? (
-                        <TransactionClosed
-                            activeTab={activeTab}
-                            handleTabChange={handleTabWarehouseChange}
-                            associatedWarehouses={associatedWarehouses}
-                            associatedProducts={associatedProducts}
-                            productsOnWarehouse={productsOnWarehouse}
-                            isUnitary={ReadisUnitary}
-                        />
-                    ) : (
-                        <TransactionOpen
-                            warehouses={warehouses}
-                            products={products}
-                            warehouseId={selectedWarehouseId}
-                            setWarehouseId={handleSelectWarehouseChange}
-                            productsOnWarehouse={productsOnWarehouse}
-                            setProductsOnWarehouse={setProductsOnWarehouse}
-                            associatedWarehouses={associatedWarehouses}
-                            transactionId={transactionId}
-                            handleProductOnoWarehouseChange={handleProductOnoWarehouseChange}
-                            isUnitary={isUnitary}
-                        />
-                    )}
+                    <TransactionClosed />
                 </Row>
                 <ActionButtons cancel={RoutesNames.TRANSACTIONS_LIST} action="Edit transaction" />
             </Form>
