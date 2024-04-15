@@ -4,14 +4,14 @@ import { useParams } from "react-router-dom";
 import TransactionItemService from "../../services/TransactionItemService";
 import useError from "../../hooks/useError";
 
-function TransactionClosed() {
+export default function TransactionClosed() {
+    const routeParams = useParams();
+    const { showError } = useError();
+
     const [associatedWarehouses, setAssociatedWarehouses] = useState([]);
     const [associatedProducts, setAssociatedProducts] = useState([]);
     const [productsOnWarehouse, setProductsOnWarehouse] = useState([]);
     const [selectedWarehouseId, setSelectedWarehouseId] = useState(null);
-
-    const { showError } = useError();
-    const routeParams = useParams();
 
     async function fetchAssociatedWarehouses() {
         const response = await TransactionItemService.GetWarehouses(
@@ -57,16 +57,13 @@ function TransactionClosed() {
     async function fetchInitialData() {
         await fetchAssociatedProducts();
         await fetchAssociatedWarehouses();
-        // Select the "All" tab by default
         setSelectedWarehouseId(null);
-        // Fetch products for the "All" tab initially
         setProductsOnWarehouse(associatedProducts);
     }
 
     function handleTabWarehouseChange(associatedWarehouseId) {
         setSelectedWarehouseId(associatedWarehouseId);
         if (associatedWarehouseId === null) {
-            // If "All" tab is selected, set products to associatedProducts
             setProductsOnWarehouse(associatedProducts);
         } else {
             fetchProductsOnWarehouse(associatedWarehouseId);
@@ -138,5 +135,3 @@ function TransactionClosed() {
         </>
     );
 }
-
-export default TransactionClosed;

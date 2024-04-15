@@ -6,6 +6,7 @@ import EmployeeService from "../../services/EmployeeService";
 import TransactionItemService from "../../services/TransactionItemService";
 import { RoutesNames } from "../../constants";
 
+import TransactionOpen from "./TransactionOpen";
 import TransactionClosed from "./TransactionClosed";
 import WarehouseService from "../../services/WarehouseService";
 import ProductService from "../../services/ProductService";
@@ -43,8 +44,8 @@ export default function TransactionsEdit() {
     async function fetchInitialData() {
         await fetchEmployees();
         await fetchTransaction();
-        await fetchWarehouses();
-        await fetchProducts();
+        // await fetchWarehouses();
+        // await fetchProducts();
     }
 
     async function edit(entityName) {
@@ -96,23 +97,23 @@ export default function TransactionsEdit() {
         setEmployeeId(response.data[0].id);
     }
 
-    async function fetchWarehouses() {
-        const response = await WarehouseService.get("Warehouse");
-        if (!response.ok) {
-            showError(response.data);
-            return;
-        }
-        setWarehouses(response.data);
-    }
+    // async function fetchWarehouses() {
+    //     const response = await WarehouseService.get("Warehouse");
+    //     if (!response.ok) {
+    //         showError(response.data);
+    //         return;
+    //     }
+    //     setWarehouses(response.data);
+    // }
 
-    async function fetchProducts() {
-        const response = await ProductService.get("Product");
-        if (!response.ok) {
-            showError(response.data);
-            return;
-        }
-        setProducts(response.data);
-    }
+    // async function fetchProducts() {
+    //     const response = await ProductService.get("Product");
+    //     if (!response.ok) {
+    //         showError(response.data);
+    //         return;
+    //     }
+    //     setProducts(response.data);
+    // }
 
     function transactionStatus(transactionStatusId) {
         if (transactionStatusId === 1) {
@@ -138,37 +139,37 @@ export default function TransactionsEdit() {
         setStatusId((previous) => (previous === 1 ? 2 : 1));
     }
 
-    function ReadisUnitary(product) {
-        if (product.isUnitary == null) return "Not defined";
-        return product.isUnitary ? "Yes" : "No";
-    }
+    // function ReadisUnitary(product) {
+    //     if (product.isUnitary == null) return "Not defined";
+    //     return product.isUnitary ? "Yes" : "No";
+    // }
 
-    function isUnitary(product) {
-        return product.isUnitary === 1 ? true : false;
-    }
+    // function isUnitary(product) {
+    //     return product.isUnitary === 1 ? true : false;
+    // }
 
-    function handleTabWarehouseChange(associatedWarehouseId) {
-        setActiveTab(associatedWarehouseId);
-        setSelectedWarehouseId(associatedWarehouseId);
-        if (associatedWarehouseId === "all") {
-            fetchAssociatedProducts();
-        } else {
-            fetchProductsOnWarehouse(associatedWarehouseId);
-        }
-    }
+    // function handleTabWarehouseChange(associatedWarehouseId) {
+    //     setActiveTab(associatedWarehouseId);
+    //     setSelectedWarehouseId(associatedWarehouseId);
+    //     if (associatedWarehouseId === "all") {
+    //         fetchAssociatedProducts();
+    //     } else {
+    //         fetchProductsOnWarehouse(associatedWarehouseId);
+    //     }
+    // }
 
-    function handleSelectWarehouseChange(warehouseId) {
-        if (warehouseId === "") {
-            setSelectedWarehouseId(null);
-        } else {
-            setSelectedWarehouseId(warehouseId);
-            fetchProductsOnWarehouse(warehouseId);
-        }
-    }
+    // function handleSelectWarehouseChange(warehouseId) {
+    //     if (warehouseId === "") {
+    //         setSelectedWarehouseId(null);
+    //     } else {
+    //         setSelectedWarehouseId(warehouseId);
+    //         fetchProductsOnWarehouse(warehouseId);
+    //     }
+    // }
 
-    function handleProductOnoWarehouseChange() {
-        fetchProductsOnWarehouse(selectedWarehouseId);
-    }
+    // function handleProductOnoWarehouseChange() {
+    //     fetchProductsOnWarehouse(selectedWarehouseId);
+    // }
 
     return (
         <Container>
@@ -185,7 +186,7 @@ export default function TransactionsEdit() {
                         transactionStatus={transactionStatus}
                         transactionStatusName={transactionStatusName}
                     />
-                    <TransactionClosed />
+                    {statusId === 2 ? <TransactionClosed /> : <TransactionOpen />}
                 </Row>
                 <ActionButtons cancel={RoutesNames.TRANSACTIONS_LIST} action="Edit transaction" />
             </Form>
