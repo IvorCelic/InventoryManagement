@@ -91,7 +91,7 @@ export default function TransactionClosed() {
             quantity: quantity,
         };
 
-        console.log(entity);
+        // console.log(entity);
 
         const response = await TransactionItemService.add("InventoryTransactionItem", entity);
         if (response.ok) {
@@ -144,28 +144,21 @@ export default function TransactionClosed() {
         const response = await TransactionItemService.remove("InventoryTransactionItem", id);
         showError(response.data);
         if (response.ok) {
-            handleProductOnoWarehouseChange();
+            await fetchProductsOnWarehouse(warehouseId);
+            return;
         }
-    }
-
-    function handleProductOnoWarehouseChange() {
-        fetchProductsOnWarehouse(warehouseId);
+        console.log("ID OF INVENTORYTRANSACTIONITEM", id);
     }
 
     const handleWarehouseChange = async (event) => {
         const selectedWarehouseId = event.target.value;
         setSelectedWarehouse(selectedWarehouseId);
 
-        // Check if the selected value is empty (All option)
         if (selectedWarehouseId === "") {
-            // Reset the warehouseId state to null
             setWarehouseId(null);
-            // Fetch all associated products
             await fetchAssociatedProducts();
         } else {
-            // Set the warehouseId state to the selected value
             setWarehouseId(selectedWarehouseId);
-            // Fetch products for the selected warehouse
             await fetchProductsOnWarehouse(selectedWarehouseId);
         }
     };

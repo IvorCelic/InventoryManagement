@@ -90,7 +90,8 @@ values
     ('Daniel', 'Miller', 'daniel.miller@example.com', 'pass1234'),
     ('Olivia', 'Davis', 'olivia.davis@example.com', 'password123'),
     ('William', 'Garcia', 'william.garcia@example.com', 'securepass'),
-    ('Sophia', 'Martinez', 'sophia.martinez@example.com', 'pass1234');
+    ('Sophia', 'Martinez', 'sophia.martinez@example.com', 'pass1234'),
+    ('Ivor', 'Ćelić', 'ivor', '$2a$12$gjarrjwBeS4VNKxvPepqVOe9m9vCJs3bbciQ.Y/FSoA6rFLYU06i.');
 
 
 -- insert into warehouses
