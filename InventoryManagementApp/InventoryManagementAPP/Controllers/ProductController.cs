@@ -18,6 +18,30 @@ namespace InventoryManagementAPP.Controllers
         }
 
 
+        [HttpGet]
+        [Route("searchPagination/{page}")]
+        public IActionResult SearchProductPagination(int page, string condition = "")
+        {
+            var perPage = 8;
+            condition = condition.ToLower();
+
+            try
+            {
+                var products = _context.Products
+                    .Where(p => EF.Functions.Like(p.ProductName.ToLower(), "%" + condition + "%"))
+                    .Skip((perPage * page) - perPage)
+                    .Take(perPage)
+                    .OrderBy(p => p.ProductName)
+                    .ToList();
+
+                return new JsonResult(_mapper.MapReadList(products));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
 
         protected override void ControlDelete(Product entity)
         {
