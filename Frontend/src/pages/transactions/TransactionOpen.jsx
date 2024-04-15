@@ -15,12 +15,15 @@ export default function TransactionClosed() {
 
     const [warehouses, setWarehouses] = useState([]);
     const [warehouseId, setWarehouseId] = useState(null);
-    const [selectedWarehouse, setSelectedWarehouse] = useState(null);
     const [products, setProducts] = useState([]);
+
+    const [selectedWarehouse, setSelectedWarehouse] = useState(null);
+    const [selectedProductId, setSelectedProductId] = useState(null);
 
     const [associatedWarehouses, setAssociatedWarehouses] = useState([]);
     const [associatedProducts, setAssociatedProducts] = useState([]);
     const [productsOnWarehouse, setProductsOnWarehouse] = useState([]);
+    const [showModal, setShowModal] = useState(false);
 
     async function fetchWarehouses() {
         const response = await WarehouseService.get("Warehouse");
@@ -80,6 +83,25 @@ export default function TransactionClosed() {
         setProductsOnWarehouse(response.data);
     }
 
+    async function addProductsOnWarehouse(productId, quantity) {
+        const entity = {
+            transactionId: parseInt(routeParams.id),
+            warehouseId: parseInt(warehouseId),
+            productId: productId,
+            quantity: quantity,
+        };
+
+        console.log(entity);
+
+        const response = await TransactionItemService.add("InventoryTransactionItem", entity);
+        if (response.ok) {
+            await fetchProductsOnWarehouse(warehouseId);
+            return;
+        }
+
+        showError(response.data);
+    }
+
     useEffect(() => {
         fetchInitialData();
     }, []);
@@ -95,6 +117,20 @@ export default function TransactionClosed() {
         }
     }
 
+    function handleAddProduct(productId, isUnitary) {
+        if (isUnitary) {
+            setSelectedProductId(productId);
+            setShowModal(true);
+        } else {
+            addProductsOnWarehouse(productId, 1);
+        }
+    }
+
+    async function handleAddWithQuantity(customQuantity) {
+        addProductsOnWarehouse(selectedProductId, customQuantity);
+        setShowModal(false);
+    }
+
     function nameWarehouse() {
         for (let i = 0; i < warehouses.length; i++) {
             const entity = warehouses[i];
@@ -102,6 +138,18 @@ export default function TransactionClosed() {
                 return entity.warehouseName;
             }
         }
+    }
+
+    async function removeProductOnWarehouse(id) {
+        const response = await TransactionItemService.remove("InventoryTransactionItem", id);
+        showError(response.data);
+        if (response.ok) {
+            handleProductOnoWarehouseChange();
+        }
+    }
+
+    function handleProductOnoWarehouseChange() {
+        fetchProductsOnWarehouse(warehouseId);
     }
 
     const handleWarehouseChange = async (event) => {
@@ -180,9 +228,9 @@ export default function TransactionClosed() {
                                         </span>
                                         <FaCirclePlus
                                             className="icon me-2 plus-icon"
-                                            // onClick={() =>
-                                            //     handleAddProduct(product.id, product.isUnitary)
-                                            // }
+                                            onClick={() =>
+                                                handleAddProduct(product.id, product.isUnitary)
+                                            }
                                         />
                                     </li>
                                 ))}
@@ -201,7 +249,7 @@ export default function TransactionClosed() {
                                             <span>{item.quantity}</span>
                                             <FaMinusCircle
                                                 className="icon me-2 minus-icon"
-                                                // onClick={() => removeProductOnWarehouse(item.id)}
+                                                onClick={() => removeProductOnWarehouse(item.id)}
                                             />
                                         </li>
                                     ))}
@@ -212,6 +260,11 @@ export default function TransactionClosed() {
                     </Col>
                 </Row>
             )}
+            <QuantityModal
+                show={showModal}
+                handleClose={() => setShowModal(false)}
+                handleAdd={handleAddWithQuantity}
+            />
         </Col>
     );
 }

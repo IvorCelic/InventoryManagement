@@ -218,53 +218,53 @@ namespace InventoryManagementAPP.Controllers
         }
 
 
-        [HttpPost]
-        [Route("Transactions/{transactionId:int}/Warehouses/{warehouseId:int}/Products/{productId:int}")]
-        public IActionResult AddProductOnWarehouse(int transactionId, int warehouseId, int productId, int quantity)
-        {
-            if (!ModelState.IsValid || transactionId <= 0 || warehouseId <= 0 || productId <= 0)
-            {
-                return BadRequest();
-            }
+        //[HttpPost]
+        //[Route("Transactions/{transactionId:int}/Warehouses/{warehouseId:int}/Products/{productId:int}")]
+        //public IActionResult AddProductOnWarehouse(int transactionId, int warehouseId, int productId, int quantity)
+        //{
+        //    if (!ModelState.IsValid || transactionId <= 0 || warehouseId <= 0 || productId <= 0)
+        //    {
+        //        return BadRequest();
+        //    }
 
-            try
-            {
-                var inventoryTransaction = _context.InventoryTransactions.Find(transactionId);
-                if (inventoryTransaction == null)
-                {
-                    return BadRequest();
-                }
+        //    try
+        //    {
+        //        var inventoryTransaction = _context.InventoryTransactions.Find(transactionId);
+        //        if (inventoryTransaction == null)
+        //        {
+        //            return BadRequest();
+        //        }
 
-                var warehouse = _context.Warehouses.Find(warehouseId);
-                if (warehouse == null)
-                {
-                    return BadRequest();
-                }
+        //        var warehouse = _context.Warehouses.Find(warehouseId);
+        //        if (warehouse == null)
+        //        {
+        //            return BadRequest();
+        //        }
 
-                var product = _context.Products.Find(productId);
-                if (product == null)
-                {
-                    return BadRequest();
-                }
+        //        var product = _context.Products.Find(productId);
+        //        if (product == null)
+        //        {
+        //            return BadRequest();
+        //        }
 
-                var inventoryTransactionItem = new InventoryTransactionItem
-                {
-                    InventoryTransaction = inventoryTransaction,
-                    Warehouse = warehouse,
-                    Product = product,
-                    Quantity = quantity
-                };
+        //        var inventoryTransactionItem = new InventoryTransactionItem
+        //        {
+        //            InventoryTransaction = inventoryTransaction,
+        //            Warehouse = warehouse,
+        //            Product = product,
+        //            Quantity = quantity
+        //        };
 
-                _context.InventoryTransactionItems.Add(inventoryTransactionItem);
-                _context.SaveChanges();
+        //        _context.InventoryTransactionItems.Add(inventoryTransactionItem);
+        //        _context.SaveChanges();
 
-                return Ok();
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status503ServiceUnavailable, ex.Message);
-            }
-        }
+        //        return Ok();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return StatusCode(StatusCodes.Status503ServiceUnavailable, ex.Message);
+        //    }
+        //}
 
 
     }

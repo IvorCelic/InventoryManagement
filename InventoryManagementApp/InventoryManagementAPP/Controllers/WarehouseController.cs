@@ -22,8 +22,8 @@ namespace InventoryManagementAPP.Controllers
         protected override void ControlDelete(Warehouse entity)
         {
             var list = _context.InventoryTransactionItems
-                .Include(x => x.Product)
-                .Where(x => x.Product.Id == entity.Id)
+                .Include(x => x.Warehouse)
+                .Where(x => x.Warehouse.Id == entity.Id)
                 .ToList();
 
             if (list != null && list.Count > 0)
