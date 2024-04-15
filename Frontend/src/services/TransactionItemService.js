@@ -20,6 +20,17 @@ async function GetProducts(name, id) {
         });
 }
 
+async function GetUnassociatedProducts(name, id) {
+    return await httpService
+        .get("/" + name + "/UnassociatedProducts/" + id)
+        .then((response) => {
+            return handleSuccess(response);
+        })
+        .catch((error) => {
+            return handleError(error);
+        });
+}
+
 async function GetWarehouses(name, id) {
     return await httpService
         .get("/" + name + "/Warehouses/" + id)
@@ -49,6 +60,7 @@ export default {
     edit,
     getById,
     GetProducts,
+    GetUnassociatedProducts,
     GetWarehouses,
     GetProductsOnWarehouse,
 };

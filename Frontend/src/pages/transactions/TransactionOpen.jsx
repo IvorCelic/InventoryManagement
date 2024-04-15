@@ -35,7 +35,10 @@ export default function TransactionClosed() {
     }
 
     async function fetchProducts() {
-        const response = await ProductService.get("Product");
+        const response = await TransactionItemService.GetUnassociatedProducts(
+            "InventoryTransactionItem",
+            routeParams.id
+        );
         if (!response.ok) {
             showError(response.data);
             return;
@@ -96,6 +99,7 @@ export default function TransactionClosed() {
         const response = await TransactionItemService.add("InventoryTransactionItem", entity);
         if (response.ok) {
             await fetchProductsOnWarehouse(warehouseId);
+            await fetchProducts();
             return;
         }
 
@@ -129,6 +133,7 @@ export default function TransactionClosed() {
     async function handleAddWithQuantity(customQuantity) {
         addProductsOnWarehouse(selectedProductId, customQuantity);
         setShowModal(false);
+        await fetchProducts();
     }
 
     function nameWarehouse() {
@@ -145,6 +150,7 @@ export default function TransactionClosed() {
         showError(response.data);
         if (response.ok) {
             await fetchProductsOnWarehouse(warehouseId);
+            await fetchProducts();
             return;
         }
         console.log("ID OF INVENTORYTRANSACTIONITEM", id);

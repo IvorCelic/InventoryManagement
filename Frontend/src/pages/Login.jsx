@@ -21,6 +21,8 @@ export default function Login() {
             <Row className="justify-content-md-center">
                 <Col className="rounded border mt-5 pt-3 pb-3 loginBackground" md="4">
                     <h2 className="centered">LOGIN</h2>
+                    <p>email: ivor</p>
+                    <p>pass: ivor</p>
                     <Form onSubmit={handleSubmit}>
                         <Form.Group className="mb-3" controlId="email">
                             <Form.Label>Email address</Form.Label>
