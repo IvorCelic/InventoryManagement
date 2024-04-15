@@ -86,6 +86,16 @@ namespace InventoryManagementAPP.Controllers
                 throw new Exception("There is no Product with ID: " + product.Id + " in database.");
             }
 
+            var existingItem = _context.InventoryTransactionItems
+                .FirstOrDefault(item =>
+                item.InventoryTransaction.Id == entityDTO.transactionId &&
+                item.Product.Id == entityDTO.productId);
+
+            if (existingItem != null)
+            {
+                throw new Exception("The product already exists in this transaction.");
+            }
+
             var entity = _mapper.MapInsertUpdatedFromDTO(entityDTO);
             entity.InventoryTransaction = transaction;
             entity.Product = product;
@@ -132,6 +142,9 @@ namespace InventoryManagementAPP.Controllers
                 return StatusCode(StatusCodes.Status503ServiceUnavailable, ex.Message);
             }
         }
+
+
+
 
 
         [HttpGet]
@@ -202,7 +215,7 @@ namespace InventoryManagementAPP.Controllers
                 productsInWarehouse.ForEach(product =>
                 {
                     list.Add(new ProductsOnTransactionDTORead(
-                        product.Product.Id,
+                        product.Id,
                         product.Product.ProductName,
                         product.Product.IsUnitary,
                         product.Quantity
