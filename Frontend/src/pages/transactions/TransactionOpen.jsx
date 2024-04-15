@@ -17,6 +17,7 @@ export default function TransactionClosed() {
     const [warehouseId, setWarehouseId] = useState(null);
     const [selectedWarehouse, setSelectedWarehouse] = useState(null);
     const [products, setProducts] = useState([]);
+
     const [associatedWarehouses, setAssociatedWarehouses] = useState([]);
     const [associatedProducts, setAssociatedProducts] = useState([]);
     const [productsOnWarehouse, setProductsOnWarehouse] = useState([]);
@@ -88,7 +89,10 @@ export default function TransactionClosed() {
         await fetchProducts();
         await fetchAssociatedProducts();
         await fetchAssociatedWarehouses();
-        await fetchProductsOnWarehouse();
+
+        if (warehouseId !== null) {
+            await fetchProductsOnWarehouse(warehouseId);
+        }
     }
 
     function nameWarehouse() {
@@ -103,7 +107,19 @@ export default function TransactionClosed() {
     const handleWarehouseChange = async (event) => {
         const selectedWarehouseId = event.target.value;
         setSelectedWarehouse(selectedWarehouseId);
-        setWarehouseId(selectedWarehouseId);
+
+        // Check if the selected value is empty (All option)
+        if (selectedWarehouseId === "") {
+            // Reset the warehouseId state to null
+            setWarehouseId(null);
+            // Fetch all associated products
+            await fetchAssociatedProducts();
+        } else {
+            // Set the warehouseId state to the selected value
+            setWarehouseId(selectedWarehouseId);
+            // Fetch products for the selected warehouse
+            await fetchProductsOnWarehouse(selectedWarehouseId);
+        }
     };
 
     return (

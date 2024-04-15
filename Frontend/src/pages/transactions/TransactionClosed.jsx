@@ -84,8 +84,8 @@ export default function TransactionClosed() {
                                     All
                                 </Nav.Link>
                             </Nav.Item>
-                            {associatedWarehouses.map((warehouse) => (
-                                <Nav.Item key={warehouse.id}>
+                            {associatedWarehouses.map((warehouse, index) => (
+                                <Nav.Item key={index}>
                                     <Nav.Link
                                         onClick={() => handleTabWarehouseChange(warehouse.id)}
                                         className={
