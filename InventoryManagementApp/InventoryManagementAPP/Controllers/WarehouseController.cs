@@ -2,6 +2,7 @@
 using InventoryManagementAPP.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Text;
 
 namespace InventoryManagementAPP.Controllers
 {
@@ -28,7 +29,15 @@ namespace InventoryManagementAPP.Controllers
 
             if (list != null && list.Count > 0)
             {
-                throw new Exception("Warehouse can not be deleted because it is associated with transactions: ");
+                StringBuilder sb = new StringBuilder();
+                sb.Append("Warehouse can not be deleted because it is associated with transactions: ");
+
+                foreach (var item in list)
+                {
+                    //sb.Append(item.InventoryTransaction.AdditionalDetails).Append(", ");
+                }
+
+                throw new Exception(sb.ToString().Substring(0, sb.ToString().Length - 2));
             }
 
         }
