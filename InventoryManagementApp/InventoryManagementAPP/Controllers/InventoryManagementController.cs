@@ -134,7 +134,7 @@ namespace InventoryManagementAPP.Controllers
 
                 _context.Remove(entityFromDB);
                 _context.SaveChanges();
-                return Ok(entityFromDB + "deleted successfully.");
+                return Ok("Deleted successfully.");
             }
             catch (Exception ex)
             {

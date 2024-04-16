@@ -24,7 +24,10 @@ namespace InventoryManagementAPP.Controllers
         {
             var list = _context.InventoryTransactionItems
                 .Include(x => x.Warehouse)
+                .Include(it => it.InventoryTransaction)
                 .Where(x => x.Warehouse.Id == entity.Id)
+                .Select(x => x.InventoryTransaction)
+                .Distinct()
                 .ToList();
 
             if (list != null && list.Count > 0)
@@ -34,7 +37,7 @@ namespace InventoryManagementAPP.Controllers
 
                 foreach (var item in list)
                 {
-                    //sb.Append(item.InventoryTransaction.AdditionalDetails).Append(", ");
+                    sb.Append(item.AdditionalDetails).Append(", ");
                 }
 
                 throw new Exception(sb.ToString().Substring(0, sb.ToString().Length - 2));
