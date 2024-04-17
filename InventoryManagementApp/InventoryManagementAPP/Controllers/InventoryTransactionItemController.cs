@@ -145,6 +145,60 @@ namespace InventoryManagementAPP.Controllers
 
 
         [HttpGet]
+        [Route("SearchUnassociatedProduct/{transactionId:int}/{condition}")]
+        public IActionResult SearchUnassociatedProduct(int transactionId, string condition)
+        {
+            if (condition == null || condition.Length < 3 || transactionId <= 0)
+            {
+                return BadRequest(ModelState);
+            }
+
+            condition = condition.ToLower();
+            try
+            {
+                var allProducts = _context.Products.ToList();
+
+                var associatedProducts = _context.InventoryTransactionItems
+                    .Include(i => i.Product)
+                    .Include(i => i.InventoryTransaction)
+                    .Where(x => x.InventoryTransaction.Id == transactionId)
+                    .ToList();
+
+                var unassociatedProducts = allProducts
+                    .Where(p => !associatedProducts.Any(ap => ap.Product.Id == p.Id))
+                    .ToList();
+
+                var list = new List<ProductDTORead>();
+                unassociatedProducts.ForEach(product =>
+                {
+                    list.Add(new ProductDTORead(
+                        product.Id,
+                        product.ProductName,
+                        product.Description,
+                        product.IsUnitary
+                    ));
+                });
+
+                var filteredProducts = new List<ProductDTORead>();
+                foreach (var product in list)
+                {
+                    if (product.productName.ToLower().Contains(condition))
+                    {
+                        filteredProducts.Add(product);
+                    }
+                }
+
+                return new JsonResult(filteredProducts);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+
+
+        [HttpGet]
         [Route("UnassociatedProducts/{transactionId:int}")]
         public IActionResult GetUnassociatedProducts(int transactionId)
         {
