@@ -1,17 +1,19 @@
-import React, { useEffect, useState } from "react";
-import { Col, Form, Row, Table } from "react-bootstrap";
+import React, { useEffect, useRef, useState } from "react";
+import { Button, Col, Form, Row, Table } from "react-bootstrap";
 import { FaCirclePlus } from "react-icons/fa6";
 import { FaMinusCircle } from "react-icons/fa";
-import TransactionItemService from "../../services/TransactionItemService";
-import QuantityModal from "../../components/QuantityModal";
+import TransactionItemService from "../../../services/TransactionItemService";
+import QuantityModal from "../../../components/QuantityModal";
 import { useParams } from "react-router-dom";
-import useError from "../../hooks/useError";
-import WarehouseService from "../../services/WarehouseService";
-import ProductService from "../../services/ProductService";
+import useError from "../../../hooks/useError";
+import WarehouseService from "../../../services/WarehouseService";
+import ProductService from "../../../services/ProductService";
+import { AsyncTypeahead } from "react-bootstrap-typeahead";
 
-export default function TransactionClosed() {
+export default function TransactionOpen() {
     const routeParams = useParams();
     const { showError } = useError();
+    const typeaheadRef = useRef(null);
 
     const [warehouses, setWarehouses] = useState([]);
     const [warehouseId, setWarehouseId] = useState(null);
@@ -24,6 +26,8 @@ export default function TransactionClosed() {
     const [associatedProducts, setAssociatedProducts] = useState([]);
     const [productsOnWarehouse, setProductsOnWarehouse] = useState([]);
     const [showModal, setShowModal] = useState(false);
+    const [foundUnassociatedProducts, setFoundUnassociatedProducts] = useState([]);
+    const [searchName, setSearchName] = useState("");
 
     async function fetchWarehouses() {
         const response = await WarehouseService.get("Warehouse");
@@ -106,6 +110,20 @@ export default function TransactionClosed() {
         showError(response.data);
     }
 
+    async function searchUnassociatedProduct(condition) {
+        const response = await TransactionItemService.SearchUnassociatedProduct(
+            "InventoryTransactionItem",
+            routeParams.id,
+            condition
+        );
+        if (!response.ok) {
+            showError(response.data);
+            return;
+        }
+        setFoundUnassociatedProducts(response.data);
+        setSearchName(condition);
+    }
+
     useEffect(() => {
         fetchInitialData();
     }, []);
@@ -169,10 +187,42 @@ export default function TransactionClosed() {
         }
     };
 
+    async function addManuallyProduct(Product) {
+        const response = await ProductService.add("Product", Product);
+        if (response.ok) {
+            const response2 = await TransactionItemService.add(
+                "InventoryTransactionItem",
+                InventoryTransactionItem
+            );
+            if (response2.ok) {
+                typeaheadRef.current.clear();
+                await fetchProducts();
+                await fetchProductsOnWarehouse();
+                return;
+            }
+            showError(response2.data);
+            return;
+        }
+        showError(response.data);
+    }
+
+    function addManually() {
+        let array = searchName;
+        if (array.length < 2) {
+            showError([{ property: "", message: "Name required" }]);
+            return;
+        }
+
+        addManuallyProduct({
+            productName: array[0],
+            description: "",
+            isUnitary: true,
+        });
+    }
+
     return (
         <Col lg={8} md={12} sm={12} className="border mt-5 transactionEditContainer">
             <Row className="align-items-center">
-                {" "}
                 <Col>
                     <Form.Group className="mb-3 pt-2 ms-2 me-3" controlId="warehouse">
                         <Form.Label>Warehouse</Form.Label>
@@ -216,47 +266,106 @@ export default function TransactionClosed() {
                 </Row>
             ) : (
                 <Row className="mt-4">
-                    <Col className="border me-4 ms-4">
-                        <h4 className="mb-3 mt-2 ms-2">Products</h4>
-                        <ul className="product-list ms-2 me-2">
-                            {products &&
-                                products.map((product, index) => (
-                                    <li key={index}>
-                                        <span className="product-name ms-2">
-                                            {product.productName}
-                                        </span>
-                                        <FaCirclePlus
-                                            className="icon me-2 plus-icon"
-                                            onClick={() =>
-                                                handleAddProduct(product.id, product.isUnitary)
-                                            }
-                                        />
-                                    </li>
-                                ))}
-                        </ul>
-                    </Col>
-                    <Col className="border ms-5 me-4">
-                        <h4 className="mb-3 mt-2 ms-2">Added Products</h4>
-                        {productsOnWarehouse && productsOnWarehouse.length > 0 ? (
+                    <Row className="mb-3">
+                        <Row>
+                            <Col key="1" sm={12} lg={6} md={6}>
+                                <Form.Group className="ms-2" controlId="condition">
+                                    <Form.Label>Add by searching</Form.Label>
+                                    <AsyncTypeahead
+                                        className="autocomplete"
+                                        id="condition"
+                                        emptyLabel="No result"
+                                        searchText="Searching..."
+                                        labelKey={(product) => `${product.productName}`}
+                                        minLength={3}
+                                        options={foundUnassociatedProducts}
+                                        onSearch={searchUnassociatedProduct}
+                                        placeholder="Part of product name"
+                                        renderMenuItemChildren={(product) => (
+                                            <div>
+                                                <span>{product.productName}</span>
+                                                <FaCirclePlus
+                                                    className="icon ms-2 plus-icon"
+                                                    onClick={() =>
+                                                        handleAddProduct(
+                                                            product.id,
+                                                            product.isUnitary
+                                                        )
+                                                    }
+                                                />
+                                            </div>
+                                        )}
+                                        ref={typeaheadRef}
+                                    />
+                                </Form.Group>
+                            </Col>
+                            <Col key="2" sm={12} lg={6} md={6}>
+                                <Button onClick={addManually}>Add</Button>
+                            </Col>
+                            {/* <Col key="2" sm={12} lg={6} md={6}>
+                                <Form.Group className="ms-4" controlId="condition">
+                                    <Form.Label>Remove by searching</Form.Label>
+                                    <AsyncTypeahead
+                                        className="autocomplete"
+                                        id="condition"
+                                        emptyLabel="No result"
+                                        searchText="Searching..."
+                                        placeholder="Part of product name"
+                                        renderMenuItemChildren={() => (
+                                            <>
+                                                <span>test</span>
+                                            </>
+                                        )}
+                                    />
+                                </Form.Group>
+                            </Col> */}
+                        </Row>
+                    </Row>
+                    <Row>
+                        <Col className="border me-4 ms-4">
+                            <h4 className="mb-3 mt-2 ms-2">Products</h4>
                             <ul className="product-list ms-2 me-2">
-                                {productsOnWarehouse &&
-                                    productsOnWarehouse.map((item, index) => (
+                                {products &&
+                                    products.map((product, index) => (
                                         <li key={index}>
                                             <span className="product-name ms-2">
-                                                {item.productName}
+                                                {product.productName}
                                             </span>
-                                            <span>{item.quantity}</span>
-                                            <FaMinusCircle
-                                                className="icon me-2 minus-icon"
-                                                onClick={() => removeProductOnWarehouse(item.id)}
+                                            <FaCirclePlus
+                                                className="icon me-2 plus-icon"
+                                                onClick={() =>
+                                                    handleAddProduct(product.id, product.isUnitary)
+                                                }
                                             />
                                         </li>
                                     ))}
                             </ul>
-                        ) : (
-                            <p>There are no products on this warehouse.</p>
-                        )}
-                    </Col>
+                        </Col>
+                        <Col className="border ms-4 me-4">
+                            <h4 className="mb-3 mt-2 ms-2">Added Products</h4>
+                            {productsOnWarehouse && productsOnWarehouse.length > 0 ? (
+                                <ul className="product-list ms-2 me-2">
+                                    {productsOnWarehouse &&
+                                        productsOnWarehouse.map((item, index) => (
+                                            <li key={index}>
+                                                <span className="product-name ms-2">
+                                                    {item.productName}
+                                                </span>
+                                                <span>{item.quantity}</span>
+                                                <FaMinusCircle
+                                                    className="icon me-2 minus-icon"
+                                                    onClick={() =>
+                                                        removeProductOnWarehouse(item.id)
+                                                    }
+                                                />
+                                            </li>
+                                        ))}
+                                </ul>
+                            ) : (
+                                <p>There are no products on this warehouse.</p>
+                            )}
+                        </Col>
+                    </Row>
                 </Row>
             )}
             <QuantityModal

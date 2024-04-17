@@ -6,10 +6,8 @@ import EmployeeService from "../../services/EmployeeService";
 import TransactionItemService from "../../services/TransactionItemService";
 import { RoutesNames } from "../../constants";
 
-import TransactionOpen from "./TransactionOpen";
-import TransactionClosed from "./TransactionClosed";
-import WarehouseService from "../../services/WarehouseService";
-import ProductService from "../../services/ProductService";
+import TransactionClosed from "./transactionItems/TransactionClosed";
+import TransactionOpen from "./transactionItems/TransactionOpen";
 import TransactionDetailsForm from "./TransactionEditForm";
 import useError from "../../hooks/useError";
 import ActionButtons from "../../components/ActionButtons";

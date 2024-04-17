@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Col, Nav, Row, Table } from "react-bootstrap";
 import { useParams } from "react-router-dom";
-import TransactionItemService from "../../services/TransactionItemService";
-import useError from "../../hooks/useError";
+import TransactionItemService from "../../../services/TransactionItemService";
+import useError from "../../../hooks/useError";
 
 export default function TransactionClosed() {
     const routeParams = useParams();
