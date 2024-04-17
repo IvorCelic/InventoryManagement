@@ -57,11 +57,20 @@ export default function Products() {
         setPage(page);
     };
 
+    const handleSearch = (searchTerm) => {
+        setPage(1);
+        setCondition(searchTerm);
+    };
+
     return (
         <Container>
             <Col>
                 <Row>
-                    <SearchAndAdd RouteName={RoutesNames.PRODUCTS_CREATE} entity={"product"} />
+                    <SearchAndAdd
+                        RouteName={RoutesNames.PRODUCTS_CREATE}
+                        entity={"product"}
+                        onSearch={handleSearch}
+                    />
                 </Row>
                 <Row>
                     <Table striped bordered hover responsive>
