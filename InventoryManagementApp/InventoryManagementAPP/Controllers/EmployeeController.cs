@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
+using System.Text;
 
 namespace InventoryManagementAPP.Controllers
 {
@@ -40,7 +41,15 @@ namespace InventoryManagementAPP.Controllers
 
             if (list != null && list.Count > 0)
             {
-                throw new Exception("Employee can not be deleted because it is associated with transactions: ");
+                StringBuilder sb = new StringBuilder();
+                sb.Append("Employee can not be deleted because it is associated with transactions: ");
+
+                foreach (var item in list)
+                {
+                    sb.Append(item.AdditionalDetails).Append(", ");
+                }
+
+                throw new Exception(sb.ToString().Substring(0, sb.ToString().Length - 2));
             }
         }
     }

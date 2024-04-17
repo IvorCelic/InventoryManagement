@@ -116,7 +116,7 @@ namespace InventoryManagementAPP.Controllers
         {
             if (!ModelState.IsValid || transactionId <= 0)
             {
-                BadRequest();
+                BadRequest(ModelState);
             }
 
             try
@@ -150,7 +150,7 @@ namespace InventoryManagementAPP.Controllers
         {
             if (!ModelState.IsValid || transactionId <= 0)
             {
-                BadRequest();
+                BadRequest(ModelState);
             }
             try
             {
@@ -199,7 +199,7 @@ namespace InventoryManagementAPP.Controllers
         {
             if (!ModelState.IsValid || transactionId <= 0)
             {
-                BadRequest();
+                BadRequest(ModelState);
             }
             try
             {
@@ -240,7 +240,7 @@ namespace InventoryManagementAPP.Controllers
         {
             if (!ModelState.IsValid || transactionId <= 0 || warehouseId <= 0)
             {
-                return BadRequest();
+                return BadRequest(ModelState);
             }
 
             try

@@ -95,7 +95,7 @@ namespace InventoryManagementAPP.Controllers
 
             if (list != null && list.Count() > 0)
             {
-                throw new Exception("Transaction can not be deleted because it contains InventoryTransactionItems on it. ");
+                throw new Exception("Transaction can not be deleted because it contains items on it. ");
             }
         }
 

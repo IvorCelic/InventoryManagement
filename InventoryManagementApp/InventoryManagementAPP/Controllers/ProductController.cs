@@ -2,6 +2,7 @@
 using InventoryManagementAPP.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Text;
 
 namespace InventoryManagementAPP.Controllers
 {
@@ -47,12 +48,23 @@ namespace InventoryManagementAPP.Controllers
         {
             var list = _context.InventoryTransactionItems
                 .Include(x => x.Product)
+                .Include(it => it.InventoryTransaction)
                 .Where(x => x.Product.Id == entity.Id)
+                .Select(x => x.InventoryTransaction)
+                .Distinct()
                 .ToList();
 
             if (list != null && list.Count > 0)
             {
-                throw new Exception("Product can not be deleted because it is associated with transactions: ");
+                StringBuilder sb = new StringBuilder();
+                sb.Append("Product can not be deleted because it is associated with transactions: ");
+
+                foreach (var item in list)
+                {
+                    sb.Append(item.AdditionalDetails).Append(", ");
+                }
+
+                throw new Exception(sb.ToString().Substring(0, sb.ToString().Length - 2));
             }
 
         }
