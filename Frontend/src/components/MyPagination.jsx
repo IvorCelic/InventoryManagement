@@ -20,8 +20,10 @@ export default function MyPagination({ currentPage, totalPages, onPageChange }) 
     }
 
     return (
-        <div>
-            <Pagination>{items}</Pagination>
-        </div>
+        totalPages >= 2 && (
+            <div>
+                <Pagination>{items}</Pagination>
+            </div>
+        )
     );
 }

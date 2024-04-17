@@ -53,14 +53,14 @@ export default function Products() {
 
     const totalPages = Math.ceil(totalProducts / 8);
 
-    const handlePageChange = (page) => {
+    function handlePageChange(page) {
         setPage(page);
-    };
+    }
 
-    const handleSearch = (searchTerm) => {
+    function handleSearch(searchTerm) {
         setPage(1);
         setCondition(searchTerm);
-    };
+    }
 
     return (
         <Container>
