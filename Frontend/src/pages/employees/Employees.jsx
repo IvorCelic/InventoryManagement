@@ -1,25 +1,40 @@
 import { useEffect, useState } from "react";
-import { Button, Container, Table } from "react-bootstrap";
+import { Button, Col, Container, Row, Table } from "react-bootstrap";
 import EmployeeService from "../../services/EmployeeService";
 import { RoutesNames } from "../../constants";
 import { useNavigate } from "react-router-dom";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import SearchAndAdd from "../../components/SearchAndAdd";
 import useError from "../../hooks/useError";
+import MyPagination from "../../components/MyPagination";
 
 export default function Employees() {
-    const [employees, setEmployees] = useState();
-    let navigate = useNavigate();
+    const navigate = useNavigate();
     const { showError } = useError();
 
+    const [employees, setEmployees] = useState();
+    const [totalEmployees, setTotalEmployees] = useState();
+    const [page, setPage] = useState(1);
+    const [condition, setCondition] = useState("");
+
     async function fetchEmployees() {
-        const response = await EmployeeService.get(`Employee`);
-        if (!response.ok) {
+        const responsePagination = await EmployeeService.getPagination(page, condition);
+        const responseEmployee = await EmployeeService.get("Employee");
+        if (!responsePagination.ok) {
             showError(response.data);
             return;
         }
-        setEmployees(response.data);
+        if (responsePagination.data.length == 0) {
+            setPage(page - 1);
+            return;
+        }
+        setEmployees(responsePagination.data);
+        setTotalEmployees(responseEmployee.data.length);
     }
+
+    useEffect(() => {
+        fetchEmployees();
+    }, [page, condition]);
 
     async function removeEmployee(id) {
         const response = await EmployeeService.remove(`Employee`, id);
@@ -29,53 +44,75 @@ export default function Employees() {
         }
     }
 
-    useEffect(() => {
-        fetchEmployees();
-    }, []);
+    const totalPages = Math.ceil(totalEmployees / 8);
+
+    function handlePageChange(page) {
+        setPage(page);
+    }
+
+    function handleSearch(searchTerm) {
+        setPage(1);
+        setCondition(searchTerm);
+    }
 
     return (
         <Container>
-            <Container>
-                <SearchAndAdd RouteName={RoutesNames.EMPLOYEES_CREATE} entity={"employee"} />
-            </Container>
-            <Table striped bordered hover responsive>
-                <thead>
-                    <tr>
-                        <th>First name</th>
-                        <th>Last name</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {employees &&
-                        employees.map((employee, index) => (
-                            <tr key={index}>
-                                <td>{employee.firstName}</td>
-                                <td>{employee.lastName}</td>
-                                <td>
-                                    <Container className="d-flex justify-content-center">
-                                        <Button
-                                            variant="link"
-                                            className="me-2 actionButton"
-                                            onClick={() => {
-                                                navigate(`/employees/${employee.id}`);
-                                            }}
-                                        >
-                                            <FaEdit size={25} />
-                                        </Button>
-                                        <Button
-                                            variant="link"
-                                            className="link-danger actionButton"
-                                            onClick={() => removeEmployee(employee.id)}
-                                        >
-                                            <FaTrash size={25} />
-                                        </Button>
-                                    </Container>
-                                </td>
+            <Col>
+                <Row>
+                    <SearchAndAdd
+                        RouteName={RoutesNames.EMPLOYEES_CREATE}
+                        entity={"employee"}
+                        onSearch={handleSearch}
+                    />
+                </Row>
+                <Row>
+                    <Table striped bordered hover responsive>
+                        <thead>
+                            <tr>
+                                <th>First name</th>
+                                <th>Last name</th>
+                                <th>Action</th>
                             </tr>
-                        ))}
-                </tbody>
-            </Table>
+                        </thead>
+                        <tbody>
+                            {employees &&
+                                employees.map((employee, index) => (
+                                    <tr key={index}>
+                                        <td>{employee.firstName}</td>
+                                        <td>{employee.lastName}</td>
+                                        <td>
+                                            <Container className="d-flex justify-content-center">
+                                                <Button
+                                                    variant="link"
+                                                    className="me-2 actionButton"
+                                                    onClick={() => {
+                                                        navigate(`/employees/${employee.id}`);
+                                                    }}
+                                                >
+                                                    <FaEdit size={25} />
+                                                </Button>
+                                                <Button
+                                                    variant="link"
+                                                    className="link-danger actionButton"
+                                                    onClick={() => removeEmployee(employee.id)}
+                                                >
+                                                    <FaTrash size={25} />
+                                                </Button>
+                                            </Container>
+                                        </td>
+                                    </tr>
+                                ))}
+                        </tbody>
+                    </Table>
+                </Row>
+                <Row>
+                    <MyPagination
+                        currentPage={page}
+                        totalPages={totalPages}
+                        onPageChange={handlePageChange}
+                    />
+                </Row>
+            </Col>
         </Container>
     );
 }

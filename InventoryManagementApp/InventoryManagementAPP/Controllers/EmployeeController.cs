@@ -27,6 +27,34 @@ namespace InventoryManagementAPP.Controllers
             DbSet = _context.Employees;
         }
 
+
+        [HttpGet]
+        [Route("searchPagination/{page}")]
+        public IActionResult SearchEmployeePagination(int page, string condition = "")
+        {
+            var perPage = 8;
+            condition = condition.ToLower();
+
+            try
+            {
+                var employees = _context.Employees
+                    .Where(w => 
+                        EF.Functions.Like(w.FirstName.ToLower(), "%" + condition + "%") ||
+                        EF.Functions.Like(w.LastName.ToLower(), "%" + condition + "%"))
+                    .Skip((perPage * page) - perPage)
+                    .Take(perPage)
+                    .OrderBy(w => w.LastName)
+                    .ToList();
+
+                return new JsonResult(_mapper.MapReadList(employees));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+
         /// <summary>
         /// Controls the deletion of an employee entity.
         /// </summary>
