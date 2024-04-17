@@ -1,4 +1,4 @@
-import { Button, Container, Table } from "react-bootstrap";
+import { Button, Col, Container, Row, Table } from "react-bootstrap";
 import { RoutesNames } from "../../constants";
 import SearchAndAdd from "../../components/SearchAndAdd";
 import { useEffect, useState } from "react";
@@ -42,64 +42,71 @@ export default function Transactions() {
 
     return (
         <Container>
-            <Container>
-                <SearchAndAdd RouteName={RoutesNames.TRANSACTIONS_CREATE} entity={"transaction"} />
-            </Container>
-            <Table striped bordered hover responsive>
-                <thead>
-                    <tr>
-                        <th>Date</th>
-                        <th>Details</th>
-                        <th>Employee</th>
-                        <th>Status</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {transactions &&
-                        transactions.map((inventoryTransaction, index) => (
-                            <tr key={index}>
-                                <td>
-                                    {inventoryTransaction.transactionDate == null
-                                        ? "Not defined"
-                                        : formatDate(inventoryTransaction.transactionDate)}
-                                </td>
-                                <td>{inventoryTransaction.additionalDetails}</td>
-                                <td>{inventoryTransaction.employeeName}</td>
-                                <td>{inventoryTransaction.transactionStatusName}</td>
-                                <td>
-                                    <Container className="d-flex justify-content-center">
-                                        <Button
-                                            variant="link"
-                                            onClick={() => {
-                                                navigate(
-                                                    `/transactions/${inventoryTransaction.id}`
-                                                );
-                                            }}
-                                        >
-                                            <FaEdit size={25} />
-                                        </Button>
-                                        <Button variant="link">
-                                            <FaFilePdf size={25} />
-                                        </Button>
-                                        <Button variant="link">
-                                            <FaPrint size={25} />
-                                        </Button>
-                                        <Button
-                                            variant="link"
-                                            className="link-danger"
-                                            onClick={() =>
-                                                removeTransaction(inventoryTransaction.id)
-                                            }
-                                        >
-                                            <FaTrash size={25} />
-                                        </Button>
-                                    </Container>
-                                </td>
+            <Col>
+                <Row>
+                    <SearchAndAdd
+                        RouteName={RoutesNames.TRANSACTIONS_CREATE}
+                        entity={"transaction"}
+                    />
+                </Row>
+                <Row>
+                    <Table striped bordered hover responsive>
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Details</th>
+                                <th>Employee</th>
+                                <th>Status</th>
+                                <th>Action</th>
                             </tr>
-                        ))}
-                </tbody>
-            </Table>
+                        </thead>
+                        <tbody>
+                            {transactions &&
+                                transactions.map((inventoryTransaction, index) => (
+                                    <tr key={index}>
+                                        <td>
+                                            {inventoryTransaction.transactionDate == null
+                                                ? "Not defined"
+                                                : formatDate(inventoryTransaction.transactionDate)}
+                                        </td>
+                                        <td>{inventoryTransaction.additionalDetails}</td>
+                                        <td>{inventoryTransaction.employeeName}</td>
+                                        <td>{inventoryTransaction.transactionStatusName}</td>
+                                        <td>
+                                            <Container className="d-flex justify-content-center">
+                                                <Button
+                                                    variant="link"
+                                                    onClick={() => {
+                                                        navigate(
+                                                            `/transactions/${inventoryTransaction.id}`
+                                                        );
+                                                    }}
+                                                >
+                                                    <FaEdit size={25} />
+                                                </Button>
+                                                <Button variant="link">
+                                                    <FaFilePdf size={25} />
+                                                </Button>
+                                                <Button variant="link">
+                                                    <FaPrint size={25} />
+                                                </Button>
+                                                <Button
+                                                    variant="link"
+                                                    className="link-danger"
+                                                    onClick={() =>
+                                                        removeTransaction(inventoryTransaction.id)
+                                                    }
+                                                >
+                                                    <FaTrash size={25} />
+                                                </Button>
+                                            </Container>
+                                        </td>
+                                    </tr>
+                                ))}
+                        </tbody>
+                    </Table>
+                </Row>
+            </Col>
         </Container>
     );
 }

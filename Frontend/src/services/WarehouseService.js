@@ -1,4 +1,24 @@
-import { get, remove, add, edit, getById } from "./httpService";
+import {
+    get,
+    remove,
+    add,
+    edit,
+    getById,
+    httpService,
+    handleSuccess,
+    handleError,
+} from "./httpService";
+
+async function getPagination(page, condition) {
+    return await httpService
+        .get("/Warehouse/searchPagination/" + page + "?condition=" + condition)
+        .then((res) => {
+            return handleSuccess(res);
+        })
+        .catch((error) => {
+            return handleError(error);
+        });
+}
 
 export default {
     get,
@@ -6,4 +26,5 @@ export default {
     add,
     edit,
     getById,
+    getPagination,
 };
