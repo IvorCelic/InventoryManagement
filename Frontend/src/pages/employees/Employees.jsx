@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
-import { Button, Card, Col, Container, Row, Table } from "react-bootstrap";
+import { Button, Card, Col, Container, Row, Image } from "react-bootstrap";
 import EmployeeService from "../../services/EmployeeService";
-import { RoutesNames } from "../../constants";
+import { App, RoutesNames } from "../../constants";
 import { useNavigate } from "react-router-dom";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import SearchAndAdd from "../../components/SearchAndAdd";
 import useError from "../../hooks/useError";
 import MyPagination from "../../components/MyPagination";
 import useLoading from "../../hooks/useLoading";
+import unknown from "../../assets/unknown.png";
 
 export default function Employees() {
     const navigate = useNavigate();
@@ -21,10 +22,7 @@ export default function Employees() {
 
     async function fetchEmployees() {
         showLoading();
-        const responsePagination = await EmployeeService.getPagination(
-            page,
-            condition
-        );
+        const responsePagination = await EmployeeService.GetPagination(page, condition);
         const responseEmployee = await EmployeeService.get("Employee");
         if (!responsePagination.ok) {
             showError(response.data);
@@ -64,6 +62,13 @@ export default function Employees() {
         setCondition(searchTerm);
     }
 
+    function image(employee) {
+        if (employee.image != null) {
+            return App.URL + employee.image + `?${Date.now()}`;
+        }
+        return unknown;
+    }
+
     return (
         <Container>
             <Col>
@@ -74,70 +79,20 @@ export default function Employees() {
                         onSearch={handleSearch}
                     />
                 </Row>
-                <Row>
-                    <Table striped bordered hover responsive>
-                        <thead>
-                            <tr>
-                                <th>First name</th>
-                                <th>Last name</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {employees &&
-                                employees.map((employee, index) => (
-                                    <tr key={index}>
-                                        <td>{employee.firstName}</td>
-                                        <td>{employee.lastName}</td>
-                                        <td>
-                                            <Container className="d-flex justify-content-center">
-                                                <Button
-                                                    variant="link"
-                                                    className="me-2 actionButton"
-                                                    onClick={() => {
-                                                        navigate(
-                                                            `/employees/${employee.id}`
-                                                        );
-                                                    }}
-                                                >
-                                                    <FaEdit size={25} />
-                                                </Button>
-                                                <Button
-                                                    variant="link"
-                                                    className="link-danger actionButton"
-                                                    onClick={() =>
-                                                        removeEmployee(
-                                                            employee.id
-                                                        )
-                                                    }
-                                                >
-                                                    <FaTrash size={25} />
-                                                </Button>
-                                            </Container>
-                                        </td>
-                                    </tr>
-                                ))}
-                        </tbody>
-                    </Table>
-                </Row>
-                <Row>
-                    <Col className="d-flex justify-content-center">
-                        <MyPagination
-                            currentPage={page}
-                            totalPages={totalPages}
-                            onPageChange={handlePageChange}
-                        />
-                    </Col>
-                </Row>
                 <Row className="d-flex justify-content-center">
                     {employees &&
                         employees.map((employee, index) => (
                             <Card
+                                key={employee.id}
                                 style={{ width: "16.6rem", margin: "0.5rem" }}
+                                className="align-items-center"
                             >
-                                <Card.Img
+                                <Image
                                     variant="top"
-                                    src="holder.js/100px180"
+                                    src={image(employee)}
+                                    // className="image mt-4"
+                                    className="image mt-3"
+                                    roundedCircle
                                 />
                                 <Card.Body
                                     key={index}
@@ -152,9 +107,7 @@ export default function Employees() {
                                             variant="link"
                                             className="me-2 "
                                             onClick={() => {
-                                                navigate(
-                                                    `/employees/${employee.id}`
-                                                );
+                                                navigate(`/employees/${employee.id}`);
                                             }}
                                         >
                                             <FaEdit size={25} />
@@ -162,9 +115,7 @@ export default function Employees() {
                                         <Button
                                             variant="link"
                                             className="link-danger"
-                                            onClick={() =>
-                                                removeEmployee(employee.id)
-                                            }
+                                            onClick={() => removeEmployee(employee.id)}
                                         >
                                             <FaTrash size={25} />
                                         </Button>
@@ -172,6 +123,15 @@ export default function Employees() {
                                 </Card.Body>
                             </Card>
                         ))}
+                </Row>
+                <Row className="mt-5">
+                    <Col className="d-flex justify-content-center">
+                        <MyPagination
+                            currentPage={page}
+                            totalPages={totalPages}
+                            onPageChange={handlePageChange}
+                        />
+                    </Col>
                 </Row>
             </Col>
         </Container>

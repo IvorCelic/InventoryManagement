@@ -9,7 +9,7 @@ import {
     handleError,
 } from "./httpService";
 
-async function getPagination(page, condition) {
+async function GetPagination(page, condition) {
     return await httpService
         .get("/Product/SearchPagination/" + page + "?condition=" + condition)
         .then((res) => {
@@ -26,5 +26,5 @@ export default {
     add,
     edit,
     getById,
-    getPagination,
+    GetPagination,
 };

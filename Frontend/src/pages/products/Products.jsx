@@ -21,7 +21,7 @@ export default function Products() {
 
     async function fetchProducts() {
         showLoading();
-        const responsePagination = await ProductService.getPagination(page, condition);
+        const responsePagination = await ProductService.GetPagination(page, condition);
         const responseProduct = await ProductService.get("Product");
         if (!responsePagination.ok) {
             showError(responsePagination.data);

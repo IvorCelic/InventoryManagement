@@ -1,3 +1,4 @@
+import { responsivePropType } from "react-bootstrap/esm/createUtilityClasses";
 import {
     get,
     remove,
@@ -9,9 +10,20 @@ import {
     handleError,
 } from "./httpService";
 
-async function getPagination(page, condition) {
+async function GetPagination(page, condition) {
     return await httpService
         .get("/Employee/SearchPagination/" + page + "?condition=" + condition)
+        .then((res) => {
+            return handleSuccess(res);
+        })
+        .catch((error) => {
+            return handleError(error);
+        });
+}
+
+async function SetImage(id, image) {
+    return await httpService
+        .put("/Employee/SetImage/" + id, image)
         .then((res) => {
             return handleSuccess(res);
         })
@@ -26,5 +38,6 @@ export default {
     add,
     edit,
     getById,
-    getPagination,
+    GetPagination,
+    SetImage,
 };

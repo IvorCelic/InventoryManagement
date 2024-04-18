@@ -21,7 +21,7 @@ export default function Warehouses() {
 
     async function fetchWarehouses() {
         showLoading();
-        const responsePagination = await WarehouseService.getPagination(page, condition);
+        const responsePagination = await WarehouseService.GetPagination(page, condition);
         const responseWarehouse = await WarehouseService.get("Warehouse");
         if (!responsePagination.ok) {
             showError(responsePagination.data);
