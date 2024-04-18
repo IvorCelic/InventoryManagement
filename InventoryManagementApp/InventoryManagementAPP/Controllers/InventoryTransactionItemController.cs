@@ -197,6 +197,58 @@ namespace InventoryManagementAPP.Controllers
         }
 
 
+        [HttpGet]
+        [Route("SearchProductOnWarehouse/{transactionId:int}/{warehouseId:int}/{condition}")]
+        public IActionResult SearchProductOnWarehouse(int transactionId, int warehouseId, string condition)
+        {
+            if (condition == null || condition.Length < 3 || transactionId <= 0 || warehouseId <= 0)
+            {
+                return BadRequest(ModelState);
+            }
+
+            condition = condition.ToLower();
+            try
+            {
+                var productsInWarehouse = _context.InventoryTransactionItems
+                    .Include(i => i.Product)
+                    .Include(i => i.Warehouse)
+                    .Include(i => i.InventoryTransaction)
+                    .Where(iti => iti.InventoryTransaction.Id == transactionId && iti.Warehouse.Id == warehouseId)
+                    .ToList();
+
+                if (productsInWarehouse == null)
+                {
+                    return BadRequest();
+                }
+
+                var list = new List<ProductsOnTransactionDTORead>();
+                productsInWarehouse.ForEach(product =>
+                {
+                    list.Add(new ProductsOnTransactionDTORead(
+                        product.Id,
+                        product.Product.ProductName,
+                        product.Product.IsUnitary,
+                        product.Quantity
+                        ));
+                });
+
+                var filteredProducts = new List<ProductsOnTransactionDTORead>();
+                foreach (var product in list)
+                {
+                    if (product.productName.ToLower().Contains(condition))
+                    {
+                        filteredProducts.Add(product);
+                    }
+                }
+
+                return new JsonResult(filteredProducts);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
 
         [HttpGet]
         [Route("UnassociatedProducts/{transactionId:int}")]

@@ -66,10 +66,7 @@ async function SearchUnassociatedProduct(name, transactionId, condition) {
 
 async function SearchProductOnWarehouse(name, transactionId, warehouseId, condition) {
     return await httpService
-        .get(
-            "/" +
-                name +
-                "/SearchProductOnWarehouse/" +
+        .get("/" + name + "/SearchProductOnWarehouse/" +
                 transactionId +
                 "/" +
                 warehouseId +
