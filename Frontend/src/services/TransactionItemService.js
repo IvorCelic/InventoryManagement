@@ -55,7 +55,7 @@ async function GetProductsOnWarehouse(name, transactionId, warehouseId) {
 
 async function SearchUnassociatedProduct(name, transactionId, condition) {
     return await httpService
-        .get("/" + name + "/SearchUnassociatedProduct/" + transactionId + "?condition=" + condition)
+        .get("/" + name + "/SearchUnassociatedProduct/" + transactionId + "/" + condition)
         .then((response) => {
             return handleSuccess(response);
         })

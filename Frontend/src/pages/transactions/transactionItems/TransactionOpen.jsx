@@ -161,6 +161,7 @@ export default function TransactionOpen() {
         } else {
             addProductsOnWarehouse(productId, 1);
         }
+        typeaheadRef.current.clear();
     }
 
     async function handleAddWithQuantity(customQuantity) {
@@ -202,38 +203,38 @@ export default function TransactionOpen() {
         }
     };
 
-    async function addManuallyProduct(Product) {
-        const response = await ProductService.add("Product", Product);
-        if (response.ok) {
-            const response2 = await TransactionItemService.add(
-                "InventoryTransactionItem",
-                InventoryTransactionItem
-            );
-            if (response2.ok) {
-                typeaheadRef.current.clear();
-                await fetchProducts();
-                await fetchProductsOnWarehouse();
-                return;
-            }
-            showError(response2.data);
-            return;
-        }
-        showError(response.data);
-    }
+    // async function addManuallyProduct(Product) {
+    //     const response = await ProductService.add("Product", Product);
+    //     if (response.ok) {
+    //         const response2 = await TransactionItemService.add(
+    //             "InventoryTransactionItem",
+    //             InventoryTransactionItem
+    //         );
+    //         if (response2.ok) {
+    //             typeaheadRef.current.clear();
+    //             await fetchProducts();
+    //             await fetchProductsOnWarehouse();
+    //             return;
+    //         }
+    //         showError(response2.data);
+    //         return;
+    //     }
+    //     showError(response.data);
+    // }
 
-    function addManually() {
-        let array = searchName;
-        if (array.length < 2) {
-            showError([{ property: "", message: "Name required" }]);
-            return;
-        }
+    // function addManually() {
+    //     let array = searchName;
+    //     if (array.length < 2) {
+    //         showError([{ property: "", message: "Name required" }]);
+    //         return;
+    //     }
 
-        addManuallyProduct({
-            productName: array[0],
-            description: "",
-            isUnitary: true,
-        });
-    }
+    //     addManuallyProduct({
+    //         productName: array[0],
+    //         description: "",
+    //         isUnitary: true,
+    //     });
+    // }
 
     return (
         <Col lg={8} md={12} sm={12} className="border mt-5 transactionEditContainer">
@@ -314,9 +315,9 @@ export default function TransactionOpen() {
                                     />
                                 </Form.Group>
                             </Col>
-                            <Col key="2" sm={12} lg={6} md={6}>
+                            {/* <Col key="2" sm={12} lg={6} md={6}>
                                 <Button onClick={addManually}>Add</Button>
-                            </Col>
+                            </Col> */}
                             {/* <Col key="2" sm={12} lg={6} md={6}>
                                 <Form.Group className="ms-4" controlId="condition">
                                     <Form.Label>Remove by searching</Form.Label>

@@ -75,6 +75,7 @@ namespace InventoryManagementAPP.Controllers
 
             try
             {
+                // https://codepen.io/jamiekane/pen/YayWOa Base64 example image
                 var ds = Path.DirectorySeparatorChar;
                 string dir = Path.Combine(Directory.GetCurrentDirectory()
                     + ds + "wwwroot" + ds + "images" + ds + "employees");
