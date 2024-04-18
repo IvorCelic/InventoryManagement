@@ -11,7 +11,7 @@ import {
 
 async function getPagination(page, condition) {
     return await httpService
-        .get("/Employee/searchPagination/" + page + "?condition=" + condition)
+        .get("/Employee/SearchPagination/" + page + "?condition=" + condition)
         .then((res) => {
             return handleSuccess(res);
         })

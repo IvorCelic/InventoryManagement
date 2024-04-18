@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Button, Col, Form, Row, Table } from "react-bootstrap";
+import { Col, Form, Row, Table } from "react-bootstrap";
 import { FaCirclePlus } from "react-icons/fa6";
 import { FaMinusCircle } from "react-icons/fa";
 import TransactionItemService from "../../../services/TransactionItemService";
@@ -7,9 +7,9 @@ import QuantityModal from "../../../components/QuantityModal";
 import { useParams } from "react-router-dom";
 import useError from "../../../hooks/useError";
 import WarehouseService from "../../../services/WarehouseService";
-import ProductService from "../../../services/ProductService";
 import { AsyncTypeahead } from "react-bootstrap-typeahead";
 import useLoading from "../../../hooks/useLoading";
+import TypeaheadSearch from "../../../components/TypeaheadSearch";
 
 export default function TransactionOpen() {
     const routeParams = useParams();
@@ -24,12 +24,10 @@ export default function TransactionOpen() {
     const [selectedWarehouse, setSelectedWarehouse] = useState(null);
     const [selectedProductId, setSelectedProductId] = useState(null);
 
-    const [associatedWarehouses, setAssociatedWarehouses] = useState([]);
     const [associatedProducts, setAssociatedProducts] = useState([]);
     const [productsOnWarehouse, setProductsOnWarehouse] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [foundUnassociatedProducts, setFoundUnassociatedProducts] = useState([]);
-    const [searchName, setSearchName] = useState("");
 
     async function fetchWarehouses() {
         showLoading();
@@ -83,7 +81,6 @@ export default function TransactionOpen() {
             return;
         }
         // console.log("warehouses: ", response.data);
-        setAssociatedWarehouses(response.data);
         hideLoading();
     }
 
@@ -124,7 +121,6 @@ export default function TransactionOpen() {
     }
 
     async function searchUnassociatedProduct(condition) {
-        showLoading();
         const response = await TransactionItemService.SearchUnassociatedProduct(
             "InventoryTransactionItem",
             routeParams.id,
@@ -135,9 +131,9 @@ export default function TransactionOpen() {
             return;
         }
         setFoundUnassociatedProducts(response.data);
-        setSearchName(condition);
-        hideLoading();
     }
+
+    
 
     useEffect(() => {
         fetchInitialData();
@@ -315,26 +311,6 @@ export default function TransactionOpen() {
                                     />
                                 </Form.Group>
                             </Col>
-                            {/* <Col key="2" sm={12} lg={6} md={6}>
-                                <Button onClick={addManually}>Add</Button>
-                            </Col> */}
-                            {/* <Col key="2" sm={12} lg={6} md={6}>
-                                <Form.Group className="ms-4" controlId="condition">
-                                    <Form.Label>Remove by searching</Form.Label>
-                                    <AsyncTypeahead
-                                        className="autocomplete"
-                                        id="condition"
-                                        emptyLabel="No result"
-                                        searchText="Searching..."
-                                        placeholder="Part of product name"
-                                        renderMenuItemChildren={() => (
-                                            <>
-                                                <span>test</span>
-                                            </>
-                                        )}
-                                    />
-                                </Form.Group>
-                            </Col> */}
                         </Row>
                     </Row>
                     <Row>

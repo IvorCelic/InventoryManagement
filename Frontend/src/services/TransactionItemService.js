@@ -64,6 +64,26 @@ async function SearchUnassociatedProduct(name, transactionId, condition) {
         });
 }
 
+async function SearchProductOnWarehouse(name, transactionId, warehouseId, condition) {
+    return await httpService
+        .get(
+            "/" +
+                name +
+                "/SearchProductOnWarehouse/" +
+                transactionId +
+                "/" +
+                warehouseId +
+                "/" +
+                condition
+        )
+        .then((response) => {
+            return handleSuccess(response);
+        })
+        .catch((error) => {
+            return handleError(error);
+        });
+}
+
 export default {
     get,
     remove,
@@ -75,4 +95,5 @@ export default {
     GetWarehouses,
     GetProductsOnWarehouse,
     SearchUnassociatedProduct,
+    SearchProductOnWarehouse,
 };
