@@ -7,6 +7,7 @@ import ProductService from "../../services/ProductService";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import useError from "../../hooks/useError";
 import MyPagination from "../../components/MyPagination";
+import useLoading from "../../hooks/useLoading";
 
 export default function Products() {
     const navigate = useNavigate();
@@ -16,8 +17,10 @@ export default function Products() {
     const [totalProducts, setTotalProducts] = useState();
     const [page, setPage] = useState(1);
     const [condition, setCondition] = useState("");
+    const { showLoading, hideLoading } = useLoading();
 
     async function fetchProducts() {
+        showLoading();
         const responsePagination = await ProductService.getPagination(page, condition);
         const responseProduct = await ProductService.get("Product");
         if (!responsePagination.ok) {
@@ -31,6 +34,7 @@ export default function Products() {
         }
         setProducts(responsePagination.data);
         setTotalProducts(responseProduct.data.length);
+        hideLoading();
     }
 
     useEffect(() => {
@@ -38,11 +42,13 @@ export default function Products() {
     }, [page, condition]);
 
     async function removeProduct(id) {
+        showLoading();
         const response = await ProductService.remove("Product", id);
         showError(response.data);
         if (response.ok) {
             fetchProducts();
         }
+        hideLoading();
     }
 
     function isUnitary(product) {

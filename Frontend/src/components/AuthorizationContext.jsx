@@ -3,13 +3,14 @@ import { AuthorizationService } from "../services/AuthorizationService";
 import { useNavigate } from "react-router-dom";
 import { RoutesNames } from "../constants";
 import useError from "../hooks/useError";
+import useLoading from "../hooks/useLoading";
 
 export const AuthorizationContext = createContext();
 
 export function AuthorizationProvider({ children }) {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [authToken, setAuthToken] = useState("");
-    // const { showLoading, hideLoading } = useLoading();
+    const { showLoading, hideLoading } = useLoading();
 
     const { showError } = useError();
     const navigate = useNavigate();
@@ -30,9 +31,9 @@ export function AuthorizationProvider({ children }) {
     }, []);
 
     async function login(userData) {
-        // showLoading();
+        showLoading();
         const response = await AuthorizationService(userData);
-        // hideLoading();
+        hideLoading();
         if (response.ok) {
             localStorage.setItem("Bearer", response.data);
             setAuthToken(response.data);

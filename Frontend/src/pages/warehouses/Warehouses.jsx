@@ -7,6 +7,7 @@ import { RoutesNames } from "../../constants";
 import SearchAndAdd from "../../components/SearchAndAdd";
 import useError from "../../hooks/useError";
 import MyPagination from "../../components/MyPagination";
+import useLoading from "../../hooks/useLoading";
 
 export default function Warehouses() {
     const navigate = useNavigate();
@@ -16,8 +17,10 @@ export default function Warehouses() {
     const [totalWarehouses, setTotalWarehouses] = useState();
     const [page, setPage] = useState(1);
     const [condition, setCondition] = useState("");
+    const { showLoading, hideLoading } = useLoading();
 
     async function fetchWarehouses() {
+        showLoading();
         const responsePagination = await WarehouseService.getPagination(page, condition);
         const responseWarehouse = await WarehouseService.get("Warehouse");
         if (!responsePagination.ok) {
@@ -31,6 +34,7 @@ export default function Warehouses() {
         }
         setWarehouses(responsePagination.data);
         setTotalWarehouses(responseWarehouse.data.length);
+        hideLoading();
     }
 
     useEffect(() => {
@@ -38,11 +42,13 @@ export default function Warehouses() {
     }, [page, condition]);
 
     async function removeWarehouse(id) {
+        showLoading();
         const response = await WarehouseService.remove("Warehouse", id);
         showError(response.data);
         if (response.ok) {
             fetchWarehouses();
         }
+        hideLoading();
     }
 
     const totalPages = Math.ceil(totalWarehouses / 8);

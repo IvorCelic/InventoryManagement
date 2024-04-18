@@ -11,6 +11,7 @@ import TransactionOpen from "./transactionItems/TransactionOpen";
 import TransactionDetailsForm from "./TransactionEditForm";
 import useError from "../../hooks/useError";
 import ActionButtons from "../../components/ActionButtons";
+import useLoading from "../../hooks/useLoading";
 
 export default function TransactionsEdit() {
     const navigate = useNavigate();
@@ -22,18 +23,47 @@ export default function TransactionsEdit() {
     const [employees, setEmployees] = useState([]);
     const [employeeId, setEmployeeId] = useState(0);
 
-    const [warehouses, setWarehouses] = useState([]);
-    const [associatedWarehouses, setAssociatedWarehouses] = useState([]);
-    const [activeTab, setActiveTab] = useState("all");
+    // const [warehouses, setWarehouses] = useState([]);
+    // const [associatedWarehouses, setAssociatedWarehouses] = useState([]);
+    // const [activeTab, setActiveTab] = useState("all");
 
-    const [products, setProducts] = useState([]);
-    const [associatedProducts, setAssociatedProducts] = useState([]);
-    const [productsOnWarehouse, setProductsOnWarehouse] = useState([]);
+    // const [products, setProducts] = useState([]);
+    // const [associatedProducts, setAssociatedProducts] = useState([]);
+    // const [productsOnWarehouse, setProductsOnWarehouse] = useState([]);
 
     const [statusId, setStatusId] = useState(0);
-    const [selectedWarehouseId, setSelectedWarehouseId] = useState(null);
+    // const [selectedWarehouseId, setSelectedWarehouseId] = useState(null);
 
     const { showError } = useError();
+    const { showLoading, hideLoading } = useLoading();
+
+    async function fetchTransaction() {
+        showLoading();
+        const response = await TransactionService.getById("InventoryTransaction", routeParams.id);
+        if (!response.ok) {
+            showError(response.data);
+            return;
+        }
+        let transactionData = response.data;
+
+        setTransaction(transactionData);
+        setEmployeeId(transactionData.employeeId);
+        setTransactionId(routeParams.id);
+        setStatusId(transactionData.transactionStatusId);
+        hideLoading();
+    }
+
+    async function fetchEmployees() {
+        showLoading();
+        const response = await EmployeeService.get("Employee");
+        if (!response.ok) {
+            showError(response.data);
+            return;
+        }
+        setEmployees(response.data);
+        setEmployeeId(response.data[0].id);
+        hideLoading();
+    }
 
     useEffect(() => {
         fetchInitialData();
@@ -47,6 +77,7 @@ export default function TransactionsEdit() {
     }
 
     async function edit(entityName) {
+        showLoading();
         const response = await TransactionService.edit(
             "InventoryTransaction",
             routeParams.id,
@@ -57,6 +88,7 @@ export default function TransactionsEdit() {
             return;
         }
         showError(response.data);
+        hideLoading();
     }
 
     function handleSubmit(event) {
@@ -69,30 +101,6 @@ export default function TransactionsEdit() {
             transactionStatusId: parseInt(statusId),
             additionalDetails: data.get("additionaldetails"),
         });
-    }
-
-    async function fetchTransaction() {
-        const response = await TransactionService.getById("InventoryTransaction", routeParams.id);
-        if (!response.ok) {
-            showError(response.data);
-            return;
-        }
-        let transactionData = response.data;
-
-        setTransaction(transactionData);
-        setEmployeeId(transactionData.employeeId);
-        setTransactionId(routeParams.id);
-        setStatusId(transactionData.transactionStatusId);
-    }
-
-    async function fetchEmployees() {
-        const response = await EmployeeService.get("Employee");
-        if (!response.ok) {
-            showError(response.data);
-            return;
-        }
-        setEmployees(response.data);
-        setEmployeeId(response.data[0].id);
     }
 
     // async function fetchWarehouses() {

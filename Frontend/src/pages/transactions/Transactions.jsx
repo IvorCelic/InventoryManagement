@@ -7,19 +7,23 @@ import TransactionService from "../../services/TransactionService";
 import { FaEdit, FaFilePdf, FaPrint, FaTrash } from "react-icons/fa";
 import moment from "moment";
 import useError from "../../hooks/useError";
+import useLoading from "../../hooks/useLoading";
 
 export default function Transactions() {
     const [transactions, setTransactions] = useState();
     let navigate = useNavigate();
     const { showError } = useError();
+    const { showLoading, hideLoading } = useLoading();
 
     async function fetchTransactions() {
+        showLoading();
         const response = await TransactionService.get("InventoryTransaction");
         if (!response.ok) {
             showError(response.data);
             return;
         }
         setTransactions(response.data);
+        hideLoading();
     }
 
     useEffect(() => {
@@ -27,11 +31,13 @@ export default function Transactions() {
     }, []);
 
     async function removeTransaction(id) {
+        showLoading();
         const response = await TransactionService.remove("InventoryTransaction", id);
         showError(response.data);
         if (response.ok) {
             fetchTransactions();
         }
+        hideLoading();
     }
 
     function formatDate(transactionDate) {

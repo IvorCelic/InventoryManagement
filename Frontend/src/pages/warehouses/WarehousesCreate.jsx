@@ -3,19 +3,23 @@ import { Link, useNavigate } from "react-router-dom";
 import { RoutesNames } from "../../constants";
 import WarehouseService from "../../services/WarehouseService";
 import useError from "../../hooks/useError";
+import useLoading from "../../hooks/useLoading";
 
 export default function WarehousesCreate() {
-    const navigate = useNavigate();
     const entityName = "warehouse";
+    const navigate = useNavigate();
     const { showError } = useError();
+    const { showLoading, hideLoading } = useLoading();
 
     async function addWarehouse(entityName) {
+        showLoading();
         const response = await WarehouseService.add("Warehouse", entityName);
         if (response.ok) {
             navigate(RoutesNames.WAREHOUSES_LIST);
             return;
         }
         showError(response.data);
+        hideLoading();
     }
 
     function handleSubmit(event) {

@@ -3,10 +3,12 @@ import { Col, Nav, Row, Table } from "react-bootstrap";
 import { useParams } from "react-router-dom";
 import TransactionItemService from "../../../services/TransactionItemService";
 import useError from "../../../hooks/useError";
+import useLoading from "../../../hooks/useLoading";
 
 export default function TransactionClosed() {
     const routeParams = useParams();
     const { showError } = useError();
+    const { showLoading, hideLoading } = useLoading();
 
     const [associatedWarehouses, setAssociatedWarehouses] = useState([]);
     const [associatedProducts, setAssociatedProducts] = useState([]);
@@ -26,6 +28,7 @@ export default function TransactionClosed() {
     }
 
     async function fetchAssociatedProducts() {
+        showLoading();
         const response = await TransactionItemService.GetProducts(
             "InventoryTransactionItem",
             routeParams.id
@@ -35,9 +38,11 @@ export default function TransactionClosed() {
             return;
         }
         setAssociatedProducts(response.data);
+        hideLoading();
     }
 
     async function fetchProductsOnWarehouse(warehouseId) {
+        showLoading();
         const response = await TransactionItemService.GetProductsOnWarehouse(
             "InventoryTransactionItem",
             routeParams.id,
@@ -48,6 +53,7 @@ export default function TransactionClosed() {
             return;
         }
         setProductsOnWarehouse(response.data);
+        hideLoading();
     }
 
     useEffect(() => {

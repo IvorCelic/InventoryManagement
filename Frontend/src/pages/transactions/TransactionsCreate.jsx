@@ -6,6 +6,7 @@ import { RoutesNames } from "../../constants";
 import EmployeeService from "../../services/EmployeeService";
 import TransactionService from "../../services/TransactionService";
 import useError from "../../hooks/useError";
+import useLoading from "../../hooks/useLoading";
 
 export default function TransactionsCreate() {
     const navigate = useNavigate();
@@ -15,8 +16,10 @@ export default function TransactionsCreate() {
     const [employeeId, setEmployeeId] = useState(0);
 
     const { showError } = useError();
+    const { showLoading, hideLoading } = useLoading();
 
     async function fetchEmployees() {
+        showLoading();
         const response = await EmployeeService.get("Employee");
         if (!response.ok) {
             showError(response.data);
@@ -24,6 +27,7 @@ export default function TransactionsCreate() {
         }
         setEmployees(response.data);
         setEmployeeId(response.data[0].id);
+        hideLoading();
     }
 
     async function load() {
@@ -35,6 +39,7 @@ export default function TransactionsCreate() {
     }, []);
 
     async function add(entity) {
+        showLoading();
         entity.transactionDate = moment().toISOString();
 
         const response = await TransactionService.add("InventoryTransaction", entity);
@@ -43,6 +48,7 @@ export default function TransactionsCreate() {
             return;
         }
         showError(response.data);
+        hideLoading();
     }
 
     function handleSubmit(event) {

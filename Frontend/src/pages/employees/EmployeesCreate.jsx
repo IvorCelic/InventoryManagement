@@ -4,19 +4,23 @@ import { RoutesNames } from "../../constants";
 import EmployeeService from "../../services/EmployeeService";
 import useError from "../../hooks/useError";
 import ActionButtons from "../../components/ActionButtons";
+import useLoading from "../../hooks/useLoading";
 
 export default function EmployeesCreate() {
-    const navigate = useNavigate();
     const entityName = "employee";
+    const navigate = useNavigate();
     const { showError } = useError();
+    const { showLoading, hideLoading } = useLoading();
 
     async function addEmployee(entityName) {
-        const response = await EmployeeService.add('Employee', entityName);
+        showLoading();
+        const response = await EmployeeService.add("Employee", entityName);
         if (response.ok) {
             navigate(RoutesNames.EMPLOYEES_LIST);
             return;
         }
         showError(response.data);
+        hideLoading();
     }
 
     function handleSubmit(event) {
@@ -70,7 +74,10 @@ export default function EmployeesCreate() {
                             name="password"
                         />
                     </Form.Group>
-                    <ActionButtons cancel={RoutesNames.EMPLOYEES_LIST} action="Add employee" />
+                    <ActionButtons
+                        cancel={RoutesNames.EMPLOYEES_LIST}
+                        action="Add employee"
+                    />
                 </Form>
             </Container>
         </Container>

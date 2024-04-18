@@ -9,10 +9,12 @@ import useError from "../../../hooks/useError";
 import WarehouseService from "../../../services/WarehouseService";
 import ProductService from "../../../services/ProductService";
 import { AsyncTypeahead } from "react-bootstrap-typeahead";
+import useLoading from "../../../hooks/useLoading";
 
 export default function TransactionOpen() {
     const routeParams = useParams();
     const { showError } = useError();
+    const { showLoading, hideLoading } = useLoading();
     const typeaheadRef = useRef(null);
 
     const [warehouses, setWarehouses] = useState([]);
@@ -30,15 +32,18 @@ export default function TransactionOpen() {
     const [searchName, setSearchName] = useState("");
 
     async function fetchWarehouses() {
+        showLoading();
         const response = await WarehouseService.get("Warehouse");
         if (!response.ok) {
             showError(response.data);
             return;
         }
         setWarehouses(response.data);
+        hideLoading();
     }
 
     async function fetchProducts() {
+        showLoading();
         const response = await TransactionItemService.GetUnassociatedProducts(
             "InventoryTransactionItem",
             routeParams.id
@@ -49,9 +54,11 @@ export default function TransactionOpen() {
         }
         setProducts(response.data);
         console.table(response.data);
+        hideLoading();
     }
 
     async function fetchAssociatedProducts() {
+        showLoading();
         const response = await TransactionItemService.GetProducts(
             "InventoryTransactionItem",
             routeParams.id
@@ -60,11 +67,13 @@ export default function TransactionOpen() {
             showError(response.data);
             return;
         }
-        setAssociatedProducts(response.data);
         // console.table(response.data);
+        setAssociatedProducts(response.data);
+        hideLoading();
     }
 
     async function fetchAssociatedWarehouses() {
+        showLoading();
         const response = await TransactionItemService.GetWarehouses(
             "InventoryTransactionItem",
             routeParams.id
@@ -73,11 +82,13 @@ export default function TransactionOpen() {
             showError(response.data);
             return;
         }
-        setAssociatedWarehouses(response.data);
         // console.log("warehouses: ", response.data);
+        setAssociatedWarehouses(response.data);
+        hideLoading();
     }
 
     async function fetchProductsOnWarehouse(warehouseId) {
+        showLoading();
         const response = await TransactionItemService.GetProductsOnWarehouse(
             "InventoryTransactionItem",
             routeParams.id,
@@ -88,9 +99,11 @@ export default function TransactionOpen() {
             return;
         }
         setProductsOnWarehouse(response.data);
+        hideLoading();
     }
 
     async function addProductsOnWarehouse(productId, quantity) {
+        showLoading();
         const entity = {
             transactionId: parseInt(routeParams.id),
             warehouseId: parseInt(warehouseId),
@@ -99,7 +112,6 @@ export default function TransactionOpen() {
         };
 
         // console.log(entity);
-
         const response = await TransactionItemService.add("InventoryTransactionItem", entity);
         if (response.ok) {
             await fetchProductsOnWarehouse(warehouseId);
@@ -108,9 +120,11 @@ export default function TransactionOpen() {
         }
 
         showError(response.data);
+        hideLoading();
     }
 
     async function searchUnassociatedProduct(condition) {
+        showLoading();
         const response = await TransactionItemService.SearchUnassociatedProduct(
             "InventoryTransactionItem",
             routeParams.id,
@@ -122,6 +136,7 @@ export default function TransactionOpen() {
         }
         setFoundUnassociatedProducts(response.data);
         setSearchName(condition);
+        hideLoading();
     }
 
     useEffect(() => {

@@ -29,6 +29,7 @@ import ErrorModal from "./components/ErrorModal";
 import useError from "./hooks/useError";
 import useAuthorization from "./hooks/useAuthorization";
 import WelcomePage from "./pages/WelcomePage";
+import LoadingSpinner from "./components/LoadingSpinner";
 
 function App() {
     const { errors, showErrorModal, hideError } = useError();
@@ -36,6 +37,7 @@ function App() {
 
     return (
         <>
+        <LoadingSpinner />
             <ErrorModal show={showErrorModal} errors={errors} onHide={hideError} />
             <NavBar />
             <Routes>

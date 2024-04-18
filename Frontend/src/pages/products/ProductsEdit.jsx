@@ -5,6 +5,7 @@ import ProductService from "../../services/ProductService";
 import { useEffect, useState } from "react";
 import useError from "../../hooks/useError";
 import ActionButtons from "../../components/ActionButtons";
+import useLoading from "../../hooks/useLoading";
 
 export default function ProductsEdit() {
     const navigate = useNavigate();
@@ -12,9 +13,10 @@ export default function ProductsEdit() {
     const [product, setProduct] = useState({});
     const entityName = "product";
     const { showError } = useError();
-    const [showModal, setShowModal] = useState();
+    const { showLoading, hideLoading } = useLoading();
 
     async function fetchProduct() {
+        showLoading();
         const response = await ProductService.getById("Product", routeParams.id);
         if (!response.ok) {
             showError(response.data);
@@ -22,7 +24,7 @@ export default function ProductsEdit() {
             return;
         }
         setProduct(response.data);
-        setShowModal(false);
+        hideLoading();
     }
 
     useEffect(() => {
@@ -30,12 +32,15 @@ export default function ProductsEdit() {
     }, []);
 
     async function editProduct(entityName) {
+        showLoading();
         const response = await ProductService.edit("Product", routeParams.id, entityName);
         if (response.ok) {
+            hideLoading();
             navigate(RoutesNames.PRODUCTS_LIST);
             return;
         } else {
             showError(response.data);
+            hideLoading();
         }
     }
 

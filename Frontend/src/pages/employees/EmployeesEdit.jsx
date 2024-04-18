@@ -5,6 +5,7 @@ import { RoutesNames } from "../../constants";
 import EmployeeService from "../../services/EmployeeService";
 import useError from "../../hooks/useError";
 import ActionButtons from "../../components/ActionButtons";
+import useLoading from "../../hooks/useLoading";
 
 export default function EmployeesEdit() {
     const navigate = useNavigate();
@@ -13,8 +14,10 @@ export default function EmployeesEdit() {
     const entityName = "employee";
     const { showError } = useError();
     const [showModal, setShowModal] = useState();
+    const { showLoading, hideLoading } = useLoading();
 
     async function fetchEmployee() {
+        showLoading();
         const response = await EmployeeService.getById("Employee", routeParams.id);
         if (!response.ok) {
             showError(response.data);
@@ -23,6 +26,7 @@ export default function EmployeesEdit() {
         }
         setEmployee(response.data);
         setShowModal(false);
+        hideLoading();
     }
 
     useEffect(() => {
@@ -30,13 +34,16 @@ export default function EmployeesEdit() {
     }, []);
 
     async function editEmployee(entityName) {
+        showLoading();
         const response = await EmployeeService.edit("Employee", routeParams.id, entityName);
         if (response.ok) {
+            hideLoading(); 
             // console.log(response.data);
             navigate(RoutesNames.EMPLOYEES_LIST);
             return;
         }
         showError(response.data);
+        hideLoading();
     }
 
     function handleSubmit(event) {

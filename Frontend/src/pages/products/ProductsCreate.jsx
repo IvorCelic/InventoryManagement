@@ -4,19 +4,23 @@ import { RoutesNames } from "../../constants";
 import ProductService from "../../services/ProductService";
 import useError from "../../hooks/useError";
 import ActionButtons from "../../components/ActionButtons";
+import useLoading from "../../hooks/useLoading";
 
 export default function ProductsCreate() {
-    const navigate = useNavigate();
     const entityName = "product";
+    const navigate = useNavigate();
     const { showError } = useError();
+    const { showLoading, hideLoading } = useLoading();
 
     async function addProduct(entityName) {
+        showLoading();
         const response = await ProductService.add("Product", entityName);
         if (response.ok) {
             navigate(RoutesNames.PRODUCTS_LIST);
             return;
         }
         showError(response.data);
+        hideLoading();
     }
 
     function handleSubmit(event) {

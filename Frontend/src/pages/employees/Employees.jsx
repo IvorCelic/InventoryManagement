@@ -7,10 +7,12 @@ import { FaEdit, FaTrash } from "react-icons/fa";
 import SearchAndAdd from "../../components/SearchAndAdd";
 import useError from "../../hooks/useError";
 import MyPagination from "../../components/MyPagination";
+import useLoading from "../../hooks/useLoading";
 
 export default function Employees() {
     const navigate = useNavigate();
     const { showError } = useError();
+    const { showLoading, hideLoading } = useLoading();
 
     const [employees, setEmployees] = useState();
     const [totalEmployees, setTotalEmployees] = useState();
@@ -18,6 +20,7 @@ export default function Employees() {
     const [condition, setCondition] = useState("");
 
     async function fetchEmployees() {
+        showLoading();
         const responsePagination = await EmployeeService.getPagination(
             page,
             condition
@@ -33,6 +36,7 @@ export default function Employees() {
         }
         setEmployees(responsePagination.data);
         setTotalEmployees(responseEmployee.data.length);
+        hideLoading();
     }
 
     useEffect(() => {
@@ -40,11 +44,13 @@ export default function Employees() {
     }, [page, condition]);
 
     async function removeEmployee(id) {
+        showLoading();
         const response = await EmployeeService.remove(`Employee`, id);
         showError(response.data);
         if (response.ok) {
             fetchEmployees();
         }
+        hideLoading();
     }
 
     const totalPages = Math.ceil(totalEmployees / 8);

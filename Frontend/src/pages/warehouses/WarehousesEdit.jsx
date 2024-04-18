@@ -5,6 +5,7 @@ import WarehouseService from "../../services/WarehouseService";
 import { useEffect, useState } from "react";
 import useError from "../../hooks/useError";
 import ActionButtons from "../../components/ActionButtons";
+import useLoading from "../../hooks/useLoading";
 
 export default function WarehousesEdit() {
     const navigate = useNavigate();
@@ -12,9 +13,10 @@ export default function WarehousesEdit() {
     const [warehouse, setWarehouse] = useState({});
     const entityName = "warehouse";
     const { showError } = useError();
-    const [showModal, setShowModal] = useState();
+    const { showLoading, hideLoading } = useLoading();
 
     async function fetchWarehouse() {
+        showLoading();
         const response = await WarehouseService.getById("Warehouse", routeParams.id);
         if (!response.ok) {
             showError(response.data);
@@ -22,7 +24,7 @@ export default function WarehousesEdit() {
             return;
         }
         setWarehouse(response.data);
-        setShowModal(false);
+        hideLoading();
     }
 
     useEffect(() => {
@@ -30,12 +32,14 @@ export default function WarehousesEdit() {
     }, []);
 
     async function editWarehouse(entityName) {
+        showLoading();
         const response = await WarehouseService.edit("Warehouse", routeParams.id, entityName);
         if (response.ok) {
             navigate(RoutesNames.WAREHOUSES_LIST);
             return;
         }
         showError(response.data);
+        hideLoading();
     }
 
     function handleSubmit(event) {
