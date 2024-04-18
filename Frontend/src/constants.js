@@ -24,7 +24,7 @@ export const RoutesNames = {
 };
 
 export const App = {
-    // URL: "https://ivorcelic-001-site1.htempurl.com",
-    URL: "https://localhost:7183",
+    URL: "https://ivorcelic-001-site1.htempurl.com",
+    // URL: "https://localhost:7183",
     DEV: false,
 };

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Button, Col, Container, Row, Table } from "react-bootstrap";
+import { Button, Card, Col, Container, Row, Table } from "react-bootstrap";
 import EmployeeService from "../../services/EmployeeService";
 import { RoutesNames } from "../../constants";
 import { useNavigate } from "react-router-dom";
@@ -18,7 +18,10 @@ export default function Employees() {
     const [condition, setCondition] = useState("");
 
     async function fetchEmployees() {
-        const responsePagination = await EmployeeService.getPagination(page, condition);
+        const responsePagination = await EmployeeService.getPagination(
+            page,
+            condition
+        );
         const responseEmployee = await EmployeeService.get("Employee");
         if (!responsePagination.ok) {
             showError(response.data);
@@ -86,7 +89,9 @@ export default function Employees() {
                                                     variant="link"
                                                     className="me-2 actionButton"
                                                     onClick={() => {
-                                                        navigate(`/employees/${employee.id}`);
+                                                        navigate(
+                                                            `/employees/${employee.id}`
+                                                        );
                                                     }}
                                                 >
                                                     <FaEdit size={25} />
@@ -94,7 +99,11 @@ export default function Employees() {
                                                 <Button
                                                     variant="link"
                                                     className="link-danger actionButton"
-                                                    onClick={() => removeEmployee(employee.id)}
+                                                    onClick={() =>
+                                                        removeEmployee(
+                                                            employee.id
+                                                        )
+                                                    }
                                                 >
                                                     <FaTrash size={25} />
                                                 </Button>
@@ -106,11 +115,57 @@ export default function Employees() {
                     </Table>
                 </Row>
                 <Row>
-                    <MyPagination
-                        currentPage={page}
-                        totalPages={totalPages}
-                        onPageChange={handlePageChange}
-                    />
+                    <Col className="d-flex justify-content-center">
+                        <MyPagination
+                            currentPage={page}
+                            totalPages={totalPages}
+                            onPageChange={handlePageChange}
+                        />
+                    </Col>
+                </Row>
+                <Row className="d-flex justify-content-center">
+                    {employees &&
+                        employees.map((employee, index) => (
+                            <Card
+                                style={{ width: "16.6rem", margin: "0.5rem" }}
+                            >
+                                <Card.Img
+                                    variant="top"
+                                    src="holder.js/100px180"
+                                />
+                                <Card.Body
+                                    key={index}
+                                    className="d-flex flex-column align-items-center"
+                                >
+                                    <Card.Title>
+                                        {employee.firstName} {employee.lastName}
+                                    </Card.Title>
+                                    <Card.Text>{employee.email}</Card.Text>
+                                    <div className="d-flex justify-content-center">
+                                        <Button
+                                            variant="link"
+                                            className="me-2 "
+                                            onClick={() => {
+                                                navigate(
+                                                    `/employees/${employee.id}`
+                                                );
+                                            }}
+                                        >
+                                            <FaEdit size={25} />
+                                        </Button>
+                                        <Button
+                                            variant="link"
+                                            className="link-danger"
+                                            onClick={() =>
+                                                removeEmployee(employee.id)
+                                            }
+                                        >
+                                            <FaTrash size={25} />
+                                        </Button>
+                                    </div>
+                                </Card.Body>
+                            </Card>
+                        ))}
                 </Row>
             </Col>
         </Container>
