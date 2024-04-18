@@ -1,9 +1,8 @@
 ﻿using InventoryManagementAPP.Data;
+using InventoryManagementAPP.Mappers;
 using InventoryManagementAPP.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Linq;
 using System.Text;
 
 namespace InventoryManagementAPP.Controllers
@@ -15,7 +14,6 @@ namespace InventoryManagementAPP.Controllers
     [Route("api/v1/[controller]")]
     public class EmployeeController : InventoryManagementController<Employee, EmployeeDTORead, EmployeeDTOInsertUpdate>
     {
-        private readonly InventoryManagementContext _context;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EmployeeController"/> class.
@@ -23,13 +21,13 @@ namespace InventoryManagementAPP.Controllers
         /// <param name="context">The database context for accessing employee data.</param>
         public EmployeeController(InventoryManagementContext context) : base(context)
         {
-            _context = context;
             DbSet = _context.Employees;
+            _mapper = new EmployeeMapper();
         }
 
 
         [HttpGet]
-        [Route("searchPagination/{page}")]
+        [Route("SearchPagination/{page}")]
         public IActionResult SearchEmployeePagination(int page, string condition = "")
         {
             var perPage = 8;
@@ -51,6 +49,47 @@ namespace InventoryManagementAPP.Controllers
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
+            }
+        }
+
+
+        [HttpPut]
+        [Route("SetImage/{id:int}")]
+        public IActionResult SetImage(int id, ImageDTO image)
+        {
+            if (id <= 0)
+            {
+                return BadRequest("ID must be bigger than zero (0).");
+            }
+
+            if (image.Base64 == null || image.Base64?.Length == 0)
+            {
+                return BadRequest("Picture not set");
+            }
+
+            var employee = _context.Employees.Find(id);
+            if (employee == null)
+            {
+                return BadRequest("There is no employee with ID: " + id + " in database.");
+            }
+
+            try
+            {
+                var ds = Path.DirectorySeparatorChar;
+                string dir = Path.Combine(Directory.GetCurrentDirectory()
+                    + ds + "wwwroot" + ds + "images" + ds + "employees");
+
+                if (!System.IO.Directory.Exists(dir))
+                {
+                    System.IO.Directory.CreateDirectory(dir);
+                }
+                var path = Path.Combine(dir + ds + id + ".png");
+                System.IO.File.WriteAllBytes(path, Convert.FromBase64String(image.Base64));
+                return Ok("Image successfully stored");
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
             }
         }
 

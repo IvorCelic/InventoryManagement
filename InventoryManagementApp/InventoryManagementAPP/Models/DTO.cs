@@ -25,27 +25,30 @@ namespace InventoryManagementAPP.Models
     /// </summary>
     public record EmployeeDTORead(
         int id,
-        string firstName,
-        string lastName,
-        string email,
-        string password);
+        string? firstName,
+        string? lastName,
+        string? email,
+        string? password,
+        string? picture);
 
     /// <summary>
     /// Data Transfer Object (DTO) representing the data needed for inserting or updating a person
     /// </summary>
     public record EmployeeDTOInsertUpdate(
         [Required(ErrorMessage = "First name required")]
-        string firstName,
+        string? firstName,
 
         [Required(ErrorMessage = "Last name required")]
-        string lastName,
+        string? lastName,
 
         [Required(ErrorMessage = "Email name required")]
-        string email,
+        string? email,
 
         [MinLength(8, ErrorMessage = "{0} must be at least {1} characters long")]
         [Required(ErrorMessage = "Password required")]
-        string password);
+        string? password,
+
+        string? picture);
 
     /// <summary>
     /// Data Transfer Object (DTO) representing a read-only view of a product
@@ -132,4 +135,8 @@ namespace InventoryManagementAPP.Models
 
         [Required(ErrorMessage = "Password required")]
         string? password);
+
+    public record ImageDTO(
+        [Required(ErrorMessage = "Base64 image data is required")]
+        string Base64);
 }
