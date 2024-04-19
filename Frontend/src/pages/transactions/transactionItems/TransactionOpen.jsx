@@ -28,9 +28,7 @@ export default function TransactionOpen() {
     const [associatedProducts, setAssociatedProducts] = useState([]);
     const [productsOnWarehouse, setProductsOnWarehouse] = useState([]);
     const [showModal, setShowModal] = useState(false);
-    const [foundUnassociatedProducts, setFoundUnassociatedProducts] = useState(
-        []
-    );
+    const [foundUnassociatedProducts, setFoundUnassociatedProducts] = useState([]);
     const [foundProductsOnWarehouse, setFoundProductOnWarehouse] = useState([]);
 
     const [pagePonW, setPagePonW] = useState(1);
@@ -51,11 +49,10 @@ export default function TransactionOpen() {
 
     async function fetchProducts() {
         showLoading();
-        const responsePagination =
-            await TransactionItemService.GetUnassociatedProductsPagination(
-                routeParams.id,
-                pageUnP
-            );
+        const responsePagination = await TransactionItemService.GetUnassociatedProductsPagination(
+            routeParams.id,
+            pageUnP
+        );
         const response = await TransactionItemService.GetUnassociatedProducts(
             "InventoryTransactionItem",
             routeParams.id
@@ -66,6 +63,7 @@ export default function TransactionOpen() {
         }
         if (responsePagination.data.length == 0) {
             setPageUnP(pageUnP - 1);
+            setTotalUnassociatedProducts(response.data.length);
             return;
         }
         setProducts(responsePagination.data);
@@ -105,12 +103,11 @@ export default function TransactionOpen() {
 
     async function fetchProductsOnWarehouse(warehouseId) {
         showLoading();
-        const responsePagination =
-            await TransactionItemService.GetProductsOnWarehousePagination(
-                routeParams.id,
-                warehouseId,
-                pagePonW
-            );
+        const responsePagination = await TransactionItemService.GetProductsOnWarehousePagination(
+            routeParams.id,
+            warehouseId,
+            pagePonW
+        );
         const response = await TransactionItemService.GetProductsOnWarehouse(
             "InventoryTransactionItem",
             routeParams.id,
@@ -120,10 +117,11 @@ export default function TransactionOpen() {
             showError(response.data);
             return;
         }
-         if (responsePagination.data.length == 0) {
-             setPagePonW(pagePonW - 1);
-             return;
-         }
+        if (responsePagination.data.length == 0) {
+            setPagePonW(pagePonW - 1);
+            setTotalProductsOnWarehouse(0);
+            return;
+        }
         setProductsOnWarehouse(responsePagination.data);
         setTotalProductsOnWarehouse(response.data.length);
         hideLoading();
@@ -139,10 +137,7 @@ export default function TransactionOpen() {
         };
 
         // console.log(entity);
-        const response = await TransactionItemService.add(
-            "InventoryTransactionItem",
-            entity
-        );
+        const response = await TransactionItemService.add("InventoryTransactionItem", entity);
         if (response.ok) {
             await fetchProductsOnWarehouse(warehouseId);
             await fetchProducts();
@@ -184,7 +179,7 @@ export default function TransactionOpen() {
 
     useEffect(() => {
         fetchInitialData();
-    }, [pageUnP,pagePonW]);
+    }, [pageUnP, pagePonW]);
 
     async function fetchInitialData() {
         await fetchWarehouses();
@@ -222,10 +217,7 @@ export default function TransactionOpen() {
     }
 
     async function removeProductOnWarehouse(id) {
-        const response = await TransactionItemService.remove(
-            "InventoryTransactionItem",
-            id
-        );
+        const response = await TransactionItemService.remove("InventoryTransactionItem", id);
         showError(response.data);
         if (response.ok) {
             await fetchProductsOnWarehouse(warehouseId);
@@ -257,22 +249,14 @@ export default function TransactionOpen() {
     }
 
     function handlePageChangeUnP(page) {
-        setPageUnP(page)
+        setPageUnP(page);
     }
 
     return (
-        <Col
-            lg={8}
-            md={12}
-            sm={12}
-            className="border mt-5 transactionEditContainer"
-        >
+        <Col lg={8} md={12} sm={12} className="border mt-5 transactionEditContainer">
             <Row className="align-items-center">
                 <Col>
-                    <Form.Group
-                        className="mb-3 pt-2 ms-2 me-3"
-                        controlId="warehouse"
-                    >
+                    <Form.Group className="mb-3 pt-2 ms-2 me-3" controlId="warehouse">
                         <Form.Label>Warehouse</Form.Label>
                         <Form.Select onChange={handleWarehouseChange}>
                             <option value="">Select warehouse</option>
@@ -293,13 +277,7 @@ export default function TransactionOpen() {
                 <Row className="mt-3">
                     <Col>
                         <h5 className="mt-3">Currently added products:</h5>
-                        <Table
-                            striped
-                            bordered
-                            hover
-                            size="sm"
-                            className="table-sm"
-                        >
+                        <Table striped bordered hover size="sm" className="table-sm">
                             <thead>
                                 <tr>
                                     <th>Name</th>
@@ -329,9 +307,7 @@ export default function TransactionOpen() {
                                     id="condition"
                                     emptyLabel="No result"
                                     searchText="Searching..."
-                                    labelKey={(product) =>
-                                        `${product.productName}`
-                                    }
+                                    labelKey={(product) => `${product.productName}`}
                                     minLength={3}
                                     options={foundUnassociatedProducts}
                                     onSearch={searchUnassociatedProduct}
@@ -342,10 +318,7 @@ export default function TransactionOpen() {
                                             <FaCirclePlus
                                                 className="icon ms-2 plus-icon"
                                                 onClick={() =>
-                                                    handleAddProduct(
-                                                        product.id,
-                                                        product.isUnitary
-                                                    )
+                                                    handleAddProduct(product.id, product.isUnitary)
                                                 }
                                             />
                                         </div>
@@ -362,9 +335,7 @@ export default function TransactionOpen() {
                                     id="condition"
                                     emptyLabel="No result"
                                     searchText="Searching..."
-                                    labelKey={(product) =>
-                                        `${product.productName}`
-                                    }
+                                    labelKey={(product) => `${product.productName}`}
                                     minLength={3}
                                     options={foundProductsOnWarehouse}
                                     onSearch={searchProductOnWarehouse}
@@ -374,11 +345,7 @@ export default function TransactionOpen() {
                                             <span>{product.productName}</span>
                                             <FaMinusCircle
                                                 className="icon me-2 minus-icon"
-                                                onClick={() =>
-                                                    removeProductOnWarehouse(
-                                                        product.id
-                                                    )
-                                                }
+                                                onClick={() => removeProductOnWarehouse(product.id)}
                                             />
                                         </div>
                                     )}
@@ -393,37 +360,29 @@ export default function TransactionOpen() {
                                 <Col>
                                     {products.length > 0 ? (
                                         <>
-                                            <h4 className="mb-3 mt-2 ms-2">
-                                                Products
-                                            </h4>
+                                            <h4 className="mb-3 mt-2 ms-2">Products</h4>
                                             <ul className="product-list ms-2 me-2">
                                                 {products &&
-                                                    products.map(
-                                                        (product, index) => (
-                                                            <li key={index}>
-                                                                <span className="product-name ms-2">
-                                                                    {
-                                                                        product.productName
-                                                                    }
-                                                                </span>
-                                                                <FaCirclePlus
-                                                                    className="icon me-2 plus-icon"
-                                                                    onClick={() =>
-                                                                        handleAddProduct(
-                                                                            product.id,
-                                                                            product.isUnitary
-                                                                        )
-                                                                    }
-                                                                />
-                                                            </li>
-                                                        )
-                                                    )}
+                                                    products.map((product, index) => (
+                                                        <li key={index}>
+                                                            <span className="product-name ms-2">
+                                                                {product.productName}
+                                                            </span>
+                                                            <FaCirclePlus
+                                                                className="icon me-2 plus-icon"
+                                                                onClick={() =>
+                                                                    handleAddProduct(
+                                                                        product.id,
+                                                                        product.isUnitary
+                                                                    )
+                                                                }
+                                                            />
+                                                        </li>
+                                                    ))}
                                             </ul>
                                         </>
                                     ) : (
-                                        <p className="mt-2">
-                                            All products have been added.
-                                        </p>
+                                        <p className="mt-2">All products have been added.</p>
                                     )}
                                 </Col>
                             </Row>
@@ -440,41 +399,27 @@ export default function TransactionOpen() {
                         <Col className="border me-4 ms-4">
                             <Row>
                                 <Col>
-                                    <h4 className="mb-3 mt-2 ms-2">
-                                        Added Products
-                                    </h4>
-                                    {productsOnWarehouse &&
-                                    productsOnWarehouse.length > 0 ? (
+                                    <h4 className="mb-3 mt-2 ms-2">Added Products</h4>
+                                    {productsOnWarehouse && productsOnWarehouse.length > 0 ? (
                                         <ul className="product-list ms-2 me-2">
                                             {productsOnWarehouse &&
-                                                productsOnWarehouse.map(
-                                                    (item, index) => (
-                                                        <li key={index}>
-                                                            <span className="product-name ms-2">
-                                                                {
-                                                                    item.productName
-                                                                }
-                                                            </span>
-                                                            <span>
-                                                                {item.quantity}
-                                                            </span>
-                                                            <FaMinusCircle
-                                                                className="icon me-2 minus-icon"
-                                                                onClick={() =>
-                                                                    removeProductOnWarehouse(
-                                                                        item.id
-                                                                    )
-                                                                }
-                                                            />
-                                                        </li>
-                                                    )
-                                                )}
+                                                productsOnWarehouse.map((item, index) => (
+                                                    <li key={index}>
+                                                        <span className="product-name ms-2">
+                                                            {item.productName}
+                                                        </span>
+                                                        <span>{item.quantity}</span>
+                                                        <FaMinusCircle
+                                                            className="icon me-2 minus-icon"
+                                                            onClick={() =>
+                                                                removeProductOnWarehouse(item.id)
+                                                            }
+                                                        />
+                                                    </li>
+                                                ))}
                                         </ul>
                                     ) : (
-                                        <p>
-                                            There are no products on this
-                                            warehouse.
-                                        </p>
+                                        <p>There are no products on this warehouse.</p>
                                     )}
                                 </Col>
                             </Row>
