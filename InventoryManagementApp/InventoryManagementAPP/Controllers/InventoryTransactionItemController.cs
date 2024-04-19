@@ -251,6 +251,95 @@ namespace InventoryManagementAPP.Controllers
 
 
         [HttpGet]
+        [Route("UnassociatedProductsPagination/{transactionId:int}/{page}")]
+        public IActionResult UnassociatedProductsPagination(int transactionId, int page)
+        {
+            var perPage = 8;
+
+            try
+            {
+                var allProducts = _context.Products.ToList();
+
+                var associatedProducts = _context.InventoryTransactionItems
+                    .Include(i => i.Product)
+                    .Include(i => i.InventoryTransaction)
+                    .Where(x => x.InventoryTransaction.Id == transactionId)
+                    .ToList();
+
+                var unassociatedProducts = allProducts
+                    .Where(p => !associatedProducts.Any(ap => ap.Product.Id == p.Id))
+                    .Skip((perPage * page) - perPage)
+                    .Take(perPage)
+                    .ToList();
+
+                var list = new List<ProductDTORead>();
+                unassociatedProducts.ForEach(product =>
+                {
+                    list.Add(new ProductDTORead(
+                        product.Id,
+                        product.ProductName,
+                        product.Description,
+                        product.IsUnitary
+                    ));
+                });
+
+                return new JsonResult(list);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
+
+
+        [HttpGet]
+        [Route("ProductsOnWarehousePagination/{transactionId:int}/{warehouseId:int}/{page}")]
+        public IActionResult ProductsOnWarehousePagination(int transactionId, int warehouseId, int page)
+        {
+            var perPage = 8;
+
+            //if (transactionId <= 0 || warehouseId <= 0 || page <= 0)
+            //{
+            //    return BadRequest(ModelState);
+            //}
+            try
+            {
+                var productsInWarehouse = _context.InventoryTransactionItems
+                    .Include(i => i.Product)
+                    .Include(i => i.Warehouse)
+                    .Include(i => i.InventoryTransaction)
+                    .Where(iti => iti.InventoryTransaction.Id == transactionId && iti.Warehouse.Id == warehouseId)
+                    .Skip((perPage * page) - perPage)
+                    .Take(perPage)
+                    .ToList();
+
+                if (productsInWarehouse == null)
+                {
+                    return BadRequest();
+                }
+
+                var list = new List<ProductsOnTransactionDTORead>();
+                productsInWarehouse.ForEach(product =>
+                {
+                    list.Add(new ProductsOnTransactionDTORead(
+                        product.Id,
+                        product.Product.ProductName,
+                        product.Product.IsUnitary,
+                        product.Quantity
+                        ));
+                });
+
+                return new JsonResult(list);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+
+        [HttpGet]
         [Route("UnassociatedProducts/{transactionId:int}")]
         public IActionResult GetUnassociatedProducts(int transactionId)
         {
