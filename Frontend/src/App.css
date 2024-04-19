@@ -135,3 +135,11 @@
 .image{
     max-width: 200px;
 }
+
+.card-container {
+    background-color: #e7e7e7ef;
+    width: 16.6rem;
+    margin: 0.5rem;
+    border-radius: 0.25rem;
+    border: none;
+}

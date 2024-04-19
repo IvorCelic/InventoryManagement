@@ -29,7 +29,7 @@ namespace InventoryManagementAPP.Models
         string? lastName,
         string? email,
         string? password,
-        string? picture);
+        string? image);
 
     /// <summary>
     /// Data Transfer Object (DTO) representing the data needed for inserting or updating a person
@@ -48,7 +48,7 @@ namespace InventoryManagementAPP.Models
         [Required(ErrorMessage = "Password required")]
         string? password,
 
-        string? picture);
+        string? image);
 
     /// <summary>
     /// Data Transfer Object (DTO) representing a read-only view of a product

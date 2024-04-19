@@ -68,6 +68,7 @@ export default function EmployeesEdit() {
             lastName: data.get("lastName"),
             email: data.get("email"),
             password: data.get("password"),
+            image: ""
         });
     }
 
@@ -106,6 +107,7 @@ export default function EmployeesEdit() {
             hideLoading();
             showError(response.data);
         }
+        console.log("Image saved successfully: ", response.data);
 
         setCurrentImage(imageForServer);
         hideLoading();
@@ -161,8 +163,8 @@ export default function EmployeesEdit() {
                         <Col key="1" sm={12} lg={6} md={12}>
                             <p className="form-label">Trenutna slika</p>
                             <Image
-                                //za lokalni development
-                                //src={'https://edunovawp1.eu/' + trenutnaSlika}
+                                // for local development
+                                // src={'https://ivorcelic-001-site1.htempurl.com/' + currentImage}
                                 src={currentImage}
                                 className="image"
                             />

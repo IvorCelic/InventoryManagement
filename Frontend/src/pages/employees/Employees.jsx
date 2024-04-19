@@ -22,7 +22,10 @@ export default function Employees() {
 
     async function fetchEmployees() {
         showLoading();
-        const responsePagination = await EmployeeService.GetPagination(page, condition);
+        const responsePagination = await EmployeeService.GetPagination(
+            page,
+            condition
+        );
         const responseEmployee = await EmployeeService.get("Employee");
         if (!responsePagination.ok) {
             showError(response.data);
@@ -84,16 +87,16 @@ export default function Employees() {
                         employees.map((employee, index) => (
                             <Card
                                 key={employee.id}
-                                style={{ width: "16.6rem", margin: "0.5rem" }}
-                                className="align-items-center"
+                                className="align-items-center card-container"
                             >
-                                <Image
-                                    variant="top"
-                                    src={image(employee)}
-                                    // className="image mt-4"
-                                    className="image mt-3"
-                                    roundedCircle
-                                />
+                                <div className="card-image-container">
+                                    <Image
+                                        variant="top"
+                                        src={image(employee)}
+                                        className="image mt-3"
+                                        roundedCircle
+                                    />
+                                </div>
                                 <Card.Body
                                     key={index}
                                     className="d-flex flex-column align-items-center"
@@ -107,7 +110,9 @@ export default function Employees() {
                                             variant="link"
                                             className="me-2 "
                                             onClick={() => {
-                                                navigate(`/employees/${employee.id}`);
+                                                navigate(
+                                                    `/employees/${employee.id}`
+                                                );
                                             }}
                                         >
                                             <FaEdit size={25} />
@@ -115,7 +120,9 @@ export default function Employees() {
                                         <Button
                                             variant="link"
                                             className="link-danger"
-                                            onClick={() => removeEmployee(employee.id)}
+                                            onClick={() =>
+                                                removeEmployee(employee.id)
+                                            }
                                         >
                                             <FaTrash size={25} />
                                         </Button>
