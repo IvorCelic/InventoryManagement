@@ -28,14 +28,25 @@ namespace InventoryManagementAPP.Controllers
 
             try
             {
-                var products = _context.Products
-                    .Where(p => EF.Functions.Like(p.ProductName.ToLower(), "%" + condition + "%"))
-                    .Skip((perPage * page) - perPage)
-                    .Take(perPage)
-                    .OrderBy(p => p.ProductName)
-                    .ToList();
 
-                return new JsonResult(_mapper.MapReadList(products));
+                var productsEmpty = new List<Product>();
+
+                try
+                {
+
+                    var products = _context.Products
+                        .Where(p => EF.Functions.Like(p.ProductName.ToLower(), "%" + condition + "%"))
+                        .Skip((perPage * page) - perPage)
+                        .Take(perPage)
+                        .OrderBy(p => p.ProductName)
+                        .ToList();
+
+                    return new JsonResult(_mapper.MapReadList(products));
+                }
+                catch (Exception ex)
+                {
+                    return new JsonResult(_mapper.MapReadList(productsEmpty));
+                }
             }
             catch (Exception ex)
             {

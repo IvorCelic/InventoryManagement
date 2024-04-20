@@ -35,16 +35,26 @@ namespace InventoryManagementAPP.Controllers
 
             try
             {
-                var employees = _context.Employees
-                    .Where(w => 
-                        EF.Functions.Like(w.FirstName.ToLower(), "%" + condition + "%") ||
-                        EF.Functions.Like(w.LastName.ToLower(), "%" + condition + "%"))
-                    .Skip((perPage * page) - perPage)
-                    .Take(perPage)
-                    .OrderBy(w => w.LastName)
-                    .ToList();
+                var employeesEmpty = new List<Employee>();
 
-                return new JsonResult(_mapper.MapReadList(employees));
+                try
+                {
+                    var employees = _context.Employees
+                        .Where(w =>
+                            EF.Functions.Like(w.FirstName.ToLower(), "%" + condition + "%") ||
+                            EF.Functions.Like(w.LastName.ToLower(), "%" + condition + "%"))
+                        .Skip((perPage * page) - perPage)
+                        .Take(perPage)
+                        .OrderBy(w => w.LastName)
+                        .ToList();
+
+                    return new JsonResult(_mapper.MapReadList(employees));
+                }
+                catch (Exception ex)
+                {
+                    return new JsonResult(_mapper.MapReadList(employeesEmpty));
+                }
+
             }
             catch (Exception ex)
             {
