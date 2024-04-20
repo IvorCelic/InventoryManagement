@@ -69,6 +69,8 @@ namespace InventoryManagementAPP.Controllers
         }
 
 
+        [HttpGet]
+        [HttpPost]
         protected override InventoryTransactionItem CreateEntity(InventoryTransactionItemDTOInsertUpdate entityDTO)
         {
             var transaction = _context.InventoryTransactions.Find(entityDTO.transactionId);

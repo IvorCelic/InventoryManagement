@@ -64,7 +64,7 @@ namespace InventoryManagementAPP.Controllers
             }
         }
 
-        
+
         [HttpPost]
         public IActionResult Post(TDI entityDTO)
         {

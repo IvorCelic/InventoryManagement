@@ -13,8 +13,8 @@ namespace InventoryManagementAPP.Controllers
         {
             try
             {
-                //var url = $"https://ivorcelic-001-site1.htempurl.com/api/v1/InventoryTransactionItem?transactionId=1&warehouseId=1&productId=1&quantity=1";
-                var url = $"https://ivorcelic-001-site1.htempurl.com/warehouses/10";
+                var url = $"https://ivorcelic-001-site1.htempurl.com/api/v1/InventoryTransactionItem?transactionId=1&warehouseId=1&productId=1&quantity=1";
+            
 
                 QRCodeGenerator qrCodeGenerator = new QRCodeGenerator();
                 QRCodeData qrCodeData = qrCodeGenerator.CreateQrCode(url, QRCodeGenerator.ECCLevel.Q);
