@@ -28,14 +28,24 @@ namespace InventoryManagementAPP.Controllers
 
             try
             {
-                var warehouses = _context.Warehouses
+                var warehousesEmpty = new List<Warehouse>();
+
+                try
+                {
+                    var warehouses = _context.Warehouses
                     .Where(w => EF.Functions.Like(w.WarehouseName.ToLower(), "%" + condition + "%"))
                     .Skip((perPage * page) - perPage)
                     .Take(perPage)
                     .OrderBy(w => w.WarehouseName)
                     .ToList();
 
-                return new JsonResult(_mapper.MapReadList(warehouses));
+                    return new JsonResult(_mapper.MapReadList(warehouses));
+                }
+                catch (Exception ex)
+                {
+                    return new JsonResult(_mapper.MapReadList(warehousesEmpty));
+                }
+
             }
             catch (Exception ex)
             {
