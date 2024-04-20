@@ -475,36 +475,5 @@ namespace InventoryManagementAPP.Controllers
         }
 
 
-        [HttpGet]
-        [Route("GenerateQRCode")]
-        public async Task<ActionResult> GenerateQRCode(int transactionId, int warehouseId, int productId, int quantity)
-        {
-            try
-            {
-                //int transactionId = 1;
-                //int warehouseId = 1;
-
-                var url = $"https://localhost:7183/api/v1/InventoryTransactionItem?transactionId={transactionId}&warehouseId={warehouseId}&productId={productId}&quantity={quantity}";
-
-                QRCodeGenerator qrCodeGenerator = new QRCodeGenerator();
-                QRCodeData qrCodeData = qrCodeGenerator.CreateQrCode(url, QRCodeGenerator.ECCLevel.Q);
-                QRCode qrCode = new QRCode(qrCodeData);
-
-                using (MemoryStream ms = new MemoryStream())
-                {
-                    Bitmap qrCodeImage = qrCode.GetGraphic(20);
-                    qrCodeImage.Save(ms, ImageFormat.Png);
-                    var bytes = ms.ToArray();
-                    return File(bytes, "image/tmp");
-                }
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-
-
-
     }
 }
