@@ -128,7 +128,28 @@ values
     ('Wireless Router', 'High-speed wireless router for reliable internet connectivity', 0),
     ('External Hard Drive', 'Portable external hard drive for data storage and backup', 0),
     ('Coffee Maker', 'Automatic coffee maker for brewing fresh coffee at home', 0),
-    ('Bluetooth Speaker', 'Portable Bluetooth speaker for wireless audio streaming', 0);
+    ('Bluetooth Speaker', 'Portable Bluetooth speaker for wireless audio streaming', 0),
+    ('Bread', 'Whole grain bread', 1),
+    ('Milk', 'Organic whole milk', 1),
+    ('Eggs', 'Cage-free eggs (12-pack)', 1),
+    ('Bananas', 'Fresh bananas (1 dozen)', 1),
+    ('Cheese', 'Cheddar cheese block', 1),
+    ('Tomatoes', 'Organic tomatoes (500g)', 1),
+    ('Hammer', '16 oz claw hammer', 1),
+    ('Nails', 'Assorted nails (100-pack)', 1),
+    ('Screwdriver', 'screwdriver', 1),
+    ('Wrench', 'Adjustable wrench', 1),
+    ('Drill', 'Electric power drill', 1),
+    ('Desk', 'Standard office desk', 1),
+    ('Stapler', 'Heavy-duty stapler', 1),
+    ('Staples', 'Box of staples (1000-pack)', 0),
+    ('Calculator', 'Scientific calculator', 1),
+    ('USB Drive', '16 GB USB flash drive', 1),
+    ('Sticky Notes', 'Sticky notes (5-pack)', 0),
+    ('Calendar', 'Desk calendar', 1),
+    ('Mouse', 'Wireless optical mouse', 1),
+    ('Keyboard', 'Ergonomic keyboard', 1),
+    ('Business Cards', 'Box of business cards (250-count)', 0);
 
 
 -- insert into transactionstatuses
