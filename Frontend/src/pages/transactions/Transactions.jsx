@@ -90,12 +90,12 @@ export default function Transactions() {
                                                 >
                                                     <FaEdit size={25} />
                                                 </Button>
-                                                <Button variant="link">
+                                                {/* <Button variant="link">
                                                     <FaFilePdf size={25} />
                                                 </Button>
                                                 <Button variant="link">
                                                     <FaPrint size={25} />
-                                                </Button>
+                                                </Button> */}
                                                 <Button
                                                     variant="link"
                                                     className="link-danger"

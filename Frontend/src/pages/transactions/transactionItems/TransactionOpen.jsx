@@ -61,9 +61,8 @@ export default function TransactionOpen() {
             showError(response.data);
             return;
         }
-        if (responsePagination.data.length == 0) {
+        if (responsePagination.data.length == 0 && pageUnP > 1) {
             setPageUnP(pageUnP - 1);
-            setTotalUnassociatedProducts(response.data.length);
             return;
         }
         setProducts(responsePagination.data);
@@ -103,6 +102,9 @@ export default function TransactionOpen() {
 
     async function fetchProductsOnWarehouse(warehouseId) {
         showLoading();
+        if (pagePonW < 1) {
+            setPagePonW(1);
+        }
         const responsePagination = await TransactionItemService.GetProductsOnWarehousePagination(
             routeParams.id,
             warehouseId,
@@ -117,9 +119,9 @@ export default function TransactionOpen() {
             showError(response.data);
             return;
         }
-        if (responsePagination.data.length == 0) {
+        if (responsePagination.data.length == 0 && pagePonW > 1) {
             setPagePonW(pagePonW - 1);
-            setTotalProductsOnWarehouse(0);
+            // setTotalProductsOnWarehouse(0);
             return;
         }
         setProductsOnWarehouse(responsePagination.data);
@@ -145,6 +147,7 @@ export default function TransactionOpen() {
             return;
         }
 
+        await fetchProductsOnWarehouse(warehouseId);
         showError(response.data);
         hideLoading();
     }
@@ -205,6 +208,7 @@ export default function TransactionOpen() {
         addProductsOnWarehouse(selectedProductId, customQuantity);
         setShowModal(false);
         await fetchProducts();
+        await fetchProductsOnWarehouse(warehouseId);
     }
 
     function nameWarehouse() {
