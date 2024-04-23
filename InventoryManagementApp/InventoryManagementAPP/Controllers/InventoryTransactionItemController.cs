@@ -6,17 +6,32 @@ using Microsoft.EntityFrameworkCore;
 
 namespace InventoryManagementAPP.Controllers
 {
+    /// <summary>
+    /// Controller for managing InventoryTransactionItems-related operations within the inventory management system.
+    /// </summary>
     [ApiController]
     [Route("api/v1/[controller]")]
     public class InventoryTransactionItemController : InventoryManagementController<InventoryTransactionItem, InventoryTransactionItemDTORead, InventoryTransactionItemDTOInsertUpdate>
     {
+        /// <summary>
+        /// Constructor for InventoryTransactionItemController.
+        /// Initializes the controller with the specified context, sets the DbSet to InventoryTransactionItems, 
+        /// and initializes the mapper for this controller.
+        /// </summary>
+        /// <param name="context">The InventoryManagementContext for the controller.</param>
         public InventoryTransactionItemController(InventoryManagementContext context) : base(context)
         {
             DbSet = _context.InventoryTransactionItems;
             _mapper = new InventoryTransactionItemMapper();
         }
 
-
+        /// <summary>
+        /// Edits an existing Inventory Transaction Item entity based on the given DTO. This method assigns 
+        /// the related inventory transaction, warehouse, and product to the entity based on the provided DTO.
+        /// </summary>
+        /// <param name="entityDTO">The DTO containing the updated details of the transaction item.</param>
+        /// <param name="entity">The existing InventoryTransactionItem entity to be updated.</param>
+        /// <returns>Returns the updated InventoryTransactionItem entity.</returns>
         protected override InventoryTransactionItem EditEntity(InventoryTransactionItemDTOInsertUpdate entityDTO, InventoryTransactionItem entity)
         {
             var transaction = _context.InventoryTransactions.Find(entityDTO.transactionId) ?? throw new Exception("There is no Inventory Transaction with ID: " + entityDTO.transactionId + " in database.");
@@ -31,7 +46,12 @@ namespace InventoryManagementAPP.Controllers
             return entity;
         }
 
-
+        /// <summary>
+        /// Loads an InventoryTransactionItem entity based on its ID, including its associated InventoryTransaction,
+        /// Warehouse, and Product information. Throws an exception if the item does not exist.
+        /// </summary>
+        /// <param name="id">The ID of the InventoryTransactionItem to be loaded.</param>
+        /// <returns>Returns the loaded InventoryTransactionItem entity.</returns>
         protected override InventoryTransactionItem LoadEntity(int id)
         {
             var entity = _context.InventoryTransactionItems
@@ -48,7 +68,11 @@ namespace InventoryManagementAPP.Controllers
             return entity;
         }
 
-
+        /// <summary>
+        /// Loads all InventoryTransactionItem entities from the context, including related InventoryTransaction,
+        /// Warehouse, and Product information. Throws an exception if there is no data.
+        /// </summary>
+        /// <returns>Returns a list of InventoryTransactionItemDTORead mapped from the entities.</returns>
         protected override List<InventoryTransactionItemDTORead> LoadEntites()
         {
             var list = _context.InventoryTransactionItems
@@ -65,7 +89,12 @@ namespace InventoryManagementAPP.Controllers
             return _mapper.MapReadList(list);
         }
 
-
+        /// <summary>
+        /// Creates a new InventoryTransactionItem entity based on the provided DTO. This method checks for existing
+        /// transactions, warehouses, and products to ensure consistency. Throws exceptions for any invalid cases.
+        /// </summary>
+        /// <param name="entityDTO">The DTO containing the details for creating a new transaction item.</param>
+        /// <returns>Returns the created InventoryTransactionItem entity.</returns>
         protected override InventoryTransactionItem CreateEntity(InventoryTransactionItemDTOInsertUpdate entityDTO)
         {
             var transaction = _context.InventoryTransactions.Find(entityDTO.transactionId);
@@ -104,12 +133,19 @@ namespace InventoryManagementAPP.Controllers
             return entity;
         }
 
-
+        /// <summary>
+        /// Custom logic to control the deletion of an InventoryTransactionItem entity.
+        /// </summary>
+        /// <param name="entity">The InventoryTransactionItem entity to be deleted.</param>
         protected override void ControlDelete(InventoryTransactionItem entity)
         {
         }
 
-
+        /// <summary>
+        /// Retrieves a list of distinct warehouses associated with a given transaction ID.
+        /// </summary>
+        /// <param name="transactionId">The ID of the inventory transaction to query.</param>
+        /// <returns>Returns a JSON result with a list of WarehouseDTORead for the given transaction ID.</returns>
         [HttpGet]
         [Route("Warehouses/{transactionId:int}")]
         public IActionResult GetWarehouses(int transactionId)
@@ -143,7 +179,13 @@ namespace InventoryManagementAPP.Controllers
             }
         }
 
-
+        /// <summary>
+        /// Searches for unassociated products with a given transaction ID and condition, 
+        /// filtering the results based on a search condition.
+        /// </summary>
+        /// <param name="transactionId">The ID of the inventory transaction to query.</param>
+        /// <param name="condition">A search condition to filter the unassociated products.</param>
+        /// <returns>Returns a JSON result with a list of unassociated products matching the condition.</returns>
         [HttpGet]
         [Route("SearchUnassociatedProduct/{transactionId:int}/{condition}")]
         public IActionResult SearchUnassociatedProduct(int transactionId, string condition)
@@ -196,7 +238,12 @@ namespace InventoryManagementAPP.Controllers
             }
         }
 
-
+        /// <summary>
+        /// Retrieves a paginated list of unassociated products for a given transaction ID.
+        /// </summary>
+        /// <param name="transactionId">The ID of the inventory transaction to query.</param>
+        /// <param name="page">The page number for pagination.</param>
+        /// <returns>Returns a JSON result with a list of paginated unassociated products.</returns>
         [HttpGet]
         [Route("SearchProductOnWarehouse/{transactionId:int}/{warehouseId:int}/{condition}")]
         public IActionResult SearchProductOnWarehouse(int transactionId, int warehouseId, string condition)
@@ -249,7 +296,12 @@ namespace InventoryManagementAPP.Controllers
             }
         }
 
-
+        /// <summary>
+        /// Retrieves a paginated list of unassociated products for a given transaction ID.
+        /// </summary>
+        /// <param name="transactionId">The ID of the inventory transaction to query.</param>
+        /// <param name="page">The page number for pagination.</param>
+        /// <returns>Returns a JSON result with a list of paginated unassociated products.</returns>
         [HttpGet]
         [Route("UnassociatedProductsPagination/{transactionId:int}/{page}")]
         public IActionResult UnassociatedProductsPagination(int transactionId, int page)
@@ -292,7 +344,14 @@ namespace InventoryManagementAPP.Controllers
 
         }
 
-
+        /// <summary>
+        /// Searches for products within a specific warehouse for a given transaction ID and warehouse ID, 
+        /// filtering the results based on a search condition.
+        /// </summary>
+        /// <param name="transactionId">The ID of the inventory transaction to query.</param>
+        /// <param name="warehouseId">The ID of the warehouse to query.</param>
+        /// <param name="condition">A search condition to filter the products within the warehouse.</param>
+        /// <returns>Returns a JSON result with a list of filtered products within the warehouse.</returns>
         [HttpGet]
         [Route("ProductsOnWarehousePagination/{transactionId:int}/{warehouseId:int}/{page}")]
         public IActionResult ProductsOnWarehousePagination(int transactionId, int warehouseId, int page)
@@ -338,7 +397,13 @@ namespace InventoryManagementAPP.Controllers
             }
         }
 
-
+        /// <summary>
+        /// Retrieves a paginated list of products within a specific warehouse for a given transaction ID and warehouse ID.
+        /// </summary>
+        /// <param name="transactionId">The ID of the inventory transaction to query.</param>
+        /// <param name="warehouseId">The ID of the warehouse to query.</param>
+        /// <param name="page">The page number for pagination.</param>
+        /// <returns>Returns a JSON result with a list of paginated products within the warehouse.</returns>
         [HttpGet]
         [Route("UnassociatedProducts/{transactionId:int}")]
         public IActionResult GetUnassociatedProducts(int transactionId)
@@ -387,7 +452,11 @@ namespace InventoryManagementAPP.Controllers
         }
 
 
-
+        /// <summary>
+        /// Retrieves all products associated with a given transaction ID.
+        /// </summary>
+        /// <param name="transactionId">The ID of the inventory transaction to query.</param>
+        /// <returns>Returns a JSON result with a list of products associated with the specified transaction ID.</summary>
         [HttpGet]
         [Route("Products/{transactionId:int}")]
         public IActionResult GetProducts(int transactionId)
@@ -428,7 +497,12 @@ namespace InventoryManagementAPP.Controllers
             }
         }
 
-
+        /// <summary>
+        /// Retrieves products within a specific warehouse for a given transaction ID and warehouse ID.
+        /// </summary>
+        /// <param name="transactionId">The ID of the inventory transaction to query.</param>
+        /// <param name="warehouseId">The ID of the warehouse to query.</param>
+        /// <returns>Returns a JSON result with a list of products within the specified warehouse for a given transaction ID.</summary>
         [HttpGet]
         [Route("Transactions/{transactionId:int}/Warehouses/{warehouseId:int}")]
         public IActionResult GetProductsOnWarehouse(int transactionId, int warehouseId)

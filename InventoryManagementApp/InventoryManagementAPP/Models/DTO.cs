@@ -21,7 +21,7 @@ namespace InventoryManagementAPP.Models
         );
 
     /// <summary>
-    /// Data Transfer Object (DTO) representing a read-only view of a person
+    /// Data Transfer Object (DTO) representing a read-only view of a person.
     /// </summary>
     public record EmployeeDTORead(
         int id,
@@ -32,7 +32,7 @@ namespace InventoryManagementAPP.Models
         string? image);
 
     /// <summary>
-    /// Data Transfer Object (DTO) representing the data needed for inserting or updating a person
+    /// Data Transfer Object (DTO) representing the data needed for inserting or updating a person.
     /// </summary>
     public record EmployeeDTOInsertUpdate(
         [Required(ErrorMessage = "First name required")]
@@ -41,7 +41,7 @@ namespace InventoryManagementAPP.Models
         [Required(ErrorMessage = "Last name required")]
         string? lastName,
 
-        [Required(ErrorMessage = "Email name required")]
+        [Required(ErrorMessage = "Email required")]
         string? email,
 
         [MinLength(8, ErrorMessage = "{0} must be at least {1} characters long")]
@@ -51,7 +51,7 @@ namespace InventoryManagementAPP.Models
         string? image);
 
     /// <summary>
-    /// Data Transfer Object (DTO) representing a read-only view of a product
+    /// Data Transfer Object (DTO) representing a read-only view of a product.
     /// </summary>
     public record ProductDTORead(
         int id,
@@ -60,7 +60,7 @@ namespace InventoryManagementAPP.Models
         bool? isUnitary);
 
     /// <summary>
-    /// Data Transfer Object (DTO) representing the data needed for inserting or updating a product
+    /// Data Transfer Object (DTO) representing the data needed for inserting or updating a product.
     /// </summary>
     public record ProductDTOInsertUpdate(
         [Required(ErrorMessage = "Product name required")]
@@ -71,7 +71,7 @@ namespace InventoryManagementAPP.Models
         bool isUnitary);
 
     /// <summary>
-    /// Data Transfer Object (DTO) representing a read-only view of a inventory transaction
+    /// Data Transfer Object (DTO) representing a read-only view of an inventory transaction.
     /// </summary>
     public record InventoryTransactionDTORead(
         int id,
@@ -81,7 +81,7 @@ namespace InventoryManagementAPP.Models
         string? additionalDetails);
 
     /// <summary>
-    /// Data Transfer Object (DTO) representing the data needed for inserting or updating a inventory transaction
+    /// Data Transfer Object (DTO) representing the data needed for inserting or updating an inventory transaction.
     /// </summary>
     public record InventoryTransactionDTOInsertUpdate(
         [Required(ErrorMessage = "Employee required")]
@@ -95,15 +95,18 @@ namespace InventoryManagementAPP.Models
         string? additionalDetails);
 
     /// <summary>
-    /// Data Transfer Object (DTO) representing a read-only view of a inventory transaction items
+    /// Data Transfer Object (DTO) representing a read-only view of inventory transaction items.
     /// </summary>
     public record InventoryTransactionItemDTORead(
         int id,
         int? transactionId,
         string? warehouseName,
-        string? productName ,
+        string? productName,
         int? quantity);
 
+    /// <summary>
+    /// Data Transfer Object (DTO) representing the products included in a specific transaction.
+    /// </summary>
     public record ProductsOnTransactionDTORead(
         int id,
         string? productName,
@@ -111,7 +114,7 @@ namespace InventoryManagementAPP.Models
         int? quantity);
 
     /// <summary>
-    /// Data Transfer Object (DTO) representing the data needed for inserting or updating a inventory transaction items
+    /// Data Transfer Object (DTO) representing the data needed for inserting or updating inventory transaction items.
     /// </summary>
     public record InventoryTransactionItemDTOInsertUpdate(
         [Required(ErrorMessage = "Inventory Transaction required")]
@@ -127,7 +130,7 @@ namespace InventoryManagementAPP.Models
         int? quantity);
 
     /// <summary>
-    /// Data Transfer Object (DTO) representing the data needed for operator
+    /// Data Transfer Object (DTO) representing the authentication data needed for an employee login.
     /// </summary>
     public record EmployeeAuthDTO(
         [Required(ErrorMessage = "Email required")]
@@ -136,6 +139,9 @@ namespace InventoryManagementAPP.Models
         [Required(ErrorMessage = "Password required")]
         string? password);
 
+    /// <summary>
+    /// Data Transfer Object (DTO) representing the data needed for image storage.
+    /// </summary>
     public record ImageDTO(
         [Required(ErrorMessage = "Base64 image data is required")]
         string Base64);

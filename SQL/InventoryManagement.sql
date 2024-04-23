@@ -142,14 +142,14 @@ values
     ('Drill', 'Electric power drill', 1),
     ('Desk', 'Standard office desk', 1),
     ('Stapler', 'Heavy-duty stapler', 1),
-    ('Staples', 'Box of staples (1000-pack)', 0),
+    ('Staples', 'Box of staples (1000-pack)', 1),
     ('Calculator', 'Scientific calculator', 1),
     ('USB Drive', '16 GB USB flash drive', 1),
-    ('Sticky Notes', 'Sticky notes (5-pack)', 0),
+    ('Sticky Notes', 'Sticky notes (5-pack)', 1),
     ('Calendar', 'Desk calendar', 1),
     ('Mouse', 'Wireless optical mouse', 1),
     ('Keyboard', 'Ergonomic keyboard', 1),
-    ('Business Cards', 'Box of business cards (250-count)', 0);
+    ('Business Cards', 'Box of business cards (250-count)', 1);
 
 
 -- insert into transactionstatuses
@@ -162,11 +162,7 @@ values
 -- insert into inventorytransactions
 insert into InventoryTransactions (Employee, TransactionStatus, TransactionDate, AdditionalDetails)
 values 
-    (1, 1, getdate(), 'Inventory for 2023.'),
-    (2, 2, getdate(), 'Inventory for 2024.'),
-    (3, 1, getdate(), 'Inventory for 2025.'),
-    (4, 2, getdate(), 'Inventory for 2026.'),
-    (5, 1, getdate(), 'Inventory for 2027.');
+    (1, 1, getdate(), 'Inventory for 2023.');
 
 
 -- Insert into inventorytransactionitems

@@ -6,18 +6,30 @@ using InventoryManagementAPP.Mappers;
 
 namespace InventoryManagementAPP.Controllers
 {
+    /// <summary>
+    /// Controller for managing InventoryTransactions-related operations within the inventory management system.
+    /// </summary>
     [ApiController]
     [Route("api/v1/[controller]")]
     public class InventoryTransactionController : InventoryManagementController<InventoryTransaction, InventoryTransactionDTORead, InventoryTransactionDTOInsertUpdate>
     {
-
+        /// <summary>
+        /// Initializes a new instance of the InventoryTransactionController class.
+        /// </summary>
+        /// <param name="context">The database context for inventory management.</param>
         public InventoryTransactionController(InventoryManagementContext context) : base(context)
         {
             DbSet = _context.InventoryTransactions;
             _mapper = new InventoryTransactionMapper();
         }
 
-
+        /// <summary>
+        /// Edits an existing InventoryTransaction entity with new data from a DTO.
+        /// This method also ensures that the associated employee and transaction status exist in the database.
+        /// </summary>
+        /// <param name="entityDTO">The data transfer object containing the updated data.</param>
+        /// <param name="entity">The existing InventoryTransaction entity to be edited.</param>
+        /// <returns>The updated InventoryTransaction entity.</returns>
         protected override InventoryTransaction EditEntity(InventoryTransactionDTOInsertUpdate entityDTO, InventoryTransaction entity)
         {
             var employee = _context.Employees.Find(entityDTO.employeeId) ?? throw new Exception("There is no Employee with ID: " + entityDTO.employeeId + " in database.");
@@ -31,7 +43,12 @@ namespace InventoryManagementAPP.Controllers
             return entity;
         }
 
-
+        /// <summary>
+        /// Loads an InventoryTransaction entity by its ID, including associated Employee and TransactionStatus data.
+        /// Throws an exception if no transaction is found with the specified ID.
+        /// </summary>
+        /// <param name="id">The ID of the InventoryTransaction to load.</param>
+        /// <returns>The InventoryTransaction entity with the specified ID.</returns>
         protected override InventoryTransaction LoadEntity(int id)
         {
             var entity = _context.InventoryTransactions
@@ -47,7 +64,11 @@ namespace InventoryManagementAPP.Controllers
             return entity;
         }
 
-
+        /// <summary>
+        /// Loads all InventoryTransaction entities from the database, including associated Employee and TransactionStatus data.
+        /// Throws an exception if no data is found.
+        /// </summary>
+        /// <returns>A list of InventoryTransactionDTORead containing all transactions.</returns>
         protected override List<InventoryTransactionDTORead> LoadEntites()
         {
             var list = _context.InventoryTransactions
@@ -63,7 +84,11 @@ namespace InventoryManagementAPP.Controllers
             return _mapper.MapReadList(list);
         }
 
-
+        /// <summary>
+        /// Creates a new InventoryTransaction entity from a DTO, ensuring that the associated Employee and TransactionStatus exist in the database.
+        /// </summary>
+        /// <param name="entityDTO">The data transfer object containing the transaction data.</param>
+        /// <returns>The created InventoryTransaction entity.</returns>
         protected override InventoryTransaction CreateEntity(InventoryTransactionDTOInsertUpdate entityDTO)
         {
             var employee = _context.Employees.Find(entityDTO.employeeId);
@@ -85,7 +110,10 @@ namespace InventoryManagementAPP.Controllers
             return entity;
         }
 
-
+        /// <summary>
+        /// Custom logic to control the deletion of an InventoryTransaction entity.
+        /// </summary>
+        /// <param name="entity">The InventoryTransaction entity to be deleted.</param>
         protected override void ControlDelete(InventoryTransaction entity)
         {
             var list = _context.InventoryTransactionItems

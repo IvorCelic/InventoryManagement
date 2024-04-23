@@ -7,6 +7,10 @@ using System.Text;
 
 namespace EdunovaAPP.Controllers
 {
+    /// <summary>
+    /// Controller for handling authorization operations within the inventory management system.
+    /// Provides a method to generate JWT tokens for employee authentication.
+    /// </summary>
     [ApiController]
     [Route("api/v1/[controller]")]
     public class AuthorizationController : ControllerBase
@@ -14,14 +18,24 @@ namespace EdunovaAPP.Controllers
 
         private readonly InventoryManagementContext _context;
 
-
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AuthorizationController"/> class.
+        /// </summary>
+        /// <param name="context">The database context for accessing employee data.</param>
         public AuthorizationController(InventoryManagementContext context)
         {
             _context = context;
         }
 
 
-
+        /// <summary>
+        /// Generates a JWT token for an authorized employee.
+        /// </summary>
+        /// <param name="employee">The EmployeeAuthDTO containing employee login information (email and password).</param>
+        /// <returns>
+        /// Returns a JWT token if the employee is successfully authenticated, 
+        /// or a status code of 403 (Forbidden) if authentication fails.
+        /// </returns>
         [HttpPost("token")]
         public IActionResult GenerateToken(EmployeeAuthDTO employee)
         {

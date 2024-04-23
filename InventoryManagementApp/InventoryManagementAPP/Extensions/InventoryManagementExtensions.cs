@@ -3,9 +3,17 @@ using System.Reflection;
 
 namespace EdunovaAPP.Extensions
 {
+    /// <summary>
+    /// Provides extension methods for setting up the Inventory Management application,
+    /// including Swagger generation and CORS configuration.
+    /// </summary>
     public static class InventoryManagementExtensions
     {
-
+        /// <summary>
+        /// Configures Swagger generation for the Inventory Management API, including
+        /// setup for OpenAPI documentation, security definitions, and XML comments.
+        /// </summary>
+        /// <param name="Services">The service collection to which SwaggerGen is added.</param>
         public static void AddInventoryManagementSwaggerGen(this IServiceCollection Services)
         {
             Services.AddSwaggerGen(sgo =>
@@ -71,7 +79,11 @@ namespace EdunovaAPP.Extensions
             });
         }
 
-
+        /// <summary>
+        /// Configures Cross-Origin Resource Sharing (CORS) policy for the Inventory Management API,
+        /// allowing any origin, method, or header.
+        /// </summary>
+        /// <param name="Services">The service collection to which CORS policies are added.</param>
         public static void AddInventoryManagementCORS(this IServiceCollection Services)
         {
             Services.AddCors(options =>

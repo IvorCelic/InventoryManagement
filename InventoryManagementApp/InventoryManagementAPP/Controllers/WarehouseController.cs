@@ -7,18 +7,29 @@ using System.Text;
 namespace InventoryManagementAPP.Controllers
 {
     /// <summary>
-    /// Inventory Management API controllers for Warehouses entity CRUD operations.
+    /// Controller for managing warehouses-related operations within the inventory management system.
     /// </summary>
     [ApiController]
     [Route("api/v1/[controller]")]
     public class WarehouseController : InventoryManagementController<Warehouse, WarehouseDTORead, WarehouseDTOInsertUpdate>
     {
+        /// <summary>
+        /// Constructor for the WarehouseController.
+        /// Initializes the controller with the specified context and sets the DbSet for Warehouses.
+        /// </summary>
+        /// <param name="context">The InventoryManagementContext for the controller.</param>
         public WarehouseController(InventoryManagementContext context) : base(context)
         {
             DbSet = _context.Warehouses;
         }
 
-
+        /// <summary>
+        /// Searches for warehouses with pagination support, allowing for retrieval of warehouse
+        /// information in a paginated manner. The search can be filtered by a condition string.
+        /// </summary>
+        /// <param name="page">The page number for pagination.</param>
+        /// <param name="condition">A condition for filtering warehouse names (optional).</param>
+        /// <returns>Returns a JSON result containing the paginated list of warehouses matching the condition.</returns>
         [HttpGet]
         [Route("searchPagination/{page}")]
         public IActionResult SearchWarehousePagination(int page, string condition = "")
@@ -53,7 +64,12 @@ namespace InventoryManagementAPP.Controllers
             }
         }
 
-
+        /// <summary>
+        /// Custom logic to control the deletion of a warehouse entity. This method checks if
+        /// the warehouse is associated with any inventory transactions. If so, it prevents deletion
+        /// and throws an exception with a descriptive message indicating the associated transactions.
+        /// </summary>
+        /// <param name="entity">The warehouse entity to be deleted.</param>
         protected override void ControlDelete(Warehouse entity)
         {
             var list = _context.InventoryTransactionItems

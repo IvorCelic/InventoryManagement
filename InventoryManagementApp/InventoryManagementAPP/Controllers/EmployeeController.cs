@@ -25,7 +25,12 @@ namespace InventoryManagementAPP.Controllers
             _mapper = new EmployeeMapper();
         }
 
-
+        /// <summary>
+        /// Retrieves a paginated list of employees based on the search condition.
+        /// </summary>
+        /// <param name="page">The page number to retrieve.</param>
+        /// <param name="condition">The condition to filter employees (optional).</param>
+        /// <returns>Returns a JSON result with the paginated list of employees or a bad request in case of an error.</returns>
         [HttpGet]
         [Route("SearchPagination/{page}")]
         public IActionResult SearchEmployeePagination(int page, string condition = "")
@@ -62,7 +67,12 @@ namespace InventoryManagementAPP.Controllers
             }
         }
 
-
+        /// <summary>
+        /// Sets or updates the profile image for a given employee.
+        /// </summary>
+        /// <param name="id">The ID of the employee whose image is to be set.</param>
+        /// <param name="image">An ImageDTO containing the base64 representation of the image.</param>
+        /// <returns>Returns an OK result if the image is successfully set or a bad request in case of errors.</returns>
         [HttpPut]
         [Route("SetImage/{id:int}")]
         public IActionResult SetImage(int id, ImageDTO image)
