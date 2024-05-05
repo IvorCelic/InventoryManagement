@@ -1,12 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using QRCoder;
-using System.Drawing.Imaging;
 using System.Drawing;
-using Microsoft.EntityFrameworkCore;
+using System.Drawing.Imaging;
 using InventoryManagementAPP.Models;
 using InventoryManagementAPP.Data;
 using InventoryManagementAPP.Mappers;
-using System.Collections.Generic;
+
+using iTextSharp.text;
+using iTextSharp.text.pdf;
+using System.IO;
 
 namespace InventoryManagementAPP.Controllers
 {
@@ -24,29 +26,50 @@ namespace InventoryManagementAPP.Controllers
             _mapper = new InventoryTransactionItemMapper();
         }
 
+
         [HttpGet]
-        public async Task<ActionResult> GenerateQRCode()
+        public IActionResult GenerateQRCodePDF()
         {
             try
             {
-                var url = $"https://localhost:7183/api/v1/QRCode?transactionId=1&warehouseId=1&productId=1&quantity=1";
-            
-
+                var qrCodeContent = "https://localhost:7183/api/v1/QRCode?transactionId=1&warehouseId=1&productId=1&quantity=1";
                 QRCodeGenerator qrCodeGenerator = new QRCodeGenerator();
-                QRCodeData qrCodeData = qrCodeGenerator.CreateQrCode(url, QRCodeGenerator.ECCLevel.Q);
+                QRCodeData qrCodeData = qrCodeGenerator.CreateQrCode(qrCodeContent, QRCodeGenerator.ECCLevel.Q);
                 QRCode qrCode = new QRCode(qrCodeData);
 
-                using (MemoryStream ms = new MemoryStream())
+                using (var qrStream = new MemoryStream())
                 {
-                    Bitmap qrCodeImage = qrCode.GetGraphic(20);
-                    qrCodeImage.Save(ms, ImageFormat.Png);
-                    var bytes = ms.ToArray();
-                    return File(bytes, "image/png");
+                    Bitmap qrBitmap = qrCode.GetGraphic(20);
+                    qrBitmap.Save(qrStream, ImageFormat.Png);
+                    byte[] qrBytes = qrStream.ToArray();
+
+                    using (var pdfStream = new MemoryStream())
+                    {
+                        Document document = new Document();
+                        PdfWriter pdfWriter = PdfWriter.GetInstance(document, pdfStream);
+
+                        document.Open();
+
+                        iTextSharp.text.Image qrImage = iTextSharp.text.Image.GetInstance(qrBytes);
+
+                        // APPEARANCE
+                        qrImage.ScaleToFit(350, 350);
+                        qrImage.Alignment = Element.ALIGN_CENTER;
+
+                        document.Add(qrImage);
+
+                        document.Close();
+
+                        return new FileContentResult(pdfStream.ToArray(), "application/pdf")
+                        {
+                            FileDownloadName = "qrcode.pdf"
+                        };
+                    }
                 }
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest($"Error generating PDF with QR code: {ex.Message}");
             }
         }
 
