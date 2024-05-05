@@ -3,6 +3,9 @@ using InventoryManagementAPP.Mappers;
 using InventoryManagementAPP.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using QRCoder;
+using System.Drawing;
+using System.Drawing.Imaging;
 
 namespace InventoryManagementAPP.Controllers
 {
@@ -89,12 +92,18 @@ namespace InventoryManagementAPP.Controllers
             return _mapper.MapReadList(list);
         }
 
+<<<<<<< HEAD
         /// <summary>
         /// Creates a new InventoryTransactionItem entity based on the provided DTO. This method checks for existing
         /// transactions, warehouses, and products to ensure consistency. Throws exceptions for any invalid cases.
         /// </summary>
         /// <param name="entityDTO">The DTO containing the details for creating a new transaction item.</param>
         /// <returns>Returns the created InventoryTransactionItem entity.</returns>
+=======
+
+        //[HttpGet]
+        [HttpPost]
+>>>>>>> QR-code
         protected override InventoryTransactionItem CreateEntity(InventoryTransactionItemDTOInsertUpdate entityDTO)
         {
             var transaction = _context.InventoryTransactions.Find(entityDTO.transactionId);

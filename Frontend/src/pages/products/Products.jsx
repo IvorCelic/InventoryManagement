@@ -4,138 +4,172 @@ import SearchAndAdd from "../../components/SearchAndAdd";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ProductService from "../../services/ProductService";
-import { FaEdit, FaTrash } from "react-icons/fa";
+import { FaEdit, FaQrcode, FaTrash } from "react-icons/fa";
 import useError from "../../hooks/useError";
 import MyPagination from "../../components/MyPagination";
 import useLoading from "../../hooks/useLoading";
+import { saveAs } from "file-saver";
 
 export default function Products() {
-    const navigate = useNavigate();
-    const { showError } = useError();
+  const navigate = useNavigate();
+  const { showError } = useError();
 
-    const [products, setProducts] = useState();
-    const [totalProducts, setTotalProducts] = useState();
-    const [page, setPage] = useState(1);
-    const [condition, setCondition] = useState("");
-    const { showLoading, hideLoading } = useLoading();
+  const [products, setProducts] = useState();
+  const [totalProducts, setTotalProducts] = useState();
+  const [page, setPage] = useState(1);
+  const [condition, setCondition] = useState("");
+  const { showLoading, hideLoading } = useLoading();
 
-    async function fetchProducts() {
-        showLoading();
-        const responsePagination = await ProductService.GetPagination(page, condition);
-        const responseProduct = await ProductService.get("Product");
-        if (!responsePagination.ok) {
-            showError(responsePagination.data);
-            return;
-        }
-
-        if (responsePagination.data.length == 0) {
-            setPage(page - 1);
-            return;
-        }
-        setProducts(responsePagination.data);
-        setTotalProducts(responseProduct.data.length);
-        hideLoading();
+  async function fetchProducts() {
+    showLoading();
+    const responsePagination = await ProductService.GetPagination(
+      page,
+      condition
+    );
+    const responseProduct = await ProductService.get("Product");
+    if (!responsePagination.ok) {
+      showError(responsePagination.data);
+      return;
     }
 
-    useEffect(() => {
-        fetchProducts();
-    }, [page, condition]);
+    if (responsePagination.data.length == 0) {
+      setPage(page - 1);
+      return;
+    }
+    setProducts(responsePagination.data);
+    setTotalProducts(responseProduct.data.length);
+    hideLoading();
+  }
 
-    async function removeProduct(id) {
-        showLoading();
-        const response = await ProductService.remove("Product", id);
-        showError(response.data);
-        if (response.ok) {
-            fetchProducts();
-        }
-        hideLoading();
+  async function generateQRCodePDF() {
+    showLoading();
+    const response = await ProductService.GenerateQRCodePDF("QRCode");
+
+    if (!response.ok) {
+      showError(response.data);
+      hideLoading();
+      return;
     }
 
-    function isUnitary(product) {
-        if (product.isUnitary == null) return "Not defined";
-        if (product.isUnitary) return "Yes";
-        return "No";
+    const blob = new Blob([response.data], { type: "application/pdf" });
+
+    // Trigger download
+    // saveAs(blob, "QRCodePDF.pdf");
+
+    // Trigger new window
+    const url = URL.createObjectURL(blob);
+    window.open(url, "_blank");
+
+    hideLoading();
+  }
+
+  useEffect(() => {
+    fetchProducts();
+  }, [page, condition]);
+
+  async function removeProduct(id) {
+    showLoading();
+    const response = await ProductService.remove("Product", id);
+    showError(response.data);
+    if (response.ok) {
+      fetchProducts();
     }
+    hideLoading();
+  }
 
-    const totalPages = Math.ceil(totalProducts / 8);
+  function isUnitary(product) {
+    if (product.isUnitary == null) return "Not defined";
+    if (product.isUnitary) return "Yes";
+    return "No";
+  }
 
-    function handlePageChange(page) {
-        setPage(page);
-    }
+  const totalPages = Math.ceil(totalProducts / 8);
 
-    function handleSearch(searchTerm) {
-        setPage(1);
-        setCondition(searchTerm);
-    }
+  function handlePageChange(page) {
+    setPage(page);
+  }
 
-    return (
-        <Container>
-            <Col>
-                <Row>
-                    <SearchAndAdd
-                        RouteName={RoutesNames.PRODUCTS_CREATE}
-                        entity={"product"}
-                        onSearch={handleSearch}
-                    />
-                </Row>
-                <Row>
-                    <Table striped bordered hover responsive>
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Description</th>
-                                <th>Is Unitary</th>
-                                {/* <th>Details</th> */}
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {products &&
-                                products.map((product, index) => (
-                                    <tr key={index}>
-                                        <td>{product.productName}</td>
-                                        <td>{product.description}</td>
-                                        <td>{isUnitary(product)}</td>
-                                        {/* <td>
+  function handleSearch(searchTerm) {
+    setPage(1);
+    setCondition(searchTerm);
+  }
+
+  return (
+    <Container>
+      <Col>
+        <Row>
+          <SearchAndAdd
+            RouteName={RoutesNames.PRODUCTS_CREATE}
+            entity={"product"}
+            onSearch={handleSearch}
+          />
+        </Row>
+        <Row>
+          <Table striped bordered hover responsive>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Is Unitary</th>
+                {/* <th>Details</th> */}
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {products &&
+                products.map((product, index) => (
+                  <tr key={index}>
+                    <td>{product.productName}</td>
+                    <td>{product.description}</td>
+                    <td>{isUnitary(product)}</td>
+                    {/* <td>
                                     <Button
                                         onClick={() => {
                                             navigate(`/products/details/${product.id}`);
                                         }}
                                     />
                                 </td> */}
-                                        <td>
-                                            <Container className="d-flex justify-content-center">
-                                                <Button
-                                                    variant="link"
-                                                    className="me-2 actionButton"
-                                                    onClick={() => {
-                                                        navigate(`/products/${product.id}`);
-                                                    }}
-                                                >
-                                                    <FaEdit size={25} />
-                                                </Button>
-                                                <Button
-                                                    variant="link"
-                                                    className="link-danger actionButton"
-                                                    onClick={() => removeProduct(product.id)}
-                                                >
-                                                    <FaTrash size={25} />
-                                                </Button>
-                                            </Container>
-                                        </td>
-                                    </tr>
-                                ))}
-                        </tbody>
-                    </Table>
-                </Row>
-                <Row>
-                    <MyPagination
-                        currentPage={page}
-                        totalPages={totalPages}
-                        onPageChange={handlePageChange}
-                    />
-                </Row>
-            </Col>
-        </Container>
-    );
+                    <td>
+                      <Container className="d-flex justify-content-center">
+                        <Button
+                          variant="link"
+                          className="actionButton"
+                          onClick={() => {
+                            navigate(`/products/${product.id}`);
+                          }}
+                        >
+                          <FaEdit size={25} />
+                        </Button>
+                        <Button
+                          variant="link"
+                          className="actionButton"
+                          title="Generate QR code"
+                          onClick={() => generateQRCodePDF()}
+                        >
+                          <FaQrcode size={25} />
+                        </Button>
+                        <Button
+                          variant="link"
+                          className="link-danger actionButton"
+                          onClick={() => removeProduct(product.id)}
+                        >
+                          <FaTrash size={25} />
+                        </Button>
+                      </Container>
+                    </td>
+                  </tr>
+                ))}
+            </tbody>
+          </Table>
+        </Row>
+        <Row>
+          <MyPagination
+            currentPage={page}
+            totalPages={totalPages}
+            onPageChange={handlePageChange}
+          />
+        </Row>
+      </Col>
+    </Container>
+  );
 }
