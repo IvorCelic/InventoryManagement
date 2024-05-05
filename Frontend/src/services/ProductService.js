@@ -20,7 +20,7 @@ async function GetPagination(page, condition) {
     });
 }
 
-async function GenerateQRCode(name) {
+async function GenerateQRCodePDF(name) {
   return await httpService
     .get("/" + name, { responseType: "arraybuffer" })
     .then((response) => {
@@ -38,5 +38,5 @@ export default {
   edit,
   getById,
   GetPagination,
-  GenerateQRCode,
+  GenerateQRCodePDF
 };

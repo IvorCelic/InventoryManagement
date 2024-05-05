@@ -8,7 +8,7 @@ import { FaEdit, FaQrcode, FaTrash } from "react-icons/fa";
 import useError from "../../hooks/useError";
 import MyPagination from "../../components/MyPagination";
 import useLoading from "../../hooks/useLoading";
-import { saveAs } from 'file-saver';
+import { saveAs } from "file-saver";
 
 export default function Products() {
   const navigate = useNavigate();
@@ -41,20 +41,25 @@ export default function Products() {
     hideLoading();
   }
 
-  async function generateQRCode() {
+  async function generateQRCodePDF() {
     showLoading();
-    const response = await ProductService.GenerateQRCode("QRCode");
+    const response = await ProductService.GenerateQRCodePDF("QRCode");
+
     if (!response.ok) {
       showError(response.data);
+      hideLoading();
       return;
     }
 
-    const blob = new Blob([response.data], { type: "image/png" });
-    
-    saveAs(blob, 'qr_code.png');
+    const blob = new Blob([response.data], { type: "application/pdf" });
 
+    // Trigger download
+    // saveAs(blob, "QRCodePDF.pdf");
+
+    // Trigger new window
     const url = URL.createObjectURL(blob);
-    window.open(url, '_blank');
+    window.open(url, "_blank");
+
     hideLoading();
   }
 
@@ -137,18 +142,18 @@ export default function Products() {
                         </Button>
                         <Button
                           variant="link"
+                          className="actionButton"
+                          title="Generate QR code"
+                          onClick={() => generateQRCodePDF()}
+                        >
+                          <FaQrcode size={25} />
+                        </Button>
+                        <Button
+                          variant="link"
                           className="link-danger actionButton"
                           onClick={() => removeProduct(product.id)}
                         >
                           <FaTrash size={25} />
-                        </Button>
-                        <Button
-                          variant="link"
-                          className="actionButton"
-                          title="Generate QR code"
-                          onClick={() => generateQRCode()}
-                        >
-                          <FaQrcode size={25} />
                         </Button>
                       </Container>
                     </td>
