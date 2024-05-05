@@ -69,7 +69,7 @@ namespace InventoryManagementAPP.Controllers
         }
 
 
-        [HttpGet]
+        //[HttpGet]
         [HttpPost]
         protected override InventoryTransactionItem CreateEntity(InventoryTransactionItemDTOInsertUpdate entityDTO)
         {
