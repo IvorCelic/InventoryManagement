@@ -25,7 +25,6 @@ namespace InventoryManagementAPP.Controllers
         }
 
         [HttpGet]
-        [Route("GenerateQRCode")]
         public async Task<ActionResult> GenerateQRCode()
         {
             try
