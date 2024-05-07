@@ -3,9 +3,8 @@ using InventoryManagementAPP.Mappers;
 using InventoryManagementAPP.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using QRCoder;
-using System.Drawing;
-using System.Drawing.Imaging;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
 
 namespace InventoryManagementAPP.Controllers
 {
@@ -542,6 +541,111 @@ namespace InventoryManagementAPP.Controllers
                 return StatusCode(StatusCodes.Status503ServiceUnavailable, ex.Message);
             }
         }
+
+
+        [HttpGet]
+        [Route("InventoryTransactionReport")]
+        public IActionResult GenerateInventoryTransactionReport(int transactionId)
+        {
+            if (transactionId <= 0)
+            {
+                return BadRequest("Invalid transaction ID.");
+            }
+
+            try
+            {
+                using (var pdfStream = new MemoryStream())
+                {
+                    Document document = new Document();
+                    // Explicitly refer to iTextSharp.text.pdf.PdfWriter
+                    var pdfWriter = PdfWriter.GetInstance(document, pdfStream);
+
+                    document.Open();
+
+                    var content = GenerateInventoryTransactionContent(transactionId);
+                    foreach (var element in content)
+                    {
+                        document.Add(element);
+                    }
+
+                    document.Close();
+
+                    return new FileContentResult(pdfStream.ToArray(), "application/pdf")
+                    {
+                        FileDownloadName = $"InventoryTransaction_{transactionId}.pdf"
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Error generating PDF report: {ex.Message}");
+            }
+        }
+
+
+        private List<IElement> GenerateInventoryTransactionContent(int transactionId)
+        {
+            var transaction = GetInventoryTransaction(transactionId);
+
+            if (transaction == null)
+            {
+                throw new Exception($"Inventory Transaction with ID {transactionId} not found.");
+            }
+
+            var transactionItems = GetInventoryTransactionItems(transactionId);
+
+            if (transactionItems == null)
+            {
+                throw new Exception($"Inventory Transaction with ID {transactionId} not found.");
+            }
+
+            var elements = new List<IElement>();
+
+            var header = new Paragraph($"Inventory Transaction Report for: {transaction.AdditionalDetails}", new Font(Font.FontFamily.HELVETICA, 14, Font.BOLD));
+            elements.Add(header);
+
+            foreach (var item in transactionItems)
+            {
+                var productDetail = new Paragraph(
+                    $"Product: {item.Product.ProductName}, Warehouse: {item.Warehouse.WarehouseName}",
+                    new Font(Font.FontFamily.HELVETICA, 12)
+                    );
+                elements.Add(productDetail);
+            }
+
+            var htmlContent = "<p>This is an <strong>inventory transaction report</strong>.</p>";
+            using (var stringReader = new StringReader(htmlContent))
+            {
+                var htmlElements = iTextSharp.text.html.simpleparser.HTMLWorker.ParseToList(stringReader, null);
+                elements.AddRange(htmlElements);
+            }
+
+            return elements;
+        }
+
+
+        private List<InventoryTransactionItem> GetInventoryTransactionItems(int transactionId)
+        {
+            var transactionItems = _context.InventoryTransactionItems
+                .Include(it => it.InventoryTransaction)
+                .Include(w => w.Warehouse)
+                .Include(p => p.Product)
+                .Where(it => it.InventoryTransaction.Id == transactionId)
+                .ToList();
+
+            return transactionItems;
+        }
+
+
+        private InventoryTransaction GetInventoryTransaction(int transactionId)
+        {
+            var transaction = _context.InventoryTransactions
+                .Include(e => e.Employee)
+                .FirstOrDefault(t => t.Id == transactionId);
+
+            return transaction;
+        }
+
 
 
     }

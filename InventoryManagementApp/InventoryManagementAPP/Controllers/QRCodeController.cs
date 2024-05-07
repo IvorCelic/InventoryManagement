@@ -8,7 +8,6 @@ using InventoryManagementAPP.Mappers;
 
 using iTextSharp.text;
 using iTextSharp.text.pdf;
-using System.IO;
 
 namespace InventoryManagementAPP.Controllers
 {
