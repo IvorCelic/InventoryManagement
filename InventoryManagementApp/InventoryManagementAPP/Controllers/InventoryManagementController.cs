@@ -95,15 +95,7 @@ namespace InventoryManagementAPP.Controllers
             }
         }
 
-<<<<<<< HEAD
-        /// <summary>
-        /// Creates a new entity from the provided DTO and saves it to the database.
-        /// </summary>
-        /// <param name="entityDTO">The data transfer object containing entity details.</param>
-        /// <returns>Returns the created entity or a bad request in case of an error.</returns>
-=======
 
->>>>>>> QR-code
         [HttpPost]
         public IActionResult Post(TDI entityDTO)
         {

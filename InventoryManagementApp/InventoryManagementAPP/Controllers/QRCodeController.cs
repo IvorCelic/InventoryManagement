@@ -32,7 +32,7 @@ namespace InventoryManagementAPP.Controllers
         {
             try
             {
-                var qrCodeContent = "https://localhost:7183/api/v1/QRCode?transactionId=1&warehouseId=1&productId=1&quantity=1";
+                var qrCodeContent = "https://inventorymanagement.runasp.net/api/v1/QRCode?transactionId=1&warehouseId=1&productId=1&quantity=1";
                 QRCodeGenerator qrCodeGenerator = new QRCodeGenerator();
                 QRCodeData qrCodeData = qrCodeGenerator.CreateQrCode(qrCodeContent, QRCodeGenerator.ECCLevel.Q);
                 QRCode qrCode = new QRCode(qrCodeData);
@@ -75,6 +75,7 @@ namespace InventoryManagementAPP.Controllers
 
 
         [HttpPost]
+        [Route("/PostFromQR")]
         public IActionResult PostFromQR(InventoryTransactionItemDTOInsertUpdate inventoryTransactionItemDTO)
         {
             try

@@ -4,6 +4,6 @@
     <ActiveDebugProfile>https</ActiveDebugProfile>
     <Controller_SelectedScaffolderID>MvcControllerEmptyScaffolder</Controller_SelectedScaffolderID>
     <Controller_SelectedScaffolderCategoryPath>root/Common/MVC/Controller</Controller_SelectedScaffolderCategoryPath>
-    <NameOfLastUsedPublishProfile>D:\PROGRAMIRANJE\CSHARP - Edunova\InventoryManagement\InventoryManagementApp\InventoryManagementAPP\Properties\PublishProfiles\site3268-WebDeploy.pubxml</NameOfLastUsedPublishProfile>
+    <NameOfLastUsedPublishProfile>site4185-WebDeploy</NameOfLastUsedPublishProfile>
   </PropertyGroup>
 </Project>
