@@ -73,36 +73,81 @@ namespace InventoryManagementAPP.Controllers
         }
 
 
+        //[HttpGet]
+        //[Route("PostFromQR")]
+        //public IActionResult PostFromQR(InventoryTransactionItemDTOInsertUpdate inventoryTransactionItemDTO)
+        //{
+        //    try
+        //    {
+        //        var transaction = _context.InventoryTransactions.Find(inventoryTransactionItemDTO.transactionId);
+        //        if (transaction == null)
+        //        {
+        //            throw new Exception("There is no Inventory Transaction with ID: " + transaction.Id + " in database.");
+        //        }
+
+        //        var warehouse = _context.Warehouses.Find(inventoryTransactionItemDTO.warehouseId);
+        //        if (warehouse == null)
+        //        {
+        //            throw new Exception("There is no Warehouse with ID: " + warehouse.Id + " in database.");
+        //        }
+
+        //        var product = _context.Products.Find(inventoryTransactionItemDTO.productId);
+        //        if (product == null)
+        //        {
+        //            throw new Exception("There is no Product with ID: " + product.Id + " in database.");
+        //        }
+
+
+        //        var entity = _mapper.MapInsertUpdatedFromDTO(inventoryTransactionItemDTO);
+
+        //        entity.InventoryTransaction = transaction;
+        //        entity.Product = product;
+        //        entity.Warehouse = warehouse;
+
+        //        _context.InventoryTransactionItems.Add(entity);
+        //        _context.SaveChanges();
+
+        //        return StatusCode(StatusCodes.Status201Created, _mapper.MapReadToDTO(entity));
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return BadRequest(ex.Message);
+        //    }
+        //}
+
+
         [HttpGet]
         [Route("PostFromQR")]
-        public IActionResult PostFromQR(InventoryTransactionItemDTOInsertUpdate inventoryTransactionItemDTO)
+        public IActionResult PostFromQR([FromQuery] int transactionId, [FromQuery] int warehouseId, [FromQuery] int productId, [FromQuery] int quantity)
         {
             try
             {
-                var transaction = _context.InventoryTransactions.Find(inventoryTransactionItemDTO.transactionId);
+                var transaction = _context.InventoryTransactions.Find(transactionId);
                 if (transaction == null)
                 {
                     throw new Exception("There is no Inventory Transaction with ID: " + transaction.Id + " in database.");
                 }
 
-                var warehouse = _context.Warehouses.Find(inventoryTransactionItemDTO.warehouseId);
+                var warehouse = _context.Warehouses.Find(warehouseId);
                 if (warehouse == null)
                 {
                     throw new Exception("There is no Warehouse with ID: " + warehouse.Id + " in database.");
                 }
 
-                var product = _context.Products.Find(inventoryTransactionItemDTO.productId);
+                var product = _context.Products.Find(productId);
                 if (product == null)
                 {
                     throw new Exception("There is no Product with ID: " + product.Id + " in database.");
                 }
 
 
-                var entity = _mapper.MapInsertUpdatedFromDTO(inventoryTransactionItemDTO);
-
-                entity.InventoryTransaction = transaction;
-                entity.Product = product;
-                entity.Warehouse = warehouse;
+                var entity = new InventoryTransactionItem
+                {
+                    InventoryTransaction = transaction,
+                    Warehouse = warehouse,
+                    Product = product,
+                    Quantity = quantity
+                };
 
                 _context.InventoryTransactionItems.Add(entity);
                 _context.SaveChanges();
@@ -114,6 +159,5 @@ namespace InventoryManagementAPP.Controllers
                 return BadRequest(ex.Message);
             }
         }
-
     }
 }
