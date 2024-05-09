@@ -27,11 +27,11 @@ namespace InventoryManagementAPP.Controllers
 
 
         [HttpGet]
-        public IActionResult GenerateQRCodePDF()
+        public IActionResult GenerateQRCodePDF(int productId)
         {
             try
             {
-                var qrCodeContent = "https://inventorymanagement.runasp.net/api/v1/QRCode/PostFromQR?transactionId=1&warehouseId=1&productId=1&quantity=1";
+                var qrCodeContent = $"https://inventorymanagement.runasp.net/api/v1/QRCode/PostFromQR?transactionId=1&warehouseId=1&productId={productId}&quantity=1";
                 QRCodeGenerator qrCodeGenerator = new QRCodeGenerator();
                 QRCodeData qrCodeData = qrCodeGenerator.CreateQrCode(qrCodeContent, QRCodeGenerator.ECCLevel.Q);
                 QRCode qrCode = new QRCode(qrCodeData);
@@ -73,49 +73,6 @@ namespace InventoryManagementAPP.Controllers
         }
 
 
-        //[HttpGet]
-        //[Route("PostFromQR")]
-        //public IActionResult PostFromQR(InventoryTransactionItemDTOInsertUpdate inventoryTransactionItemDTO)
-        //{
-        //    try
-        //    {
-        //        var transaction = _context.InventoryTransactions.Find(inventoryTransactionItemDTO.transactionId);
-        //        if (transaction == null)
-        //        {
-        //            throw new Exception("There is no Inventory Transaction with ID: " + transaction.Id + " in database.");
-        //        }
-
-        //        var warehouse = _context.Warehouses.Find(inventoryTransactionItemDTO.warehouseId);
-        //        if (warehouse == null)
-        //        {
-        //            throw new Exception("There is no Warehouse with ID: " + warehouse.Id + " in database.");
-        //        }
-
-        //        var product = _context.Products.Find(inventoryTransactionItemDTO.productId);
-        //        if (product == null)
-        //        {
-        //            throw new Exception("There is no Product with ID: " + product.Id + " in database.");
-        //        }
-
-
-        //        var entity = _mapper.MapInsertUpdatedFromDTO(inventoryTransactionItemDTO);
-
-        //        entity.InventoryTransaction = transaction;
-        //        entity.Product = product;
-        //        entity.Warehouse = warehouse;
-
-        //        _context.InventoryTransactionItems.Add(entity);
-        //        _context.SaveChanges();
-
-        //        return StatusCode(StatusCodes.Status201Created, _mapper.MapReadToDTO(entity));
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return BadRequest(ex.Message);
-        //    }
-        //}
-
-
         [HttpGet]
         [Route("PostFromQR")]
         public IActionResult PostFromQR([FromQuery] int transactionId, [FromQuery] int warehouseId, [FromQuery] int productId, [FromQuery] int quantity)
@@ -140,6 +97,11 @@ namespace InventoryManagementAPP.Controllers
                     throw new Exception("There is no Product with ID: " + product.Id + " in database.");
                 }
 
+                var existingItem = _context.InventoryTransactionItems.FirstOrDefault(item => item.InventoryTransaction.Id == transactionId && item.Product.Id == productId);
+                if (existingItem != null)
+                {
+                    return BadRequest("Product already exists in this transaction!");
+                }
 
                 var entity = new InventoryTransactionItem
                 {
