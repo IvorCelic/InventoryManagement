@@ -73,7 +73,7 @@ namespace InventoryManagementAPP.Controllers
         }
 
 
-        [HttpPost]
+        [HttpGet]
         [Route("PostFromQR")]
         public IActionResult PostFromQR(InventoryTransactionItemDTOInsertUpdate inventoryTransactionItemDTO)
         {

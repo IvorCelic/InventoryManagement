@@ -24,7 +24,7 @@ export const RoutesNames = {
 };
 
 export const App = {
-    // URL: "https://inventorymanagement.runasp.net",
-    URL: "https://localhost:7183",
+    URL: "https://inventorymanagement.runasp.net",
+    // URL: "https://localhost:7183",
     DEV: false,
 };
