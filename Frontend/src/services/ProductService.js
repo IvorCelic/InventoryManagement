@@ -11,7 +11,7 @@ import {
 
 async function GetPagination(page, condition) {
   return await httpService
-    .get("/Product/SearchPagination/" + page + "?condition=" + condition)
+    .get("Product/SearchPagination/" + page + "?condition=" + condition)
     .then((res) => {
       return handleSuccess(res);
     })
@@ -20,9 +20,9 @@ async function GetPagination(page, condition) {
     });
 }
 
-async function GenerateQRCodePDF(name) {
+async function GenerateQRCodePDF(name, productId) {
   return await httpService
-    .get("/" + name, { responseType: "arraybuffer" })
+    .get("/" + name + `?productId=${productId}`, { responseType: "arraybuffer" })
     .then((response) => {
       return handleSuccess(response);
     })

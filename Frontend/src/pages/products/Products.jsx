@@ -41,9 +41,9 @@ export default function Products() {
     hideLoading();
   }
 
-  async function generateQRCodePDF() {
+  async function generateQRCodePDF(productId) {
     showLoading();
-    const response = await ProductService.GenerateQRCodePDF("QRCode");
+    const response = await ProductService.GenerateQRCodePDF("QRCode", productId);
 
     if (!response.ok) {
       showError(response.data);
@@ -144,7 +144,7 @@ export default function Products() {
                           variant="link"
                           className="actionButton"
                           title="Generate QR code"
-                          onClick={() => generateQRCodePDF()}
+                          onClick={() => generateQRCodePDF(product.id)}
                         >
                           <FaQrcode size={25} />
                         </Button>
