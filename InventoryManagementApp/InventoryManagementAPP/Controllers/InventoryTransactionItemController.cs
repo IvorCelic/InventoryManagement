@@ -545,7 +545,7 @@ namespace InventoryManagementAPP.Controllers
 
         [HttpGet]
         [Route("InventoryTransactionReport")]
-        public IActionResult GenerateInventoryTransactionReport(int transactionId)
+        public IActionResult GenerateInventoryTransactionReportPDF(int transactionId)
         {
             if (transactionId <= 0)
             {

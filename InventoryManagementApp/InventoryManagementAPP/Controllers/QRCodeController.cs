@@ -27,7 +27,7 @@ namespace InventoryManagementAPP.Controllers
 
 
         [HttpGet]
-        public IActionResult GenerateQRCodePDF(int productId)
+        public IActionResult GenerateSingleQR(int productId)
         {
             try
             {
@@ -69,6 +69,94 @@ namespace InventoryManagementAPP.Controllers
             catch (Exception ex)
             {
                 return BadRequest($"Error generating PDF with QR code: {ex.Message}");
+            }
+        }
+
+
+        [HttpGet]
+        [Route("GenerateAllQRs")]
+        public IActionResult GenerateAllQRs()
+        {
+            try
+            {
+                using (var qrStream = new MemoryStream())
+                {
+                    Document document = new Document();
+                    PdfWriter pdfWriter = PdfWriter.GetInstance(document, qrStream);
+
+                    document.Open();
+
+                    var products = GetProducts();
+                    if (products == null)
+                    {
+                        return BadRequest(ModelState);
+                    }
+
+                    var table = new PdfPTable(3) { WidthPercentage = 100 };
+
+                    foreach (var product in products)
+                    {
+                        var qrContent = $"https://inventorymanagement.runasp.net?transactionId=1&warehouseId=1&productId={product.Id}&quantity=1";
+                        var qrBytes = GenerateQRCode(qrContent);
+
+                        var qrImage = iTextSharp.text.Image.GetInstance(qrBytes);
+                        qrImage.ScaleToFit(100, 100);
+                        qrImage.Alignment = Element.ALIGN_CENTER;
+
+                        var cell = new PdfPCell
+                        {
+                            Padding = 10,
+                            HorizontalAlignment = Element.ALIGN_CENTER,
+                            VerticalAlignment = Element.ALIGN_MIDDLE
+                        };
+
+                        cell.AddElement(new Paragraph($"{product.ProductName}"));
+                        cell.AddElement(qrImage);
+
+                        table.AddCell(cell);
+                    }
+
+                    while (table.Rows[table.Rows.Count - 1].GetCells().Length < 3)
+                    {
+                        table.AddCell("");
+                    }
+
+                    document.Add(table);
+
+                    document.Close();
+
+                    return new FileContentResult(qrStream.ToArray(), "application/pdf")
+                    {
+                        FileDownloadName = "QRCodes.pdf"
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Error generating PDF with QR code: {ex.Message}");
+            }
+        }
+
+
+        private List<Product> GetProducts()
+        {
+            var products = _context.Products.ToList();
+            return products;
+        }
+
+
+        private byte[] GenerateQRCode(string content)
+        {
+            QRCodeGenerator qrCodeGenerator = new QRCodeGenerator();
+            QRCodeData qRCodeData = qrCodeGenerator.CreateQrCode(content, QRCodeGenerator.ECCLevel.Q);
+            QRCode qRCode = new QRCode(qRCodeData);
+
+            using (var qrStream = new MemoryStream())
+            {
+                Bitmap qrBitmap = qRCode.GetGraphic(20);
+                qrBitmap.Save(qrStream, ImageFormat.Png);
+
+                return qrStream.ToArray();
             }
         }
 
