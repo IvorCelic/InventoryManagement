@@ -26,6 +26,22 @@ export default function Transactions() {
         hideLoading();
     }
 
+    async function getTransactionReport(id) {
+        showLoading();
+        const response = await TransactionService.GetTransactionReport("InventoryTransaction", id);
+        if (!response.ok) {
+            showError(response.data);
+            hideLoading();
+            return;
+        }
+
+        const blob = new Blob([response.data], { type: "application/pdf" });
+
+        saveAs(blob, `test_${id}.pdf`);
+
+        hideLoading();
+    }
+
     useEffect(() => {
         fetchTransactions();
     }, []);
@@ -90,10 +106,18 @@ export default function Transactions() {
                                                 >
                                                     <FaEdit size={25} />
                                                 </Button>
-                                                {/* <Button variant="link">
-                                                    <FaFilePdf size={25} />
-                                                </Button>
                                                 <Button variant="link">
+                                                    <FaFilePdf
+                                                        size={25}
+                                                        title="Generate PDF report"
+                                                        onClick={() =>
+                                                            getTransactionReport(
+                                                                inventoryTransaction.id
+                                                            )
+                                                        }
+                                                    />
+                                                </Button>
+                                                {/* <Button variant="link">
                                                     <FaPrint size={25} />
                                                 </Button> */}
                                                 <Button

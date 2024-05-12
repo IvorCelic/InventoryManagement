@@ -1,4 +1,26 @@
-import { get, remove, add, edit, getById } from "./httpService";
+import {
+    get,
+    remove,
+    add,
+    edit,
+    getById,
+    httpService,
+    handleSuccess,
+    handleError,
+} from "./httpService";
+
+async function GetTransactionReport(name, transactionId) {
+    return await httpService
+        .get("/" + name + "/InventoryTransactionReport/" + transactionId, {
+            responseType: "arraybuffer",
+        })
+        .then((response) => {
+            return handleSuccess(response);
+        })
+        .catch((error) => {
+            return handleError(error);
+        });
+}
 
 export default {
     get,
@@ -6,4 +28,5 @@ export default {
     add,
     edit,
     getById,
+    GetTransactionReport,
 };

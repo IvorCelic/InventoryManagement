@@ -44,14 +44,7 @@ async function GetWarehouses(name, id) {
 
 async function GetProductsOnWarehouse(name, transactionId, warehouseId) {
     return await httpService
-        .get(
-            "/" +
-                name +
-                "/Transactions/" +
-                transactionId +
-                "/Warehouses/" +
-                warehouseId
-        )
+        .get("/" + name + "/Transactions/" + transactionId + "/Warehouses/" + warehouseId)
         .then((response) => {
             return handleSuccess(response);
         })
@@ -62,14 +55,7 @@ async function GetProductsOnWarehouse(name, transactionId, warehouseId) {
 
 async function SearchUnassociatedProduct(name, transactionId, condition) {
     return await httpService
-        .get(
-            "/" +
-                name +
-                "/SearchUnassociatedProduct/" +
-                transactionId +
-                "/" +
-                condition
-        )
+        .get("/" + name + "/SearchUnassociatedProduct/" + transactionId + "/" + condition)
         .then((response) => {
             return handleSuccess(response);
         })
@@ -78,12 +64,7 @@ async function SearchUnassociatedProduct(name, transactionId, condition) {
         });
 }
 
-async function SearchProductOnWarehouse(
-    name,
-    transactionId,
-    warehouseId,
-    condition
-) {
+async function SearchProductOnWarehouse(name, transactionId, warehouseId, condition) {
     return await httpService
         .get(
             "/" +
@@ -106,10 +87,7 @@ async function SearchProductOnWarehouse(
 async function GetUnassociatedProductsPagination(transactionId, page) {
     return await httpService
         .get(
-            "/InventoryTransactionItem/UnassociatedProductsPagination/" +
-                transactionId +
-                "/" +
-                page
+            "/InventoryTransactionItem/UnassociatedProductsPagination/" + transactionId + "/" + page
         )
         .then((response) => {
             return handleSuccess(response);
@@ -119,11 +97,7 @@ async function GetUnassociatedProductsPagination(transactionId, page) {
         });
 }
 
-async function GetProductsOnWarehousePagination(
-    transactionId,
-    warehouseId,
-    page
-) {
+async function GetProductsOnWarehousePagination(transactionId, warehouseId, page) {
     return await httpService
         .get(
             "/InventoryTransactionItem/ProductsOnWarehousePagination/" +
