@@ -11,10 +11,11 @@ import {
 
 async function GetTransactionReport(name, transactionId) {
     return await httpService
-        .get("/" + name + "/InventoryTransactionReport/" + transactionId, {
+        .get("/" + name + "/InventoryTransactionReport/?transactionId=" + transactionId, {
             responseType: "arraybuffer",
         })
         .then((response) => {
+            console.log(response.data);
             return handleSuccess(response);
         })
         .catch((error) => {

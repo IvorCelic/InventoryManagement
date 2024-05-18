@@ -51,7 +51,7 @@ export default function Products() {
         const blob = new Blob([response.data], { type: "application/pdf" });
 
         // Trigger download
-        // saveAs(blob, "QRCodePDF.pdf");
+        saveAs(blob, "QRCodePDF.pdf");
 
         // Trigger new window
         const url = URL.createObjectURL(blob);

@@ -34,7 +34,7 @@ export default function Transactions() {
             hideLoading();
             return;
         }
-
+        
         const blob = new Blob([response.data], { type: "application/pdf" });
 
         saveAs(blob, `test_${id}.pdf`);
